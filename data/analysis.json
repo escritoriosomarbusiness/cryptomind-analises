@@ -1,0 +1,85 @@
+{
+  "date": "2026-01-02",
+  "update_time": "06:00",
+  "btc": {
+    "price": 89475,
+    "change_24h": 0.72,
+    "high_24h": 89942,
+    "low_24h": 88379
+  },
+  "sentiment": {
+    "fear_greed": 28,
+    "fear_greed_label": "Fear",
+    "fear_greed_yesterday": 20,
+    "fear_greed_last_week": 20,
+    "fear_greed_last_month": 28
+  },
+  "funding": {
+    "rate": 0.0051,
+    "signal": "Bullish"
+  },
+  "open_interest": {
+    "value": 133.57,
+    "unit": "B",
+    "change": 4.23
+  },
+  "long_short": {
+    "long": 49.29,
+    "short": 50.71
+  },
+  "bias": {
+    "direction": "NEUTRO",
+    "confidence": "Cauteloso",
+    "reasons_positive": [
+      "Funding Rate levemente positivo",
+      "Recuperação do Fear & Greed",
+      "Open Interest subindo"
+    ],
+    "reasons_negative": [
+      "Estrutura macro bearish",
+      "Volume muito baixo",
+      "Mercados tradicionais em queda"
+    ]
+  },
+  "levels": {
+    "resistance_2": { "price": 90000, "note": "Número redondo + Liquidez" },
+    "resistance_1": { "price": 89942, "note": "High do dia (PDH)" },
+    "support_1": { "price": 88379, "note": "Low do dia (PDL)" },
+    "support_2": { "price": 85000, "note": "Suporte forte + Liquidez" }
+  },
+  "setups": [
+    {
+      "type": "LONG",
+      "style": "Conservador",
+      "entry": "$88,400 - $88,500",
+      "stop": "$87,700",
+      "target_1": { "price": "$89,500", "rr": "1.5:1" },
+      "target_2": { "price": "$90,000", "rr": "2.2:1" },
+      "trigger": "Rejeição com volume no suporte"
+    },
+    {
+      "type": "SHORT",
+      "style": "Agressivo",
+      "entry": "$89,900 - $90,000",
+      "stop": "$90,500",
+      "target_1": { "price": "$89,000", "rr": "1.7:1" },
+      "target_2": { "price": "$88,400", "rr": "2.8:1" },
+      "trigger": "Rejeição com volume na resistência"
+    },
+    {
+      "type": "BREAKOUT",
+      "style": "Se Confirmar",
+      "entry": "$90,100",
+      "stop": "$89,400",
+      "target_1": { "price": "$91,500", "rr": "2:1" },
+      "target_2": { "price": "$93,000", "rr": "4:1" },
+      "trigger": "Fechamento 3H acima de $90,000 com volume"
+    }
+  ],
+  "correlations": {
+    "sp500": { "value": 6845.49, "change": -0.74 },
+    "nasdaq": { "value": 25249.85, "change": -0.84 },
+    "dxy": { "value": 98.449, "change": 0.17 },
+    "gold": { "value": 4392.97, "change": 1.74 }
+  }
+}
