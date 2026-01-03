@@ -1,0 +1,363 @@
+{
+  "timestamp": "2026-01-03T17:16:55.687229-03:00",
+  "date": "03/01/2026",
+  "time": "17:16",
+  "assets": {
+    "BTC": {
+      "symbol": "BTC",
+      "name": "Bitcoin",
+      "price": 90027,
+      "change_24h": 0.23,
+      "trend": {
+        "trend": "NEUTRO",
+        "strength": "CONSOLIDAÇÃO",
+        "price": 90036.98,
+        "ema_9": 88675.53,
+        "ema_21": 88646.47,
+        "ema_50": 92148.57,
+        "above_ema_9": true,
+        "above_ema_21": true,
+        "above_ema_50": false,
+        "ema_9_rising": true,
+        "ema_21_rising": true,
+        "ema_alignment": "MIXED"
+      },
+      "structure": {
+        "structure": "ALTA_FORMANDO",
+        "description": "Estrutura de alta em formação",
+        "last_high": 88577.42,
+        "last_low": 87156.56,
+        "hh": false,
+        "hl": true,
+        "lh": true,
+        "ll": false
+      },
+      "sr_levels": {
+        "supports": [
+          87156.56,
+          86281.5,
+          85450.33
+        ],
+        "resistances": [
+          92723.21,
+          93619.44,
+          105909.07
+        ],
+        "key_levels": [
+          106443.61,
+          84682.62,
+          86281.5,
+          93619.44,
+          101322.64
+        ],
+        "nearest_support": 87156.56,
+        "nearest_resistance": 92723.21
+      },
+      "indicators": {
+        "rsi": 60.59,
+        "rsi_status": "NEUTRO",
+        "macd": {
+          "macd": -401.1708,
+          "signal": -892.4169,
+          "histogram": 491.2461,
+          "trend": "BULLISH"
+        }
+      },
+      "bias": "BULLISH",
+      "bullish_factors": 2,
+      "bearish_factors": 0
+    },
+    "ETH": {
+      "symbol": "ETH",
+      "name": "Ethereum",
+      "price": 3106.81,
+      "change_24h": -0.63,
+      "trend": {
+        "trend": "NEUTRO",
+        "strength": "CONSOLIDAÇÃO",
+        "price": 3106.81,
+        "ema_9": 3018.32,
+        "ema_21": 3006.45,
+        "ema_50": 3141.9,
+        "above_ema_9": true,
+        "above_ema_21": true,
+        "above_ema_50": false,
+        "ema_9_rising": true,
+        "ema_21_rising": true,
+        "ema_alignment": "MIXED"
+      },
+      "structure": {
+        "structure": "ALTA_FORMANDO",
+        "description": "Estrutura de alta em formação",
+        "last_high": 3005.79,
+        "last_low": 2904.25,
+        "hh": false,
+        "hl": true,
+        "lh": true,
+        "ll": false
+      },
+      "sr_levels": {
+        "supports": [
+          2904.25,
+          2826.59,
+          2799.04
+        ],
+        "resistances": [
+          3195.41,
+          3326.26,
+          3576.25
+        ],
+        "key_levels": [
+          3296.74,
+          2799.04,
+          3749.22,
+          3801.79,
+          2764.74
+        ],
+        "nearest_support": 2904.25,
+        "nearest_resistance": 3195.41
+      },
+      "indicators": {
+        "rsi": 66.26,
+        "rsi_status": "NEUTRO",
+        "macd": {
+          "macd": -7.0569,
+          "signal": -32.2231,
+          "histogram": 25.1662,
+          "trend": "BULLISH"
+        }
+      },
+      "bias": "BULLISH",
+      "bullish_factors": 2,
+      "bearish_factors": 0
+    },
+    "SOL": {
+      "symbol": "SOL",
+      "name": "Solana",
+      "price": 131.38,
+      "change_24h": -0.22,
+      "trend": {
+        "trend": "BEARISH",
+        "strength": "MODERADA",
+        "price": 131.36,
+        "ema_9": 127.25,
+        "ema_21": 127.48,
+        "ema_50": 137.8,
+        "above_ema_9": true,
+        "above_ema_21": true,
+        "above_ema_50": false,
+        "ema_9_rising": true,
+        "ema_21_rising": true,
+        "ema_alignment": "BEARISH"
+      },
+      "structure": {
+        "structure": "ALTA",
+        "description": "Higher Highs + Higher Lows confirmados",
+        "last_high": 145.03,
+        "last_low": 120.09,
+        "hh": true,
+        "hl": true,
+        "lh": false,
+        "ll": false
+      },
+      "sr_levels": {
+        "supports": [
+          127.63,
+          126.75,
+          120.09
+        ],
+        "resistances": [
+          142.92,
+          145.03,
+          167.55
+        ],
+        "key_levels": [
+          127.63,
+          119.47,
+          178.31,
+          180.03,
+          131.64
+        ],
+        "nearest_support": 127.63,
+        "nearest_resistance": 142.92
+      },
+      "indicators": {
+        "rsi": 61.78,
+        "rsi_status": "NEUTRO",
+        "macd": {
+          "macd": -1.5836,
+          "signal": -3.1541,
+          "histogram": 1.5705,
+          "trend": "BULLISH"
+        }
+      },
+      "bias": "NEUTRO",
+      "bullish_factors": 2,
+      "bearish_factors": 2
+    },
+    "BNB": {
+      "symbol": "BNB",
+      "name": "BNB",
+      "price": 875.55,
+      "change_24h": -0.64,
+      "trend": {
+        "trend": "NEUTRO",
+        "strength": "CONSOLIDAÇÃO",
+        "price": 875.55,
+        "ema_9": 863.57,
+        "ema_21": 862.99,
+        "ema_50": 902.29,
+        "above_ema_9": true,
+        "above_ema_21": true,
+        "above_ema_50": false,
+        "ema_9_rising": true,
+        "ema_21_rising": true,
+        "ema_alignment": "MIXED"
+      },
+      "structure": {
+        "structure": "BAIXA",
+        "description": "Lower Highs + Lower Lows confirmados",
+        "last_high": 858.02,
+        "last_low": 828.87,
+        "hh": false,
+        "hl": false,
+        "lh": true,
+        "ll": true
+      },
+      "sr_levels": {
+        "supports": [
+          831.16,
+          829.17,
+          828.87
+        ],
+        "resistances": [
+          895.4,
+          922.35,
+          932.06
+        ],
+        "key_levels": [
+          831.16,
+          938.89,
+          1110.81,
+          1057.85,
+          1140.48
+        ],
+        "nearest_support": 831.16,
+        "nearest_resistance": 895.4
+      },
+      "indicators": {
+        "rsi": 59.86,
+        "rsi_status": "NEUTRO",
+        "macd": {
+          "macd": -4.3691,
+          "signal": -10.2239,
+          "histogram": 5.8548,
+          "trend": "BULLISH"
+        }
+      },
+      "bias": "NEUTRO",
+      "bullish_factors": 1,
+      "bearish_factors": 1
+    },
+    "XRP": {
+      "symbol": "XRP",
+      "name": "XRP",
+      "price": 2.0,
+      "change_24h": 0.32,
+      "trend": {
+        "trend": "BEARISH",
+        "strength": "MODERADA",
+        "price": 2.0,
+        "ema_9": 1.92,
+        "ema_21": 1.92,
+        "ema_50": 2.04,
+        "above_ema_9": true,
+        "above_ema_21": true,
+        "above_ema_50": false,
+        "ema_9_rising": true,
+        "ema_21_rising": true,
+        "ema_alignment": "BEARISH"
+      },
+      "structure": {
+        "structure": "ALTA_FORMANDO",
+        "description": "Estrutura de alta em formação",
+        "last_high": 1.93,
+        "last_low": 1.83,
+        "hh": false,
+        "hl": true,
+        "lh": true,
+        "ll": false
+      },
+      "sr_levels": {
+        "supports": [
+          1.95,
+          1.83,
+          1.81
+        ],
+        "resistances": [
+          2.11,
+          2.2,
+          2.22
+        ],
+        "key_levels": [
+          2.21,
+          1.95,
+          2.38,
+          2.3,
+          2.03
+        ],
+        "nearest_support": 1.95,
+        "nearest_resistance": 2.11
+      },
+      "indicators": {
+        "rsi": 58.33,
+        "rsi_status": "NEUTRO",
+        "macd": {
+          "macd": -0.0294,
+          "signal": -0.0538,
+          "histogram": 0.0244,
+          "trend": "BULLISH"
+        }
+      },
+      "bias": "NEUTRO",
+      "bullish_factors": 2,
+      "bearish_factors": 2
+    }
+  },
+  "dominance": {
+    "btc_d": {
+      "dominance": 56.92,
+      "impact": "BEARISH",
+      "analysis": "BTC.D em 56.92% - Alta dominância, capital concentrado em BTC"
+    },
+    "usdt_d": {
+      "dominance": 5.92,
+      "impact": "NEUTRO",
+      "analysis": "USDT.D em 5.92% - Fluxo neutro"
+    }
+  },
+  "fear_greed": {
+    "value": 29,
+    "classification": "Fear",
+    "timestamp": "1767398400"
+  },
+  "market_summary": {
+    "sentiment": "NEUTRO",
+    "bullish_score": 2,
+    "bearish_score": 1,
+    "bullish_assets": [
+      "BTC",
+      "ETH"
+    ],
+    "bearish_assets": [],
+    "neutral_assets": [
+      "SOL",
+      "BNB",
+      "XRP"
+    ],
+    "btc_d_impact": "BEARISH",
+    "usdt_d_impact": "NEUTRO",
+    "fear_greed_signal": "NEUTRO",
+    "recommendation": "Mercado misto. Operar com tamanho reduzido e priorizar setups de alta confluência."
+  }
+}

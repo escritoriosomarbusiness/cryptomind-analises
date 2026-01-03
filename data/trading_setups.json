@@ -1,0 +1,242 @@
+{
+  "timestamp": "2026-01-03T17:23:11.462112-03:00",
+  "setups": {
+    "BTC": [
+      {
+        "symbol": "BTC",
+        "ts_type": "TS1",
+        "ts_name": "Rompimento",
+        "direction": "LONG",
+        "entry_zone": {
+          "min": 90027,
+          "max": 92908.66
+        },
+        "stop_loss": 87156.56,
+        "targets": [
+          104412.85,
+          110164.95,
+          115917.04
+        ],
+        "risk_reward": 2.0,
+        "confidence_score": 6,
+        "confidence_level": "MÉDIA",
+        "reasoning": "Rompimento de resistência em $92723.21. RSI em 61, MACD BULLISH.",
+        "timestamp": "2026-01-03T17:23:11.462233-03:00",
+        "config": {
+          "risk_percent": 2.0,
+          "max_leverage": 10,
+          "min_rr": 2.0,
+          "expected_winrate": "45-55%",
+          "partial_1_pct": 50,
+          "partial_2_pct": 30,
+          "trailing_pct": 1.0,
+          "color": "#3B82F6"
+        }
+      },
+      {
+        "symbol": "BTC",
+        "ts_type": "TS1",
+        "ts_name": "Rompimento",
+        "direction": "SHORT",
+        "entry_zone": {
+          "min": 86982.25,
+          "max": 90027
+        },
+        "stop_loss": 92723.21,
+        "targets": [
+          75500.32,
+          69759.36,
+          64018.39
+        ],
+        "risk_reward": 2.0,
+        "confidence_score": 3,
+        "confidence_level": "BAIXA",
+        "reasoning": "Rompimento de suporte em $87156.56. RSI em 61, MACD BULLISH.",
+        "timestamp": "2026-01-03T17:23:11.462272-03:00",
+        "config": {
+          "risk_percent": 2.0,
+          "max_leverage": 10,
+          "min_rr": 2.0,
+          "expected_winrate": "45-55%",
+          "partial_1_pct": 50,
+          "partial_2_pct": 30,
+          "trailing_pct": 1.0,
+          "color": "#3B82F6"
+        }
+      },
+      {
+        "symbol": "BTC",
+        "ts_type": "TS3",
+        "ts_name": "Reversão",
+        "direction": "SHORT",
+        "entry_zone": {
+          "min": 92259.59,
+          "max": 92908.66
+        },
+        "stop_loss": 94114.06,
+        "targets": [
+          84841.74,
+          81132.81,
+          87156.56
+        ],
+        "risk_reward": 4.0,
+        "confidence_score": 3,
+        "confidence_level": "BAIXA",
+        "reasoning": "Reversão em resistência forte $92723.21. RSI sobrecomprado em 61. Nível chave histórico.",
+        "timestamp": "2026-01-03T17:23:11.462302-03:00",
+        "config": {
+          "risk_percent": 1.0,
+          "max_leverage": 5,
+          "min_rr": 4.0,
+          "expected_winrate": "30-40%",
+          "partial_1_pct": 40,
+          "partial_2_pct": 30,
+          "trailing_pct": 1.5,
+          "color": "#F97316"
+        }
+      }
+    ],
+    "ETH": [
+      {
+        "symbol": "ETH",
+        "ts_type": "TS1",
+        "ts_name": "Rompimento",
+        "direction": "LONG",
+        "entry_zone": {
+          "min": 3106.81,
+          "max": 3201.8
+        },
+        "stop_loss": 2904.25,
+        "targets": [
+          3796.9,
+          4094.45,
+          4392.0
+        ],
+        "risk_reward": 2.0,
+        "confidence_score": 5,
+        "confidence_level": "MÉDIA",
+        "reasoning": "Rompimento de resistência em $3195.41. RSI em 66, MACD BULLISH.",
+        "timestamp": "2026-01-03T17:23:11.462360-03:00",
+        "config": {
+          "risk_percent": 2.0,
+          "max_leverage": 10,
+          "min_rr": 2.0,
+          "expected_winrate": "45-55%",
+          "partial_1_pct": 50,
+          "partial_2_pct": 30,
+          "trailing_pct": 1.0,
+          "color": "#3B82F6"
+        }
+      }
+    ],
+    "SOL": [
+      {
+        "symbol": "SOL",
+        "ts_type": "TS1",
+        "ts_name": "Rompimento",
+        "direction": "SHORT",
+        "entry_zone": {
+          "min": 127.37,
+          "max": 131.38
+        },
+        "stop_loss": 142.92,
+        "targets": [
+          96.28,
+          80.74,
+          65.19
+        ],
+        "risk_reward": 2.0,
+        "confidence_score": 5,
+        "confidence_level": "MÉDIA",
+        "reasoning": "Rompimento de suporte em $127.63. RSI em 62, MACD BULLISH.",
+        "timestamp": "2026-01-03T17:23:11.462408-03:00",
+        "config": {
+          "risk_percent": 2.0,
+          "max_leverage": 10,
+          "min_rr": 2.0,
+          "expected_winrate": "45-55%",
+          "partial_1_pct": 50,
+          "partial_2_pct": 30,
+          "trailing_pct": 1.0,
+          "color": "#3B82F6"
+        }
+      }
+    ],
+    "BNB": [
+      {
+        "symbol": "BNB",
+        "ts_type": "TS1",
+        "ts_name": "Rompimento",
+        "direction": "LONG",
+        "entry_zone": {
+          "min": 875.55,
+          "max": 897.19
+        },
+        "stop_loss": 831.16,
+        "targets": [
+          1029.25,
+          1095.28,
+          1161.31
+        ],
+        "risk_reward": 2.0,
+        "confidence_score": 6,
+        "confidence_level": "MÉDIA",
+        "reasoning": "Rompimento de resistência em $895.40. RSI em 60, MACD BULLISH.",
+        "timestamp": "2026-01-03T17:23:11.462442-03:00",
+        "config": {
+          "risk_percent": 2.0,
+          "max_leverage": 10,
+          "min_rr": 2.0,
+          "expected_winrate": "45-55%",
+          "partial_1_pct": 50,
+          "partial_2_pct": 30,
+          "trailing_pct": 1.0,
+          "color": "#3B82F6"
+        }
+      }
+    ],
+    "XRP": [
+      {
+        "symbol": "XRP",
+        "ts_type": "TS1",
+        "ts_name": "Rompimento",
+        "direction": "SHORT",
+        "entry_zone": {
+          "min": 1.95,
+          "max": 2.0
+        },
+        "stop_loss": 2.11,
+        "targets": [
+          1.62,
+          1.45,
+          1.29
+        ],
+        "risk_reward": 2.0,
+        "confidence_score": 6,
+        "confidence_level": "MÉDIA",
+        "reasoning": "Rompimento de suporte em $1.95. RSI em 58, MACD BULLISH.",
+        "timestamp": "2026-01-03T17:23:11.462504-03:00",
+        "config": {
+          "risk_percent": 2.0,
+          "max_leverage": 10,
+          "min_rr": 2.0,
+          "expected_winrate": "45-55%",
+          "partial_1_pct": 50,
+          "partial_2_pct": 30,
+          "trailing_pct": 1.0,
+          "color": "#3B82F6"
+        }
+      }
+    ]
+  },
+  "summary": {
+    "total_setups": 7,
+    "long_setups": 3,
+    "short_setups": 4,
+    "by_ts_type": {
+      "TS1": 6,
+      "TS2": 0,
+      "TS3": 1
+    }
+  }
+}
