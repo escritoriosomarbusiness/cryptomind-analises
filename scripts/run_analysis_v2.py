@@ -336,15 +336,15 @@ class AnalysisEngineV2:
         
         if direction == 'LONG':
             targets = [
-                {'price': round(entry_avg + risk * 2, 2), 'r': 2.0, 'size_pct': 50, 'action': 'Realizar 50%, SL → entrada, trailing 1%'},
-                {'price': round(entry_avg + risk * 3, 2), 'r': 3.0, 'size_pct': 30, 'action': 'Realizar 30%'},
-                {'price': 'Trailing', 'r': 'Trailing', 'size_pct': 20, 'action': 'Trailing stop 1%'}
+                {'price': round(entry_avg + risk * 2, 2), 'r': 2.0, 'size_pct': 50, 'action': 'Realizar 50%', 'post_action': 'Mover SL para entrada + Ativar Trailing 1%'},
+                {'price': round(entry_avg + risk * 3, 2), 'r': 3.0, 'size_pct': 30, 'action': 'Realizar 30%', 'post_action': None},
+                {'price': 'Trailing', 'r': 'Trailing', 'size_pct': 20, 'action': 'Deixar no Trailing Stop 1%', 'post_action': None}
             ]
         else:
             targets = [
-                {'price': round(entry_avg - risk * 2, 2), 'r': 2.0, 'size_pct': 50, 'action': 'Realizar 50%, SL → entrada, trailing 1%'},
-                {'price': round(entry_avg - risk * 3, 2), 'r': 3.0, 'size_pct': 30, 'action': 'Realizar 30%'},
-                {'price': 'Trailing', 'r': 'Trailing', 'size_pct': 20, 'action': 'Trailing stop 1%'}
+                {'price': round(entry_avg - risk * 2, 2), 'r': 2.0, 'size_pct': 50, 'action': 'Realizar 50%', 'post_action': 'Mover SL para entrada + Ativar Trailing 1%'},
+                {'price': round(entry_avg - risk * 3, 2), 'r': 3.0, 'size_pct': 30, 'action': 'Realizar 30%', 'post_action': None},
+                {'price': 'Trailing', 'r': 'Trailing', 'size_pct': 20, 'action': 'Deixar no Trailing Stop 1%', 'post_action': None}
             ]
         
         return {
@@ -403,15 +403,15 @@ class AnalysisEngineV2:
         
         if direction == 'LONG':
             targets = [
-                {'price': round(entry_avg + risk * 1.5, 2), 'r': 1.5, 'size_pct': 60, 'action': 'Realizar 60%, SL → entrada, trailing 0.8%'},
-                {'price': round(entry_avg + risk * 2.5, 2), 'r': 2.5, 'size_pct': 30, 'action': 'Realizar 30%'},
-                {'price': 'Trailing', 'r': 'Trailing', 'size_pct': 10, 'action': 'Trailing stop 0.8%'}
+                {'price': round(entry_avg + risk * 1.5, 2), 'r': 1.5, 'size_pct': 60, 'action': 'Realizar 60%', 'post_action': 'Mover SL para entrada + Ativar Trailing 0.8%'},
+                {'price': round(entry_avg + risk * 2.5, 2), 'r': 2.5, 'size_pct': 30, 'action': 'Realizar 30%', 'post_action': None},
+                {'price': 'Trailing', 'r': 'Trailing', 'size_pct': 10, 'action': 'Deixar no Trailing Stop 0.8%', 'post_action': None}
             ]
         else:
             targets = [
-                {'price': round(entry_avg - risk * 1.5, 2), 'r': 1.5, 'size_pct': 60, 'action': 'Realizar 60%, SL → entrada, trailing 0.8%'},
-                {'price': round(entry_avg - risk * 2.5, 2), 'r': 2.5, 'size_pct': 30, 'action': 'Realizar 30%'},
-                {'price': 'Trailing', 'r': 'Trailing', 'size_pct': 10, 'action': 'Trailing stop 0.8%'}
+                {'price': round(entry_avg - risk * 1.5, 2), 'r': 1.5, 'size_pct': 60, 'action': 'Realizar 60%', 'post_action': 'Mover SL para entrada + Ativar Trailing 0.8%'},
+                {'price': round(entry_avg - risk * 2.5, 2), 'r': 2.5, 'size_pct': 30, 'action': 'Realizar 30%', 'post_action': None},
+                {'price': 'Trailing', 'r': 'Trailing', 'size_pct': 10, 'action': 'Deixar no Trailing Stop 0.8%', 'post_action': None}
             ]
         
         return {
@@ -471,15 +471,15 @@ class AnalysisEngineV2:
         
         if direction == 'LONG':
             targets = [
-                {'price': round(entry_avg + risk * 2, 2), 'r': 2.0, 'size_pct': 40, 'action': 'Realizar 40%, SL → entrada'},
-                {'price': round(entry_avg + risk * 4, 2), 'r': 4.0, 'size_pct': 30, 'action': 'Realizar 30%, trailing 1.5%'},
-                {'price': 'Trailing', 'r': 'Trailing', 'size_pct': 30, 'action': 'Trailing stop 1.5%'}
+                {'price': round(entry_avg + risk * 2, 2), 'r': 2.0, 'size_pct': 40, 'action': 'Realizar 40%', 'post_action': 'Mover SL para entrada + Ativar Trailing 1.5%'},
+                {'price': round(entry_avg + risk * 4, 2), 'r': 4.0, 'size_pct': 30, 'action': 'Realizar 30%', 'post_action': None},
+                {'price': 'Trailing', 'r': 'Trailing', 'size_pct': 30, 'action': 'Deixar no Trailing Stop 1.5%', 'post_action': None}
             ]
         else:
             targets = [
-                {'price': round(entry_avg - risk * 2, 2), 'r': 2.0, 'size_pct': 40, 'action': 'Realizar 40%, SL → entrada'},
-                {'price': round(entry_avg - risk * 4, 2), 'r': 4.0, 'size_pct': 30, 'action': 'Realizar 30%, trailing 1.5%'},
-                {'price': 'Trailing', 'r': 'Trailing', 'size_pct': 30, 'action': 'Trailing stop 1.5%'}
+                {'price': round(entry_avg - risk * 2, 2), 'r': 2.0, 'size_pct': 40, 'action': 'Realizar 40%', 'post_action': 'Mover SL para entrada + Ativar Trailing 1.5%'},
+                {'price': round(entry_avg - risk * 4, 2), 'r': 4.0, 'size_pct': 30, 'action': 'Realizar 30%', 'post_action': None},
+                {'price': 'Trailing', 'r': 'Trailing', 'size_pct': 30, 'action': 'Deixar no Trailing Stop 1.5%', 'post_action': None}
             ]
         
         return {
@@ -537,9 +537,11 @@ class AnalysisEngineV2:
         
         for i, target in enumerate(call['targets'], 1):
             if target['price'] == 'Trailing':
-                lines.append(f"{i}. Trailing Stop {call['trailing_pct']}% → {target['size_pct']}%")
+                lines.append(f"{i}. {target['action']}")
             else:
-                lines.append(f"{i}. ${target['price']:,.2f} ({target['r']}R) → {target['size_pct']}%")
+                lines.append(f"{i}. ${target['price']:,.2f} ({target['r']}R) → {target['action']}")
+                if target.get('post_action'):
+                    lines.append(f"   ⚡ {target['post_action']}")
         
         lines.extend([
             f"",
