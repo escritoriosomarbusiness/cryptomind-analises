@@ -1,0 +1,1051 @@
+{
+  "timestamp": "2026-01-03T18:06:15.956570-03:00",
+  "date": "03/01/2026",
+  "time": "18:06",
+  "version": "2.0",
+  "macro": {
+    "fear_greed": {
+      "value": 29,
+      "classification": "Fear",
+      "timestamp": "1767398400"
+    },
+    "dominance": {
+      "btc_d": {
+        "dominance": 56.92,
+        "impact": "BEARISH",
+        "analysis": "BTC.D em 56.92% - Alta dominância, capital concentrado em BTC"
+      },
+      "usdt_d": {
+        "dominance": 5.92,
+        "impact": "NEUTRO",
+        "analysis": "USDT.D em 5.92% - Fluxo neutro"
+      }
+    },
+    "market_summary": {
+      "sentiment": "NEUTRO",
+      "bullish_score": 2,
+      "bearish_score": 1,
+      "bullish_assets": [
+        "BTC",
+        "ETH"
+      ],
+      "bearish_assets": [],
+      "neutral_assets": [
+        "SOL",
+        "BNB",
+        "XRP"
+      ],
+      "btc_d_impact": "BEARISH",
+      "usdt_d_impact": "NEUTRO",
+      "fear_greed_signal": "NEUTRO",
+      "recommendation": "Mercado misto. Operar com tamanho reduzido e priorizar setups de alta confluência."
+    }
+  },
+  "assets": {
+    "BTC": {
+      "symbol": "BTC",
+      "name": "Bitcoin",
+      "price": 90027,
+      "change_24h": 0.23,
+      "trend": {
+        "trend": "NEUTRO",
+        "strength": "CONSOLIDAÇÃO",
+        "price": 90036.98,
+        "ema_9": 88675.53,
+        "ema_21": 88646.47,
+        "ema_50": 92148.57,
+        "above_ema_9": true,
+        "above_ema_21": true,
+        "above_ema_50": false,
+        "ema_9_rising": true,
+        "ema_21_rising": true,
+        "ema_alignment": "MIXED"
+      },
+      "structure": {
+        "structure": "ALTA_FORMANDO",
+        "description": "Estrutura de alta em formação",
+        "last_high": 88577.42,
+        "last_low": 87156.56,
+        "hh": false,
+        "hl": true,
+        "lh": true,
+        "ll": false
+      },
+      "sr_levels": {
+        "supports": [
+          87156.56,
+          86281.5,
+          85450.33
+        ],
+        "resistances": [
+          92723.21,
+          93619.44,
+          105909.07
+        ],
+        "key_levels": [
+          106443.61,
+          84682.62,
+          86281.5,
+          93619.44,
+          101322.64
+        ],
+        "nearest_support": 87156.56,
+        "nearest_resistance": 92723.21
+      },
+      "indicators": {
+        "rsi": 60.59,
+        "rsi_status": "NEUTRO",
+        "macd": {
+          "macd": -401.1708,
+          "signal": -892.4169,
+          "histogram": 491.2461,
+          "trend": "BULLISH"
+        }
+      },
+      "bias": "BULLISH",
+      "bullish_factors": 2,
+      "bearish_factors": 0
+    },
+    "ETH": {
+      "symbol": "ETH",
+      "name": "Ethereum",
+      "price": 3106.81,
+      "change_24h": -0.63,
+      "trend": {
+        "trend": "NEUTRO",
+        "strength": "CONSOLIDAÇÃO",
+        "price": 3106.81,
+        "ema_9": 3018.32,
+        "ema_21": 3006.45,
+        "ema_50": 3141.9,
+        "above_ema_9": true,
+        "above_ema_21": true,
+        "above_ema_50": false,
+        "ema_9_rising": true,
+        "ema_21_rising": true,
+        "ema_alignment": "MIXED"
+      },
+      "structure": {
+        "structure": "ALTA_FORMANDO",
+        "description": "Estrutura de alta em formação",
+        "last_high": 3005.79,
+        "last_low": 2904.25,
+        "hh": false,
+        "hl": true,
+        "lh": true,
+        "ll": false
+      },
+      "sr_levels": {
+        "supports": [
+          2904.25,
+          2826.59,
+          2799.04
+        ],
+        "resistances": [
+          3195.41,
+          3326.26,
+          3576.25
+        ],
+        "key_levels": [
+          3296.74,
+          2799.04,
+          3749.22,
+          3801.79,
+          2764.74
+        ],
+        "nearest_support": 2904.25,
+        "nearest_resistance": 3195.41
+      },
+      "indicators": {
+        "rsi": 66.26,
+        "rsi_status": "NEUTRO",
+        "macd": {
+          "macd": -7.0569,
+          "signal": -32.2231,
+          "histogram": 25.1662,
+          "trend": "BULLISH"
+        }
+      },
+      "bias": "BULLISH",
+      "bullish_factors": 2,
+      "bearish_factors": 0
+    },
+    "SOL": {
+      "symbol": "SOL",
+      "name": "Solana",
+      "price": 131.38,
+      "change_24h": -0.22,
+      "trend": {
+        "trend": "BEARISH",
+        "strength": "MODERADA",
+        "price": 131.36,
+        "ema_9": 127.25,
+        "ema_21": 127.48,
+        "ema_50": 137.8,
+        "above_ema_9": true,
+        "above_ema_21": true,
+        "above_ema_50": false,
+        "ema_9_rising": true,
+        "ema_21_rising": true,
+        "ema_alignment": "BEARISH"
+      },
+      "structure": {
+        "structure": "ALTA",
+        "description": "Higher Highs + Higher Lows confirmados",
+        "last_high": 145.03,
+        "last_low": 120.09,
+        "hh": true,
+        "hl": true,
+        "lh": false,
+        "ll": false
+      },
+      "sr_levels": {
+        "supports": [
+          127.63,
+          126.75,
+          120.09
+        ],
+        "resistances": [
+          142.92,
+          145.03,
+          167.55
+        ],
+        "key_levels": [
+          127.63,
+          119.47,
+          178.31,
+          180.03,
+          131.64
+        ],
+        "nearest_support": 127.63,
+        "nearest_resistance": 142.92
+      },
+      "indicators": {
+        "rsi": 61.78,
+        "rsi_status": "NEUTRO",
+        "macd": {
+          "macd": -1.5836,
+          "signal": -3.1541,
+          "histogram": 1.5705,
+          "trend": "BULLISH"
+        }
+      },
+      "bias": "NEUTRO",
+      "bullish_factors": 2,
+      "bearish_factors": 2
+    },
+    "BNB": {
+      "symbol": "BNB",
+      "name": "BNB",
+      "price": 875.55,
+      "change_24h": -0.64,
+      "trend": {
+        "trend": "NEUTRO",
+        "strength": "CONSOLIDAÇÃO",
+        "price": 875.55,
+        "ema_9": 863.57,
+        "ema_21": 862.99,
+        "ema_50": 902.29,
+        "above_ema_9": true,
+        "above_ema_21": true,
+        "above_ema_50": false,
+        "ema_9_rising": true,
+        "ema_21_rising": true,
+        "ema_alignment": "MIXED"
+      },
+      "structure": {
+        "structure": "BAIXA",
+        "description": "Lower Highs + Lower Lows confirmados",
+        "last_high": 858.02,
+        "last_low": 828.87,
+        "hh": false,
+        "hl": false,
+        "lh": true,
+        "ll": true
+      },
+      "sr_levels": {
+        "supports": [
+          831.16,
+          829.17,
+          828.87
+        ],
+        "resistances": [
+          895.4,
+          922.35,
+          932.06
+        ],
+        "key_levels": [
+          831.16,
+          938.89,
+          1110.81,
+          1057.85,
+          1140.48
+        ],
+        "nearest_support": 831.16,
+        "nearest_resistance": 895.4
+      },
+      "indicators": {
+        "rsi": 59.86,
+        "rsi_status": "NEUTRO",
+        "macd": {
+          "macd": -4.3691,
+          "signal": -10.2239,
+          "histogram": 5.8548,
+          "trend": "BULLISH"
+        }
+      },
+      "bias": "NEUTRO",
+      "bullish_factors": 1,
+      "bearish_factors": 1
+    },
+    "XRP": {
+      "symbol": "XRP",
+      "name": "XRP",
+      "price": 2.0,
+      "change_24h": 0.32,
+      "trend": {
+        "trend": "BEARISH",
+        "strength": "MODERADA",
+        "price": 2.0,
+        "ema_9": 1.92,
+        "ema_21": 1.92,
+        "ema_50": 2.04,
+        "above_ema_9": true,
+        "above_ema_21": true,
+        "above_ema_50": false,
+        "ema_9_rising": true,
+        "ema_21_rising": true,
+        "ema_alignment": "BEARISH"
+      },
+      "structure": {
+        "structure": "ALTA_FORMANDO",
+        "description": "Estrutura de alta em formação",
+        "last_high": 1.93,
+        "last_low": 1.83,
+        "hh": false,
+        "hl": true,
+        "lh": true,
+        "ll": false
+      },
+      "sr_levels": {
+        "supports": [
+          1.95,
+          1.83,
+          1.81
+        ],
+        "resistances": [
+          2.11,
+          2.2,
+          2.22
+        ],
+        "key_levels": [
+          2.21,
+          1.95,
+          2.38,
+          2.3,
+          2.03
+        ],
+        "nearest_support": 1.95,
+        "nearest_resistance": 2.11
+      },
+      "indicators": {
+        "rsi": 58.33,
+        "rsi_status": "NEUTRO",
+        "macd": {
+          "macd": -0.0294,
+          "signal": -0.0538,
+          "histogram": 0.0244,
+          "trend": "BULLISH"
+        }
+      },
+      "bias": "NEUTRO",
+      "bullish_factors": 2,
+      "bearish_factors": 2
+    }
+  },
+  "setups": {
+    "BTC": [
+      {
+        "symbol": "BTC",
+        "ts_type": "TS1",
+        "ts_name": "Rompimento",
+        "direction": "LONG",
+        "entry_zone": {
+          "min": 90027,
+          "max": 92908.66
+        },
+        "stop_loss": 87156.56,
+        "targets": [
+          104412.85,
+          110164.95,
+          115917.04
+        ],
+        "risk_reward": 2.0,
+        "confidence_score": 6,
+        "confidence_level": "MÉDIA",
+        "reasoning": "Rompimento de resistência em $92723.21. RSI em 61, MACD BULLISH.",
+        "timestamp": "2026-01-03T18:06:15.955726-03:00",
+        "config": {
+          "risk_percent": 2.0,
+          "max_leverage": 10,
+          "min_rr": 2.0,
+          "expected_winrate": "45-55%",
+          "partial_1_pct": 50,
+          "partial_2_pct": 30,
+          "trailing_pct": 1.0,
+          "color": "#3B82F6"
+        },
+        "risk_plan": {
+          "symbol": "BTC",
+          "direction": "LONG",
+          "ts_type": "TS1",
+          "ts_name": "Rompimento",
+          "color": "#3B82F6",
+          "entry": {
+            "min": 90027,
+            "max": 92908.66,
+            "avg": 91467.83
+          },
+          "stop_loss": {
+            "price": 87156.56,
+            "distance_percent": 4.71
+          },
+          "risk_management": {
+            "risk_percent": 2.0,
+            "max_leverage": 10,
+            "suggested_leverage": 10,
+            "max_exposure": 5.0
+          },
+          "partials": [
+            {
+              "number": 1,
+              "target_price": 100090.37,
+              "size_percent": 50,
+              "rr_ratio": 2.0,
+              "action": "REALIZAR",
+              "after_action": [
+                "Subir stop para entrada (breakeven)",
+                "Ativar trailing stop de 1.0%"
+              ]
+            },
+            {
+              "number": 2,
+              "target_price": 104401.64,
+              "size_percent": 30,
+              "rr_ratio": 3.0,
+              "action": "REALIZAR",
+              "after_action": [
+                "Manter trailing stop ativo"
+              ]
+            },
+            {
+              "number": 3,
+              "target_price": "TRAILING",
+              "size_percent": 20,
+              "rr_ratio": "VARIÁVEL",
+              "action": "TRAILING STOP",
+              "after_action": [
+                "Deixar trailing de 1.0% até ser stopado"
+              ]
+            }
+          ],
+          "trailing": {
+            "activation_price": 100090.37,
+            "percent": 1.0
+          },
+          "metrics": {
+            "risk_reward": 3.0,
+            "expected_winrate": "45-55%"
+          }
+        }
+      },
+      {
+        "symbol": "BTC",
+        "ts_type": "TS1",
+        "ts_name": "Rompimento",
+        "direction": "SHORT",
+        "entry_zone": {
+          "min": 86982.25,
+          "max": 90027
+        },
+        "stop_loss": 92723.21,
+        "targets": [
+          75500.32,
+          69759.36,
+          64018.39
+        ],
+        "risk_reward": 2.0,
+        "confidence_score": 4,
+        "confidence_level": "BAIXA",
+        "reasoning": "Rompimento de suporte em $87156.56. RSI em 61, MACD BULLISH.",
+        "timestamp": "2026-01-03T18:06:15.955788-03:00",
+        "config": {
+          "risk_percent": 2.0,
+          "max_leverage": 10,
+          "min_rr": 2.0,
+          "expected_winrate": "45-55%",
+          "partial_1_pct": 50,
+          "partial_2_pct": 30,
+          "trailing_pct": 1.0,
+          "color": "#3B82F6"
+        },
+        "risk_plan": {
+          "symbol": "BTC",
+          "direction": "SHORT",
+          "ts_type": "TS1",
+          "ts_name": "Rompimento",
+          "color": "#3B82F6",
+          "entry": {
+            "min": 86982.25,
+            "max": 90027,
+            "avg": 88504.62
+          },
+          "stop_loss": {
+            "price": 92723.21,
+            "distance_percent": 4.77
+          },
+          "risk_management": {
+            "risk_percent": 2.0,
+            "max_leverage": 10,
+            "suggested_leverage": 10,
+            "max_exposure": 5.0
+          },
+          "partials": [
+            {
+              "number": 1,
+              "target_price": 80067.45,
+              "size_percent": 50,
+              "rr_ratio": 2.0,
+              "action": "REALIZAR",
+              "after_action": [
+                "Subir stop para entrada (breakeven)",
+                "Ativar trailing stop de 1.0%"
+              ]
+            },
+            {
+              "number": 2,
+              "target_price": 75848.87,
+              "size_percent": 30,
+              "rr_ratio": 3.0,
+              "action": "REALIZAR",
+              "after_action": [
+                "Manter trailing stop ativo"
+              ]
+            },
+            {
+              "number": 3,
+              "target_price": "TRAILING",
+              "size_percent": 20,
+              "rr_ratio": "VARIÁVEL",
+              "action": "TRAILING STOP",
+              "after_action": [
+                "Deixar trailing de 1.0% até ser stopado"
+              ]
+            }
+          ],
+          "trailing": {
+            "activation_price": 80067.45,
+            "percent": 1.0
+          },
+          "metrics": {
+            "risk_reward": 3.08,
+            "expected_winrate": "45-55%"
+          }
+        }
+      },
+      {
+        "symbol": "BTC",
+        "ts_type": "TS3",
+        "ts_name": "Reversão",
+        "direction": "SHORT",
+        "entry_zone": {
+          "min": 92259.59,
+          "max": 92908.66
+        },
+        "stop_loss": 94114.06,
+        "targets": [
+          84841.74,
+          81132.81,
+          87156.56
+        ],
+        "risk_reward": 4.0,
+        "confidence_score": 2,
+        "confidence_level": "SEM SETUP",
+        "reasoning": "Reversão em resistência forte $92723.21. RSI sobrecomprado em 61. Nível chave histórico.",
+        "timestamp": "2026-01-03T18:06:15.955842-03:00",
+        "config": {
+          "risk_percent": 1.0,
+          "max_leverage": 5,
+          "min_rr": 4.0,
+          "expected_winrate": "30-40%",
+          "partial_1_pct": 40,
+          "partial_2_pct": 30,
+          "trailing_pct": 1.5,
+          "color": "#F97316"
+        },
+        "risk_plan": {
+          "symbol": "BTC",
+          "direction": "SHORT",
+          "ts_type": "TS3",
+          "ts_name": "Reversão",
+          "color": "#F97316",
+          "entry": {
+            "min": 92259.59,
+            "max": 92908.66,
+            "avg": 92584.12
+          },
+          "stop_loss": {
+            "price": 94114.06,
+            "distance_percent": 1.65
+          },
+          "risk_management": {
+            "risk_percent": 1.0,
+            "max_leverage": 5,
+            "suggested_leverage": 5,
+            "max_exposure": 5.0
+          },
+          "partials": [
+            {
+              "number": 1,
+              "target_price": 86464.39,
+              "size_percent": 40,
+              "rr_ratio": 4.0,
+              "action": "REALIZAR",
+              "after_action": [
+                "Subir stop para entrada (breakeven)",
+                "Ativar trailing stop de 1.5%"
+              ]
+            },
+            {
+              "number": 2,
+              "target_price": 83404.52,
+              "size_percent": 30,
+              "rr_ratio": 6.0,
+              "action": "REALIZAR",
+              "after_action": [
+                "Manter trailing stop ativo"
+              ]
+            },
+            {
+              "number": 3,
+              "target_price": "TRAILING",
+              "size_percent": 30,
+              "rr_ratio": "VARIÁVEL",
+              "action": "TRAILING STOP",
+              "after_action": [
+                "Deixar trailing de 1.5% até ser stopado"
+              ]
+            }
+          ],
+          "trailing": {
+            "activation_price": 86464.39,
+            "percent": 1.5
+          },
+          "metrics": {
+            "risk_reward": 5.06,
+            "expected_winrate": "30-40%"
+          }
+        }
+      }
+    ],
+    "ETH": [
+      {
+        "symbol": "ETH",
+        "ts_type": "TS1",
+        "ts_name": "Rompimento",
+        "direction": "LONG",
+        "entry_zone": {
+          "min": 3106.81,
+          "max": 3201.8
+        },
+        "stop_loss": 2904.25,
+        "targets": [
+          3796.9,
+          4094.45,
+          4392.0
+        ],
+        "risk_reward": 2.0,
+        "confidence_score": 6,
+        "confidence_level": "MÉDIA",
+        "reasoning": "Rompimento de resistência em $3195.41. RSI em 66, MACD BULLISH.",
+        "timestamp": "2026-01-03T18:06:15.955928-03:00",
+        "config": {
+          "risk_percent": 2.0,
+          "max_leverage": 10,
+          "min_rr": 2.0,
+          "expected_winrate": "45-55%",
+          "partial_1_pct": 50,
+          "partial_2_pct": 30,
+          "trailing_pct": 1.0,
+          "color": "#3B82F6"
+        },
+        "risk_plan": {
+          "symbol": "ETH",
+          "direction": "LONG",
+          "ts_type": "TS1",
+          "ts_name": "Rompimento",
+          "color": "#3B82F6",
+          "entry": {
+            "min": 3106.81,
+            "max": 3201.8,
+            "avg": 3154.31
+          },
+          "stop_loss": {
+            "price": 2904.25,
+            "distance_percent": 7.93
+          },
+          "risk_management": {
+            "risk_percent": 2.0,
+            "max_leverage": 10,
+            "suggested_leverage": 10,
+            "max_exposure": 5.0
+          },
+          "partials": [
+            {
+              "number": 1,
+              "target_price": 3654.42,
+              "size_percent": 50,
+              "rr_ratio": 2.0,
+              "action": "REALIZAR",
+              "after_action": [
+                "Subir stop para entrada (breakeven)",
+                "Ativar trailing stop de 1.0%"
+              ]
+            },
+            {
+              "number": 2,
+              "target_price": 3904.47,
+              "size_percent": 30,
+              "rr_ratio": 3.0,
+              "action": "REALIZAR",
+              "after_action": [
+                "Manter trailing stop ativo"
+              ]
+            },
+            {
+              "number": 3,
+              "target_price": "TRAILING",
+              "size_percent": 20,
+              "rr_ratio": "VARIÁVEL",
+              "action": "TRAILING STOP",
+              "after_action": [
+                "Deixar trailing de 1.0% até ser stopado"
+              ]
+            }
+          ],
+          "trailing": {
+            "activation_price": 3654.42,
+            "percent": 1.0
+          },
+          "metrics": {
+            "risk_reward": 2.57,
+            "expected_winrate": "45-55%"
+          }
+        }
+      }
+    ],
+    "SOL": [
+      {
+        "symbol": "SOL",
+        "ts_type": "TS1",
+        "ts_name": "Rompimento",
+        "direction": "SHORT",
+        "entry_zone": {
+          "min": 127.37,
+          "max": 131.38
+        },
+        "stop_loss": 142.92,
+        "targets": [
+          96.28,
+          80.74,
+          65.19
+        ],
+        "risk_reward": 2.0,
+        "confidence_score": 4,
+        "confidence_level": "BAIXA",
+        "reasoning": "Rompimento de suporte em $127.63. RSI em 62, MACD BULLISH.",
+        "timestamp": "2026-01-03T18:06:15.956004-03:00",
+        "config": {
+          "risk_percent": 2.0,
+          "max_leverage": 10,
+          "min_rr": 2.0,
+          "expected_winrate": "45-55%",
+          "partial_1_pct": 50,
+          "partial_2_pct": 30,
+          "trailing_pct": 1.0,
+          "color": "#3B82F6"
+        },
+        "risk_plan": {
+          "symbol": "SOL",
+          "direction": "SHORT",
+          "ts_type": "TS1",
+          "ts_name": "Rompimento",
+          "color": "#3B82F6",
+          "entry": {
+            "min": 127.37,
+            "max": 131.38,
+            "avg": 129.38
+          },
+          "stop_loss": {
+            "price": 142.92,
+            "distance_percent": 10.47
+          },
+          "risk_management": {
+            "risk_percent": 2.0,
+            "max_leverage": 10,
+            "suggested_leverage": 10,
+            "max_exposure": 5.0
+          },
+          "partials": [
+            {
+              "number": 1,
+              "target_price": 102.29,
+              "size_percent": 50,
+              "rr_ratio": 2.0,
+              "action": "REALIZAR",
+              "after_action": [
+                "Subir stop para entrada (breakeven)",
+                "Ativar trailing stop de 1.0%"
+              ]
+            },
+            {
+              "number": 2,
+              "target_price": 88.74,
+              "size_percent": 30,
+              "rr_ratio": 3.0,
+              "action": "REALIZAR",
+              "after_action": [
+                "Manter trailing stop ativo"
+              ]
+            },
+            {
+              "number": 3,
+              "target_price": "TRAILING",
+              "size_percent": 20,
+              "rr_ratio": "VARIÁVEL",
+              "action": "TRAILING STOP",
+              "after_action": [
+                "Deixar trailing de 1.0% até ser stopado"
+              ]
+            }
+          ],
+          "trailing": {
+            "activation_price": 102.29,
+            "percent": 1.0
+          },
+          "metrics": {
+            "risk_reward": 2.44,
+            "expected_winrate": "45-55%"
+          }
+        }
+      }
+    ],
+    "BNB": [
+      {
+        "symbol": "BNB",
+        "ts_type": "TS1",
+        "ts_name": "Rompimento",
+        "direction": "LONG",
+        "entry_zone": {
+          "min": 875.55,
+          "max": 897.19
+        },
+        "stop_loss": 831.16,
+        "targets": [
+          1029.25,
+          1095.28,
+          1161.31
+        ],
+        "risk_reward": 2.0,
+        "confidence_score": 7,
+        "confidence_level": "MÉDIA",
+        "reasoning": "Rompimento de resistência em $895.40. RSI em 60, MACD BULLISH.",
+        "timestamp": "2026-01-03T18:06:15.956056-03:00",
+        "config": {
+          "risk_percent": 2.0,
+          "max_leverage": 10,
+          "min_rr": 2.0,
+          "expected_winrate": "45-55%",
+          "partial_1_pct": 50,
+          "partial_2_pct": 30,
+          "trailing_pct": 1.0,
+          "color": "#3B82F6"
+        },
+        "risk_plan": {
+          "symbol": "BNB",
+          "direction": "LONG",
+          "ts_type": "TS1",
+          "ts_name": "Rompimento",
+          "color": "#3B82F6",
+          "entry": {
+            "min": 875.55,
+            "max": 897.19,
+            "avg": 886.37
+          },
+          "stop_loss": {
+            "price": 831.16,
+            "distance_percent": 6.23
+          },
+          "risk_management": {
+            "risk_percent": 2.0,
+            "max_leverage": 10,
+            "suggested_leverage": 10,
+            "max_exposure": 5.0
+          },
+          "partials": [
+            {
+              "number": 1,
+              "target_price": 996.79,
+              "size_percent": 50,
+              "rr_ratio": 2.0,
+              "action": "REALIZAR",
+              "after_action": [
+                "Subir stop para entrada (breakeven)",
+                "Ativar trailing stop de 1.0%"
+              ]
+            },
+            {
+              "number": 2,
+              "target_price": 1052.0,
+              "size_percent": 30,
+              "rr_ratio": 3.0,
+              "action": "REALIZAR",
+              "after_action": [
+                "Manter trailing stop ativo"
+              ]
+            },
+            {
+              "number": 3,
+              "target_price": "TRAILING",
+              "size_percent": 20,
+              "rr_ratio": "VARIÁVEL",
+              "action": "TRAILING STOP",
+              "after_action": [
+                "Deixar trailing de 1.0% até ser stopado"
+              ]
+            }
+          ],
+          "trailing": {
+            "activation_price": 996.79,
+            "percent": 1.0
+          },
+          "metrics": {
+            "risk_reward": 2.59,
+            "expected_winrate": "45-55%"
+          }
+        }
+      }
+    ],
+    "XRP": [
+      {
+        "symbol": "XRP",
+        "ts_type": "TS1",
+        "ts_name": "Rompimento",
+        "direction": "SHORT",
+        "entry_zone": {
+          "min": 1.95,
+          "max": 2.0
+        },
+        "stop_loss": 2.11,
+        "targets": [
+          1.62,
+          1.45,
+          1.29
+        ],
+        "risk_reward": 2.0,
+        "confidence_score": 5,
+        "confidence_level": "MÉDIA",
+        "reasoning": "Rompimento de suporte em $1.95. RSI em 58, MACD BULLISH.",
+        "timestamp": "2026-01-03T18:06:15.956149-03:00",
+        "config": {
+          "risk_percent": 2.0,
+          "max_leverage": 10,
+          "min_rr": 2.0,
+          "expected_winrate": "45-55%",
+          "partial_1_pct": 50,
+          "partial_2_pct": 30,
+          "trailing_pct": 1.0,
+          "color": "#3B82F6"
+        },
+        "risk_plan": {
+          "symbol": "XRP",
+          "direction": "SHORT",
+          "ts_type": "TS1",
+          "ts_name": "Rompimento",
+          "color": "#3B82F6",
+          "entry": {
+            "min": 1.95,
+            "max": 2.0,
+            "avg": 1.98
+          },
+          "stop_loss": {
+            "price": 2.11,
+            "distance_percent": 6.84
+          },
+          "risk_management": {
+            "risk_percent": 2.0,
+            "max_leverage": 10,
+            "suggested_leverage": 10,
+            "max_exposure": 5.0
+          },
+          "partials": [
+            {
+              "number": 1,
+              "target_price": 1.71,
+              "size_percent": 50,
+              "rr_ratio": 2.0,
+              "action": "REALIZAR",
+              "after_action": [
+                "Subir stop para entrada (breakeven)",
+                "Ativar trailing stop de 1.0%"
+              ]
+            },
+            {
+              "number": 2,
+              "target_price": 1.57,
+              "size_percent": 30,
+              "rr_ratio": 3.0,
+              "action": "REALIZAR",
+              "after_action": [
+                "Manter trailing stop ativo"
+              ]
+            },
+            {
+              "number": 3,
+              "target_price": "TRAILING",
+              "size_percent": 20,
+              "rr_ratio": "VARIÁVEL",
+              "action": "TRAILING STOP",
+              "after_action": [
+                "Deixar trailing de 1.0% até ser stopado"
+              ]
+            }
+          ],
+          "trailing": {
+            "activation_price": 1.71,
+            "percent": 1.0
+          },
+          "metrics": {
+            "risk_reward": 2.63,
+            "expected_winrate": "45-55%"
+          }
+        }
+      }
+    ]
+  },
+  "summary": {
+    "total_setups": 7,
+    "high_confidence": 0,
+    "medium_confidence": 4,
+    "low_confidence": 3,
+    "by_ts_type": {
+      "TS1": 6,
+      "TS2": 0,
+      "TS3": 1
+    },
+    "by_direction": {
+      "LONG": 3,
+      "SHORT": 4
+    }
+  }
+}

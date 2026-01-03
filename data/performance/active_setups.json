@@ -1,0 +1,134 @@
+[
+  {
+    "id": "BTC_TS1_LONG_20260103160217",
+    "symbol": "BTC",
+    "direction": "LONG",
+    "ts_type": "TS1",
+    "ts_name": "Rompimento",
+    "confidence_score": 6,
+    "entry_min": 90027,
+    "entry_max": 92908.66,
+    "stop_loss": 87156.56,
+    "targets": [
+      {
+        "price": 100090.37,
+        "rr": 2.0,
+        "size": 50,
+        "hit": false
+      },
+      {
+        "price": 104401.64,
+        "rr": 3.0,
+        "size": 30,
+        "hit": false
+      }
+    ],
+    "status": "ACTIVE",
+    "created_at": "2026-01-03T18:02:17.762941-03:00",
+    "activated_at": "2026-01-03T18:02:22.836005-03:00",
+    "closed_at": null,
+    "entry_price": 90295,
+    "exit_price": null,
+    "result_r": 0.0,
+    "partial_hits": 0
+  },
+  {
+    "id": "ETH_TS1_LONG_20260103160217",
+    "symbol": "ETH",
+    "direction": "LONG",
+    "ts_type": "TS1",
+    "ts_name": "Rompimento",
+    "confidence_score": 6,
+    "entry_min": 3106.81,
+    "entry_max": 3201.8,
+    "stop_loss": 2904.25,
+    "targets": [
+      {
+        "price": 3654.42,
+        "rr": 2.0,
+        "size": 50,
+        "hit": false
+      },
+      {
+        "price": 3904.47,
+        "rr": 3.0,
+        "size": 30,
+        "hit": false
+      }
+    ],
+    "status": "ACTIVE",
+    "created_at": "2026-01-03T18:02:17.763257-03:00",
+    "activated_at": "2026-01-03T18:02:22.836070-03:00",
+    "closed_at": null,
+    "entry_price": 3113.82,
+    "exit_price": null,
+    "result_r": 0.0,
+    "partial_hits": 0
+  },
+  {
+    "id": "BNB_TS1_LONG_20260103160217",
+    "symbol": "BNB",
+    "direction": "LONG",
+    "ts_type": "TS1",
+    "ts_name": "Rompimento",
+    "confidence_score": 7,
+    "entry_min": 875.55,
+    "entry_max": 897.19,
+    "stop_loss": 831.16,
+    "targets": [
+      {
+        "price": 996.79,
+        "rr": 2.0,
+        "size": 50,
+        "hit": false
+      },
+      {
+        "price": 1052.0,
+        "rr": 3.0,
+        "size": 30,
+        "hit": false
+      }
+    ],
+    "status": "ACTIVE",
+    "created_at": "2026-01-03T18:02:17.763501-03:00",
+    "activated_at": "2026-01-03T18:02:22.836089-03:00",
+    "closed_at": null,
+    "entry_price": 876.88,
+    "exit_price": null,
+    "result_r": 0.0,
+    "partial_hits": 0
+  },
+  {
+    "id": "XRP_TS1_SHORT_20260103160217",
+    "symbol": "XRP",
+    "direction": "SHORT",
+    "ts_type": "TS1",
+    "ts_name": "Rompimento",
+    "confidence_score": 5,
+    "entry_min": 1.95,
+    "entry_max": 2.0,
+    "stop_loss": 2.11,
+    "targets": [
+      {
+        "price": 1.71,
+        "rr": 2.0,
+        "size": 50,
+        "hit": false
+      },
+      {
+        "price": 1.57,
+        "rr": 3.0,
+        "size": 30,
+        "hit": false
+      }
+    ],
+    "status": "WAITING",
+    "created_at": "2026-01-03T18:02:17.763987-03:00",
+    "activated_at": null,
+    "closed_at": null,
+    "entry_price": null,
+    "exit_price": null,
+    "result_r": 0.0,
+    "partial_hits": 0
+  }
+]

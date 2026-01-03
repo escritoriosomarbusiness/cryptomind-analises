@@ -1,0 +1,44 @@
+{
+  "total_setups": 4,
+  "wins": 0,
+  "losses": 0,
+  "breakeven": 0,
+  "active": 4,
+  "win_rate": 0.0,
+  "profit_factor": 0.0,
+  "total_r_gained": 0.0,
+  "total_r_lost": 0.0,
+  "best_trade": null,
+  "worst_trade": null,
+  "by_ts_type": {
+    "TS1": {
+      "wins": 0,
+      "losses": 0,
+      "total_r": 0.0
+    },
+    "TS2": {
+      "wins": 0,
+      "losses": 0,
+      "total_r": 0.0
+    },
+    "TS3": {
+      "wins": 0,
+      "losses": 0,
+      "total_r": 0.0
+    }
+  },
+  "by_asset": {},
+  "by_direction": {
+    "LONG": {
+      "wins": 0,
+      "losses": 0,
+      "total_r": 0.0
+    },
+    "SHORT": {
+      "wins": 0,
+      "losses": 0,
+      "total_r": 0.0
+    }
+  },
+  "last_updated": "2026-01-03T18:06:32.481352-03:00"
+}

@@ -1,0 +1,15 @@
+{
+  "chat_ids": [
+    1372841832
+  ],
+  "admin_ids": [
+    1372841832
+  ],
+  "settings": {
+    "send_daily_analysis": true,
+    "send_setups": true,
+    "send_weekly_report": true,
+    "send_monthly_report": true,
+    "min_score_alert": 5
+  }
+}
