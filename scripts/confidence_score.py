@@ -24,12 +24,6 @@ class ConfidenceScoreCalculator:
     Calculadora de Score de Confiança.
     
     ALGORITMO PROPRIETÁRIO - NÃO EXPOR DETALHES AO USUÁRIO
-    
-    O score é calculado com base em múltiplos fatores:
-    - Contexto macro (USDT.D, BTC.D, Fear & Greed)
-    - Alinhamento de tendência em múltiplos timeframes
-    - Indicadores técnicos
-    - Critérios específicos do tipo de Trading System
     """
     
     # Pesos internos (CONFIDENCIAL)
@@ -44,474 +38,312 @@ class ConfidenceScoreCalculator:
             'h4_alignment': 1.0
         },
         'ts_specific': {
-            'TS1': {  # Rompimento
+            'TS1': {
                 'volume': 1.0,
                 'candle_strength': 1.0,
                 'sr_tested': 1.0,
                 'clear_path': 1.0,
-                'adx_dmi': 1.0
+                'adx': 1.0
             },
-            'TS2': {  # Continuação
+            'TS2': {
+                'ema_touch': 1.0,
                 'trend_strength': 1.0,
-                'structure_confirmed': 1.0,
-                'pullback_quality': 1.0,
-                'ema_respect': 1.0,
-                'macd_confirmation': 1.0
+                'pullback_depth': 1.0,
+                'volume_dry': 1.0,
+                'higher_tf_support': 1.0
             },
-            'TS3': {  # Reversão
-                'rsi_extreme': 1.5,  # Peso maior
-                'key_level': 1.5,    # Peso maior
-                'divergence': 1.0,
-                'rejection_candle': 1.0,
-                'exhaustion_volume': 1.0
+            'TS3': {
+                'divergence': 1.5,
+                'extreme_rsi': 1.0,
+                'sr_rejection': 1.0,
+                'reversal_candle': 1.0,
+                'volume_spike': 0.5
             }
         }
     }
     
-    def __init__(self, asset_data: Dict, market_context: Dict, ts_type: str, direction: str):
+    def __init__(self):
+        """Inicializa a calculadora de score"""
+        pass
+    
+    def calculate(self, setup: Dict, macro_data: Dict) -> Dict:
         """
-        Inicializa a calculadora.
+        Calcula o score de confiança para um setup.
         
         Args:
-            asset_data: Dados do ativo
-            market_context: Contexto de mercado
-            ts_type: Tipo do Trading System (TS1, TS2, TS3)
-            direction: Direção (LONG, SHORT)
-        """
-        self.asset = asset_data
-        self.context = market_context
-        self.ts_type = ts_type
-        self.direction = direction
-        self._score_breakdown = {}  # Para debug interno apenas
-    
-    def calculate(self) -> Tuple[int, ConfidenceLevel]:
-        """
-        Calcula o score de confiança.
-        
+            setup: Dicionário com dados do setup
+            macro_data: Dados macro (Fear & Greed, BTC.D, USDT.D)
+            
         Returns:
-            Tuple com (score 0-10, nível de confiança)
+            Dicionário com score, label e stars
         """
-        total_score = 0
-        max_possible = 10
+        total_score = 0.0
+        
+        direction = setup.get('direction', 'LONG')
+        ts = setup.get('ts', 'TS1')
+        symbol = setup.get('symbol', '')
+        is_long = direction == 'LONG'
         
         # Componente 1: Macro (3 pontos)
-        macro_score = self._calculate_macro_score()
+        macro_score = self._calc_macro(macro_data, is_long, symbol)
         total_score += macro_score
-        self._score_breakdown['macro'] = macro_score
         
         # Componente 2: Tendência (2 pontos)
-        trend_score = self._calculate_trend_score()
+        trend_score = self._calc_trend(setup, is_long)
         total_score += trend_score
-        self._score_breakdown['trend'] = trend_score
         
         # Componente 3: Específico do TS (5 pontos)
-        ts_score = self._calculate_ts_specific_score()
+        ts_score = self._calc_ts_specific(setup, ts)
         total_score += ts_score
-        self._score_breakdown['ts_specific'] = ts_score
         
         # Normalizar para 0-10
-        final_score = min(int(total_score), 10)
+        final_score = min(int(round(total_score)), 10)
         
-        # Determinar nível
-        level = self._get_confidence_level(final_score)
+        # Determinar nível e estrelas
+        if final_score >= 8:
+            level = ConfidenceLevel.HIGH
+            stars = "⭐⭐⭐"
+        elif final_score >= 5:
+            level = ConfidenceLevel.MEDIUM
+            stars = "⭐⭐"
+        elif final_score >= 3:
+            level = ConfidenceLevel.LOW
+            stars = "⭐"
+        else:
+            level = ConfidenceLevel.NO_SETUP
+            stars = "❌"
         
-        return final_score, level
+        return {
+            'score': final_score,
+            'label': level.value,
+            'stars': stars
+        }
     
-    def _calculate_macro_score(self) -> float:
-        """Calcula pontuação do contexto macro."""
+    def _calc_macro(self, macro_data: Dict, is_long: bool, symbol: str) -> float:
+        """Calcula pontuação do contexto macro (máx 3 pontos)"""
         score = 0.0
-        is_long = self.direction == "LONG"
         
-        # USDT.D
-        usdt_d = self.context.get('dominance', {}).get('usdt_d', {})
-        usdt_impact = usdt_d.get('impact', 'NEUTRO')
+        # Fear & Greed (1 ponto)
+        fg = macro_data.get('fear_greed', 50)
+        if is_long:
+            # Para LONG: medo (< 40) é bom, ganância (> 60) é ruim
+            if fg < 30:
+                score += 1.0
+            elif fg < 45:
+                score += 0.7
+            elif fg < 55:
+                score += 0.5
+            elif fg < 70:
+                score += 0.3
+            # > 70: 0 pontos
+        else:
+            # Para SHORT: ganância é bom
+            if fg > 70:
+                score += 1.0
+            elif fg > 55:
+                score += 0.7
+            elif fg > 45:
+                score += 0.5
+            elif fg > 30:
+                score += 0.3
+        
+        # USDT.D (1 ponto)
+        usdt_d = macro_data.get('usdt_d', {})
+        usdt_below_emas = usdt_d.get('below_emas', False)
+        usdt_trend = usdt_d.get('trend', 'neutral')
         
         if is_long:
-            if usdt_impact == 'BULLISH':
-                score += self._WEIGHTS['macro']['usdt_d']
-            elif usdt_impact == 'NEUTRO':
-                score += self._WEIGHTS['macro']['usdt_d'] * 0.5
+            # USDT.D caindo = bullish para cripto
+            if usdt_below_emas and usdt_trend == 'bearish':
+                score += 1.0
+            elif usdt_below_emas:
+                score += 0.5
         else:
-            if usdt_impact == 'BEARISH':
-                score += self._WEIGHTS['macro']['usdt_d']
-            elif usdt_impact == 'NEUTRO':
-                score += self._WEIGHTS['macro']['usdt_d'] * 0.5
+            # USDT.D subindo = bearish para cripto
+            if not usdt_below_emas and usdt_trend == 'bullish':
+                score += 1.0
+            elif not usdt_below_emas:
+                score += 0.5
         
-        # BTC.D (para altcoins)
-        symbol = self.asset.get('symbol', '')
+        # BTC.D (1 ponto) - apenas para altcoins
         if symbol != 'BTC':
-            btc_d = self.context.get('dominance', {}).get('btc_d', {})
-            btc_impact = btc_d.get('impact', 'NEUTRO')
+            btc_d = macro_data.get('btc_d', {})
+            btc_trend = btc_d.get('trend', 'neutral')
             
-            # Para altcoins: BTC.D caindo é bullish
             if is_long:
-                if btc_impact == 'BEARISH':  # BTC.D caindo
-                    score += self._WEIGHTS['macro']['btc_d']
-                elif btc_impact == 'NEUTRO':
-                    score += self._WEIGHTS['macro']['btc_d'] * 0.5
+                # BTC.D caindo = bullish para altcoins
+                if btc_trend == 'bearish':
+                    score += 1.0
+                elif btc_trend == 'neutral':
+                    score += 0.5
             else:
-                if btc_impact == 'BULLISH':  # BTC.D subindo
-                    score += self._WEIGHTS['macro']['btc_d']
-                elif btc_impact == 'NEUTRO':
-                    score += self._WEIGHTS['macro']['btc_d'] * 0.5
+                # BTC.D subindo = bearish para altcoins
+                if btc_trend == 'bullish':
+                    score += 1.0
+                elif btc_trend == 'neutral':
+                    score += 0.5
         else:
-            # BTC não é afetado por BTC.D da mesma forma
-            score += self._WEIGHTS['macro']['btc_d'] * 0.5
-        
-        # Fear & Greed
-        fg = self.context.get('fear_greed', {})
-        fg_value = fg.get('value', 50)
-        
-        if is_long:
-            # Medo = oportunidade de compra
-            if fg_value < 25:
-                score += self._WEIGHTS['macro']['fear_greed']
-            elif fg_value < 40:
-                score += self._WEIGHTS['macro']['fear_greed'] * 0.7
-            elif fg_value < 50:
-                score += self._WEIGHTS['macro']['fear_greed'] * 0.5
-        else:
-            # Ganância = oportunidade de venda
-            if fg_value > 75:
-                score += self._WEIGHTS['macro']['fear_greed']
-            elif fg_value > 60:
-                score += self._WEIGHTS['macro']['fear_greed'] * 0.7
-            elif fg_value > 50:
-                score += self._WEIGHTS['macro']['fear_greed'] * 0.5
+            # Para BTC, dar ponto neutro
+            score += 0.5
         
         return min(score, 3.0)
     
-    def _calculate_trend_score(self) -> float:
-        """Calcula pontuação do alinhamento de tendência."""
+    def _calc_trend(self, setup: Dict, is_long: bool) -> float:
+        """Calcula pontuação de alinhamento de tendência (máx 2 pontos)"""
         score = 0.0
-        is_long = self.direction == "LONG"
         
-        trend = self.asset.get('trend', {})
-        trend_direction = trend.get('trend', 'NEUTRO')
-        ema_alignment = trend.get('ema_alignment', 'MIXED')
-        strength = trend.get('strength', 'FRACA')
+        # Verificar se preço está acima/abaixo das EMAs
+        current_price = setup.get('current_price', 0)
+        ema_9 = setup.get('ema_9', 0)
+        ema_21 = setup.get('ema_21', 0)
+        ema_200 = setup.get('ema_200', 0)
         
-        # Tendência D1/H4 alinhada
         if is_long:
-            if trend_direction == 'BULLISH':
-                score += self._WEIGHTS['trend']['d1_alignment']
-                if strength in ['FORTE', 'MODERADA']:
-                    score += self._WEIGHTS['trend']['h4_alignment'] * 0.5
-            elif trend_direction == 'NEUTRO':
-                score += self._WEIGHTS['trend']['d1_alignment'] * 0.5
+            # Para LONG: preço acima das EMAs
+            if current_price > ema_200:
+                score += 0.5
+            if current_price > ema_21:
+                score += 0.5
+            if ema_9 > ema_21:
+                score += 0.5
+            if ema_21 > ema_200:
+                score += 0.5
         else:
-            if trend_direction == 'BEARISH':
-                score += self._WEIGHTS['trend']['d1_alignment']
-                if strength in ['FORTE', 'MODERADA']:
-                    score += self._WEIGHTS['trend']['h4_alignment'] * 0.5
-            elif trend_direction == 'NEUTRO':
-                score += self._WEIGHTS['trend']['d1_alignment'] * 0.5
-        
-        # EMA alignment
-        if is_long and ema_alignment == 'BULLISH':
-            score += self._WEIGHTS['trend']['h4_alignment'] * 0.5
-        elif not is_long and ema_alignment == 'BEARISH':
-            score += self._WEIGHTS['trend']['h4_alignment'] * 0.5
+            # Para SHORT: preço abaixo das EMAs
+            if current_price < ema_200:
+                score += 0.5
+            if current_price < ema_21:
+                score += 0.5
+            if ema_9 < ema_21:
+                score += 0.5
+            if ema_21 < ema_200:
+                score += 0.5
         
         return min(score, 2.0)
     
-    def _calculate_ts_specific_score(self) -> float:
-        """Calcula pontuação específica do Trading System."""
-        if self.ts_type == 'TS1':
-            return self._calculate_breakout_specific()
-        elif self.ts_type == 'TS2':
-            return self._calculate_continuation_specific()
-        elif self.ts_type == 'TS3':
-            return self._calculate_reversal_specific()
-        return 0.0
-    
-    def _calculate_breakout_specific(self) -> float:
-        """Critérios específicos para rompimento."""
+    def _calc_ts_specific(self, setup: Dict, ts: str) -> float:
+        """Calcula pontuação específica do Trading System (máx 5 pontos)"""
         score = 0.0
-        weights = self._WEIGHTS['ts_specific']['TS1']
-        is_long = self.direction == "LONG"
         
-        indicators = self.asset.get('indicators', {})
-        trend = self.asset.get('trend', {})
-        sr_levels = self.asset.get('sr_levels', {})
+        rsi = setup.get('rsi', 50)
+        volume_above_avg = setup.get('volume_above_avg', False)
+        sr_tested = setup.get('sr_tested', 1)
+        candle_strength = setup.get('candle_strength', 0.5)
         
-        rsi = indicators.get('rsi', 50)
-        macd = indicators.get('macd', {})
-        
-        # Volume implícito (baseado em momentum)
-        macd_histogram = macd.get('histogram', 0)
-        if is_long and macd_histogram > 0:
-            score += weights['volume']
-        elif not is_long and macd_histogram < 0:
-            score += weights['volume']
-        
-        # Força do candle (RSI não em extremo)
-        if 40 <= rsi <= 60:
-            score += weights['candle_strength']
-        elif 35 <= rsi <= 65:
-            score += weights['candle_strength'] * 0.5
-        
-        # SR testada (baseado em key levels)
-        key_levels = sr_levels.get('key_levels', [])
-        if len(key_levels) >= 3:
-            score += weights['sr_tested']
-        elif len(key_levels) >= 1:
-            score += weights['sr_tested'] * 0.5
-        
-        # Caminho livre (distância para próxima SR)
-        resistances = sr_levels.get('resistances', [])
-        supports = sr_levels.get('supports', [])
-        price = self.asset.get('price', 0)
-        
-        if is_long and resistances:
-            distance = (resistances[0] - price) / price * 100
-            if distance > 3:
-                score += weights['clear_path']
-            elif distance > 1.5:
-                score += weights['clear_path'] * 0.5
-        elif not is_long and supports:
-            distance = (price - supports[0]) / price * 100
-            if distance > 3:
-                score += weights['clear_path']
-            elif distance > 1.5:
-                score += weights['clear_path'] * 0.5
-        
-        # ADX/DMI (baseado em MACD trend)
-        macd_trend = macd.get('trend', 'NEUTRO')
-        if is_long and macd_trend == 'BULLISH':
-            score += weights['adx_dmi']
-        elif not is_long and macd_trend == 'BEARISH':
-            score += weights['adx_dmi']
+        if ts == 'TS1':  # Rompimento
+            # Volume no rompimento
+            if volume_above_avg:
+                score += 1.0
+            
+            # Força do candle de rompimento
+            if candle_strength > 0.7:
+                score += 1.0
+            elif candle_strength > 0.5:
+                score += 0.5
+            
+            # SR testada múltiplas vezes
+            if sr_tested >= 3:
+                score += 1.0
+            elif sr_tested >= 2:
+                score += 0.5
+            
+            # RSI não em extremo
+            if 40 <= rsi <= 60:
+                score += 1.0
+            elif 30 <= rsi <= 70:
+                score += 0.5
+            
+            # Espaço para movimento
+            score += 1.0  # Assumir que já foi validado
+            
+        elif ts == 'TS2':  # Continuação
+            # Pullback tocou EMA
+            if setup.get('touched_ema', False):
+                score += 1.0
+            
+            # Tendência forte
+            if setup.get('trend_strong', False):
+                score += 1.0
+            
+            # Profundidade do pullback adequada
+            pullback_depth = setup.get('pullback_depth', 0)
+            if 0.3 <= pullback_depth <= 0.6:
+                score += 1.0
+            elif 0.2 <= pullback_depth <= 0.7:
+                score += 0.5
+            
+            # Volume secando no pullback
+            if setup.get('volume_dry', False):
+                score += 1.0
+            
+            # Suporte em timeframe maior
+            if setup.get('higher_tf_support', False):
+                score += 1.0
+            else:
+                score += 0.5  # Dar meio ponto por padrão
+            
+        elif ts == 'TS3':  # Reversão
+            # Divergência (peso maior)
+            if setup.get('divergence', False):
+                score += 1.5
+            
+            # RSI em extremo
+            if rsi < 25 or rsi > 75:
+                score += 1.0
+            elif rsi < 30 or rsi > 70:
+                score += 0.5
+            
+            # Rejeição de SR
+            if setup.get('sr_rejection', False):
+                score += 1.0
+            
+            # Candle de reversão
+            if setup.get('reversal_candle', False):
+                score += 1.0
+            
+            # Volume spike
+            if volume_above_avg:
+                score += 0.5
         
         return min(score, 5.0)
-    
-    def _calculate_continuation_specific(self) -> float:
-        """Critérios específicos para continuação."""
-        score = 0.0
-        weights = self._WEIGHTS['ts_specific']['TS2']
-        is_long = self.direction == "LONG"
-        
-        trend = self.asset.get('trend', {})
-        structure = self.asset.get('structure', {})
-        indicators = self.asset.get('indicators', {})
-        
-        rsi = indicators.get('rsi', 50)
-        macd = indicators.get('macd', {})
-        
-        # Força da tendência
-        strength = trend.get('strength', 'FRACA')
-        if strength == 'FORTE':
-            score += weights['trend_strength']
-        elif strength == 'MODERADA':
-            score += weights['trend_strength'] * 0.7
-        elif strength == 'CONSOLIDAÇÃO':
-            score += weights['trend_strength'] * 0.3
-        
-        # Estrutura confirmada
-        struct = structure.get('structure', 'INDEFINIDA')
-        if is_long:
-            if struct == 'ALTA':
-                score += weights['structure_confirmed']
-            elif struct == 'ALTA_FORMANDO':
-                score += weights['structure_confirmed'] * 0.5
-        else:
-            if struct == 'BAIXA':
-                score += weights['structure_confirmed']
-            elif struct == 'BAIXA_FORMANDO':
-                score += weights['structure_confirmed'] * 0.5
-        
-        # Qualidade do pullback (RSI em zona ideal)
-        if 40 <= rsi <= 55:
-            score += weights['pullback_quality']
-        elif 35 <= rsi <= 60:
-            score += weights['pullback_quality'] * 0.5
-        
-        # Respeito às EMAs
-        ema_9 = trend.get('ema_9', 0)
-        ema_21 = trend.get('ema_21', 0)
-        price = self.asset.get('price', 0)
-        
-        if is_long:
-            if price >= ema_9 and price >= ema_21:
-                score += weights['ema_respect']
-            elif price >= ema_21:
-                score += weights['ema_respect'] * 0.5
-        else:
-            if price <= ema_9 and price <= ema_21:
-                score += weights['ema_respect']
-            elif price <= ema_21:
-                score += weights['ema_respect'] * 0.5
-        
-        # Confirmação MACD
-        macd_trend = macd.get('trend', 'NEUTRO')
-        if is_long and macd_trend == 'BULLISH':
-            score += weights['macd_confirmation']
-        elif not is_long and macd_trend == 'BEARISH':
-            score += weights['macd_confirmation']
-        
-        return min(score, 5.0)
-    
-    def _calculate_reversal_specific(self) -> float:
-        """Critérios específicos para reversão."""
-        score = 0.0
-        weights = self._WEIGHTS['ts_specific']['TS3']
-        is_long = self.direction == "LONG"
-        
-        indicators = self.asset.get('indicators', {})
-        sr_levels = self.asset.get('sr_levels', {})
-        
-        rsi = indicators.get('rsi', 50)
-        macd = indicators.get('macd', {})
-        
-        # RSI em extremo (peso maior)
-        if is_long:
-            if rsi < 25:
-                score += weights['rsi_extreme']
-            elif rsi < 30:
-                score += weights['rsi_extreme'] * 0.7
-            elif rsi < 35:
-                score += weights['rsi_extreme'] * 0.4
-        else:
-            if rsi > 75:
-                score += weights['rsi_extreme']
-            elif rsi > 70:
-                score += weights['rsi_extreme'] * 0.7
-            elif rsi > 65:
-                score += weights['rsi_extreme'] * 0.4
-        
-        # Nível chave (peso maior)
-        key_levels = sr_levels.get('key_levels', [])
-        supports = sr_levels.get('supports', [])
-        resistances = sr_levels.get('resistances', [])
-        price = self.asset.get('price', 0)
-        
-        # Verificar se está em nível chave
-        is_at_key_level = False
-        for kl in key_levels:
-            if abs(price - kl) / price < 0.02:  # 2% de tolerância
-                is_at_key_level = True
-                break
-        
-        if is_at_key_level:
-            score += weights['key_level']
-        elif is_long and supports:
-            # Próximo de suporte
-            if abs(price - supports[0]) / price < 0.03:
-                score += weights['key_level'] * 0.5
-        elif not is_long and resistances:
-            # Próximo de resistência
-            if abs(price - resistances[0]) / price < 0.03:
-                score += weights['key_level'] * 0.5
-        
-        # Divergência potencial (baseado em MACD histogram)
-        histogram = macd.get('histogram', 0)
-        if is_long and histogram > 0:
-            score += weights['divergence']  # Histograma subindo em zona de sobrevenda
-        elif not is_long and histogram < 0:
-            score += weights['divergence']  # Histograma caindo em zona de sobrecompra
-        
-        # Candle de rejeição (inferido pelo RSI não em extremo absoluto)
-        if is_long and 25 <= rsi <= 35:
-            score += weights['rejection_candle'] * 0.5
-        elif not is_long and 65 <= rsi <= 75:
-            score += weights['rejection_candle'] * 0.5
-        
-        # Volume de exaustão (inferido)
-        # Se MACD está virando, pode indicar exaustão
-        macd_trend = macd.get('trend', 'NEUTRO')
-        if is_long and macd_trend == 'BULLISH':
-            score += weights['exhaustion_volume'] * 0.5
-        elif not is_long and macd_trend == 'BEARISH':
-            score += weights['exhaustion_volume'] * 0.5
-        
-        return min(score, 5.0)
-    
-    def _get_confidence_level(self, score: int) -> ConfidenceLevel:
-        """Determina o nível de confiança baseado no score."""
-        if score >= 8:
-            return ConfidenceLevel.HIGH
-        elif score >= 5:
-            return ConfidenceLevel.MEDIUM
-        elif score >= 3:
-            return ConfidenceLevel.LOW
-        else:
-            return ConfidenceLevel.NO_SETUP
-    
-    def get_breakdown(self) -> Dict:
-        """
-        Retorna o breakdown do score.
-        
-        APENAS PARA DEBUG INTERNO - NÃO EXPOR AO USUÁRIO
-        """
-        return self._score_breakdown.copy()
 
 
-def calculate_confidence_for_setup(asset_data: Dict, market_context: Dict, 
-                                   ts_type: str, direction: str) -> Tuple[int, str]:
-    """
-    Função de conveniência para calcular score de confiança.
+def test_score_calculator():
+    """Testa a calculadora de score"""
+    calc = ConfidenceScoreCalculator()
     
-    Args:
-        asset_data: Dados do ativo
-        market_context: Contexto de mercado
-        ts_type: Tipo do TS (TS1, TS2, TS3)
-        direction: Direção (LONG, SHORT)
+    # Setup de teste
+    setup = {
+        'symbol': 'ETH',
+        'direction': 'LONG',
+        'ts': 'TS2',
+        'current_price': 3250,
+        'ema_9': 3240,
+        'ema_21': 3200,
+        'ema_200': 3000,
+        'rsi': 55,
+        'volume_above_avg': False,
+        'touched_ema': True,
+        'trend_strong': True,
+        'pullback_depth': 0.4,
+        'volume_dry': True
+    }
     
-    Returns:
-        Tuple com (score, nível como string)
-    """
-    calculator = ConfidenceScoreCalculator(asset_data, market_context, ts_type, direction)
-    score, level = calculator.calculate()
-    return score, level.value
+    macro = {
+        'fear_greed': 35,
+        'btc_d': {'trend': 'neutral'},
+        'usdt_d': {'below_emas': True, 'trend': 'bearish'}
+    }
+    
+    result = calc.calculate(setup, macro)
+    
+    print("=" * 50)
+    print("CONFIDENCE SCORE CALCULATOR - TESTE")
+    print("=" * 50)
+    print(f"Score: {result['score']}/10")
+    print(f"Label: {result['label']}")
+    print(f"Stars: {result['stars']}")
 
 
-# Teste do módulo
 if __name__ == "__main__":
-    # Dados de teste
-    test_asset = {
-        'symbol': 'BTC',
-        'price': 90000,
-        'trend': {
-            'trend': 'BULLISH',
-            'strength': 'MODERADA',
-            'ema_9': 89000,
-            'ema_21': 88000,
-            'ema_alignment': 'BULLISH'
-        },
-        'structure': {
-            'structure': 'ALTA_FORMANDO'
-        },
-        'indicators': {
-            'rsi': 55,
-            'macd': {
-                'trend': 'BULLISH',
-                'histogram': 100
-            }
-        },
-        'sr_levels': {
-            'supports': [87000, 85000],
-            'resistances': [93000, 95000],
-            'key_levels': [85000, 90000, 95000]
-        }
-    }
-    
-    test_context = {
-        'dominance': {
-            'usdt_d': {'impact': 'BULLISH'},
-            'btc_d': {'impact': 'NEUTRO'}
-        },
-        'fear_greed': {'value': 35}
-    }
-    
-    print("=" * 50)
-    print("Teste do Algoritmo de Score de Confiança")
-    print("=" * 50)
-    
-    for ts in ['TS1', 'TS2', 'TS3']:
-        for direction in ['LONG', 'SHORT']:
-            score, level = calculate_confidence_for_setup(
-                test_asset, test_context, ts, direction
-            )
-            print(f"{ts} {direction}: Score {score}/10 - {level}")
-    
-    print("\n✅ Algoritmo funcionando corretamente")
+    test_score_calculator()

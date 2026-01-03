@@ -1,0 +1,348 @@
+{
+  "timestamp": "2026-01-03T16:36:02.364797",
+  "macro": {
+    "fear_greed": 29,
+    "btc_d": {
+      "value": 56.95976128396983,
+      "trend": "bullish"
+    },
+    "usdt_d": {
+      "value": 5.9,
+      "below_emas": true,
+      "trend": "bearish"
+    }
+  },
+  "calls": [
+    {
+      "symbol": "BTC",
+      "direction": "LONG",
+      "ts": "TS2",
+      "ts_name": "Continuação",
+      "ts_color": "🟩",
+      "ts_color_hex": "#22C55E",
+      "timeframe": "H4",
+      "fundamento": "Pullback para EMA 21 ($90,091.28) em tendência de alta",
+      "entry_low": 89911.1,
+      "entry_high": 90360.65,
+      "entry_range_pct": 0.5,
+      "sl_price": 89457.05,
+      "sl_pct": 1.0,
+      "targets": [
+        {
+          "price": 91154.12,
+          "r": 1.5,
+          "size_pct": 60,
+          "action": "Realizar 60%, SL → entrada, trailing 0.8%"
+        },
+        {
+          "price": 91832.95,
+          "r": 2.5,
+          "size_pct": 30,
+          "action": "Realizar 30%"
+        },
+        {
+          "price": "Trailing",
+          "r": "Trailing",
+          "size_pct": 10,
+          "action": "Trailing stop 0.8%"
+        }
+      ],
+      "trailing_pct": 0.8,
+      "invalidation": "Fechamento abaixo de $89,457.05",
+      "risk_per_trade": 3.0,
+      "leverage": 7,
+      "current_price": 90544,
+      "ema_9": 90362.912,
+      "ema_21": 90091.28,
+      "ema_200": 83300.48000000001,
+      "rsi": 51.49674192781622,
+      "touched_ema": true,
+      "trend_strong": true,
+      "pullback_depth": 0.4,
+      "volume_dry": true,
+      "score": 9,
+      "score_label": "ALTA",
+      "score_stars": "⭐⭐⭐",
+      "validation": {
+        "real_risk_pct": 7.0,
+        "risk_level": "Baixo"
+      }
+    },
+    {
+      "symbol": "ETH",
+      "direction": "LONG",
+      "ts": "TS2",
+      "ts_name": "Continuação",
+      "ts_color": "🟩",
+      "ts_color_hex": "#22C55E",
+      "timeframe": "H4",
+      "fundamento": "Pullback para EMA 21 ($3,105.62) em tendência de alta",
+      "entry_low": 3099.41,
+      "entry_high": 3114.91,
+      "entry_range_pct": 0.5,
+      "sl_price": 3083.76,
+      "sl_pct": 1.0,
+      "targets": [
+        {
+          "price": 3142.26,
+          "r": 1.5,
+          "size_pct": 60,
+          "action": "Realizar 60%, SL → entrada, trailing 0.8%"
+        },
+        {
+          "price": 3165.66,
+          "r": 2.5,
+          "size_pct": 30,
+          "action": "Realizar 30%"
+        },
+        {
+          "price": "Trailing",
+          "r": "Trailing",
+          "size_pct": 10,
+          "action": "Trailing stop 0.8%"
+        }
+      ],
+      "trailing_pct": 0.8,
+      "invalidation": "Fechamento abaixo de $3,083.76",
+      "risk_per_trade": 3.0,
+      "leverage": 7,
+      "current_price": 3121.23,
+      "ema_9": 3114.98754,
+      "ema_21": 3105.62385,
+      "ema_200": 2871.5316000000003,
+      "rsi": 49.75454347261309,
+      "touched_ema": true,
+      "trend_strong": true,
+      "pullback_depth": 0.4,
+      "volume_dry": true,
+      "score": 8,
+      "score_label": "ALTA",
+      "score_stars": "⭐⭐⭐",
+      "validation": {
+        "real_risk_pct": 7.0,
+        "risk_level": "Baixo"
+      }
+    },
+    {
+      "symbol": "SOL",
+      "direction": "LONG",
+      "ts": "TS2",
+      "ts_name": "Continuação",
+      "ts_color": "🟩",
+      "ts_color_hex": "#22C55E",
+      "timeframe": "H4",
+      "fundamento": "Pullback para EMA 21 ($131.95) em tendência de alta",
+      "entry_low": 131.68,
+      "entry_high": 132.34,
+      "entry_range_pct": 0.5,
+      "sl_price": 131.02,
+      "sl_pct": 1.0,
+      "targets": [
+        {
+          "price": 133.5,
+          "r": 1.5,
+          "size_pct": 60,
+          "action": "Realizar 60%, SL → entrada, trailing 0.8%"
+        },
+        {
+          "price": 134.5,
+          "r": 2.5,
+          "size_pct": 30,
+          "action": "Realizar 30%"
+        },
+        {
+          "price": "Trailing",
+          "r": "Trailing",
+          "size_pct": 10,
+          "action": "Trailing stop 0.8%"
+        }
+      ],
+      "trailing_pct": 0.8,
+      "invalidation": "Fechamento abaixo de $131.02",
+      "risk_per_trade": 3.0,
+      "leverage": 7,
+      "current_price": 132.61,
+      "ema_9": 132.34478000000001,
+      "ema_21": 131.94695000000002,
+      "ema_200": 122.00120000000001,
+      "rsi": 51.4338778160705,
+      "touched_ema": true,
+      "trend_strong": true,
+      "pullback_depth": 0.4,
+      "volume_dry": true,
+      "score": 8,
+      "score_label": "ALTA",
+      "score_stars": "⭐⭐⭐",
+      "validation": {
+        "real_risk_pct": 7.0,
+        "risk_level": "Baixo"
+      }
+    },
+    {
+      "symbol": "BNB",
+      "direction": "LONG",
+      "ts": "TS1",
+      "ts_name": "Rompimento",
+      "ts_color": "🟦",
+      "ts_color_hex": "#3B82F6",
+      "timeframe": "H4",
+      "fundamento": "Rompimento da resistência $880.00",
+      "entry_low": 880.88,
+      "entry_high": 883.52,
+      "entry_range_pct": 0.3,
+      "sl_price": 876.9,
+      "sl_pct": 0.75,
+      "targets": [
+        {
+          "price": 892.81,
+          "r": 2.0,
+          "size_pct": 50,
+          "action": "Realizar 50%, SL → entrada, trailing 1%"
+        },
+        {
+          "price": 898.12,
+          "r": 3.0,
+          "size_pct": 30,
+          "action": "Realizar 30%"
+        },
+        {
+          "price": "Trailing",
+          "r": "Trailing",
+          "size_pct": 20,
+          "action": "Trailing stop 1%"
+        }
+      ],
+      "trailing_pct": 1.0,
+      "invalidation": "Fechamento abaixo de $876.90",
+      "risk_per_trade": 2.0,
+      "leverage": 10,
+      "current_price": 878.45,
+      "ema_9": 876.6931000000001,
+      "ema_21": 874.05775,
+      "ema_200": 808.1740000000001,
+      "rsi": 49.62771651874146,
+      "sr_tested": 2,
+      "volume_above_avg": true,
+      "candle_strength": 0.7,
+      "score": 8,
+      "score_label": "ALTA",
+      "score_stars": "⭐⭐⭐",
+      "validation": {
+        "real_risk_pct": 7.5,
+        "risk_level": "Baixo"
+      }
+    },
+    {
+      "symbol": "BNB",
+      "direction": "LONG",
+      "ts": "TS2",
+      "ts_name": "Continuação",
+      "ts_color": "🟩",
+      "ts_color_hex": "#22C55E",
+      "timeframe": "H4",
+      "fundamento": "Pullback para EMA 21 ($874.06) em tendência de alta",
+      "entry_low": 872.31,
+      "entry_high": 876.67,
+      "entry_range_pct": 0.5,
+      "sl_price": 867.9,
+      "sl_pct": 1.0,
+      "targets": [
+        {
+          "price": 884.37,
+          "r": 1.5,
+          "size_pct": 60,
+          "action": "Realizar 60%, SL → entrada, trailing 0.8%"
+        },
+        {
+          "price": 890.96,
+          "r": 2.5,
+          "size_pct": 30,
+          "action": "Realizar 30%"
+        },
+        {
+          "price": "Trailing",
+          "r": "Trailing",
+          "size_pct": 10,
+          "action": "Trailing stop 0.8%"
+        }
+      ],
+      "trailing_pct": 0.8,
+      "invalidation": "Fechamento abaixo de $867.90",
+      "risk_per_trade": 3.0,
+      "leverage": 7,
+      "current_price": 878.45,
+      "ema_9": 876.6931000000001,
+      "ema_21": 874.05775,
+      "ema_200": 808.1740000000001,
+      "rsi": 49.62771651874146,
+      "touched_ema": true,
+      "trend_strong": true,
+      "pullback_depth": 0.4,
+      "volume_dry": true,
+      "score": 8,
+      "score_label": "ALTA",
+      "score_stars": "⭐⭐⭐",
+      "validation": {
+        "real_risk_pct": 7.0,
+        "risk_level": "Baixo"
+      }
+    },
+    {
+      "symbol": "XRP",
+      "direction": "LONG",
+      "ts": "TS2",
+      "ts_name": "Continuação",
+      "ts_color": "🟩",
+      "ts_color_hex": "#22C55E",
+      "timeframe": "H4",
+      "fundamento": "Pullback para EMA 21 ($2.00) em tendência de alta",
+      "entry_low": 2.0,
+      "entry_high": 2.01,
+      "entry_range_pct": 0.5,
+      "sl_price": 1.99,
+      "sl_pct": 1.0,
+      "targets": [
+        {
+          "price": 2.02,
+          "r": 1.5,
+          "size_pct": 60,
+          "action": "Realizar 60%, SL → entrada, trailing 0.8%"
+        },
+        {
+          "price": 2.04,
+          "r": 2.5,
+          "size_pct": 30,
+          "action": "Realizar 30%"
+        },
+        {
+          "price": "Trailing",
+          "r": "Trailing",
+          "size_pct": 10,
+          "action": "Trailing stop 0.8%"
+        }
+      ],
+      "trailing_pct": 0.8,
+      "invalidation": "Fechamento abaixo de $1.99",
+      "risk_per_trade": 3.0,
+      "leverage": 7,
+      "current_price": 2.01,
+      "ema_9": 2.0059799999999997,
+      "ema_21": 1.9999499999999997,
+      "ema_200": 1.8492,
+      "rsi": 51.37733176385654,
+      "touched_ema": true,
+      "trend_strong": true,
+      "pullback_depth": 0.4,
+      "volume_dry": true,
+      "score": 8,
+      "score_label": "ALTA",
+      "score_stars": "⭐⭐⭐",
+      "validation": {
+        "real_risk_pct": 7.0,
+        "risk_level": "Baixo"
+      }
+    }
+  ],
+  "total_setups_found": 6,
+  "total_calls_valid": 6
+}
