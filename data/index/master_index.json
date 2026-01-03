@@ -1,0 +1,55 @@
+{
+  "generated_at": "2026-01-03T15:26:48.506458-03:00",
+  "statistics": {
+    "total_days": 2,
+    "total_weeks": 1,
+    "total_months": 1,
+    "total_analyses": 6
+  },
+  "latest": {
+    "daily": {
+      "type": "opening",
+      "filename": "opening_14-03.json",
+      "path": "data/archive/2026/01/daily/03/opening_14-03.json",
+      "timestamp": "2026-01-03T14:03:44.232549-03:00",
+      "time": "14:03",
+      "summary": {
+        "assets": [],
+        "setups_count": 0,
+        "fear_greed": 29,
+        "usdt_d_impact": "BULLISH"
+      }
+    },
+    "weekly": {
+      "year": "2026",
+      "month": "01",
+      "week": "01",
+      "filename": "week_01.json",
+      "path": "data/archive/2026/01/weekly/week_01.json",
+      "timestamp": "2026-01-03T15:26:33.603015-03:00",
+      "summary": {
+        "win_rate": null,
+        "total_setups": 22,
+        "best_asset": null
+      }
+    },
+    "monthly": {
+      "year": "2026",
+      "month": "01",
+      "month_name": "january",
+      "filename": "january.json",
+      "path": "data/archive/2026/01/monthly/january.json",
+      "timestamp": "2026-01-03T15:26:38.642269-03:00",
+      "summary": {
+        "win_rate": null,
+        "profit_factor": null,
+        "total_setups": 22
+      }
+    }
+  },
+  "indexes": {
+    "daily": "data/index/daily_index.json",
+    "weekly": "data/index/weekly_index.json",
+    "monthly": "data/index/monthly_index.json"
+  }
+}

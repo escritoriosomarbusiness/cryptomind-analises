@@ -1,0 +1,126 @@
+{
+  "generated_at": "2026-01-03T15:26:48.503850-03:00",
+  "total_days": 2,
+  "days": [
+    {
+      "date": "2026-01-02",
+      "year": "2026",
+      "month": "01",
+      "day": "02",
+      "analyses": [
+        {
+          "type": "closing",
+          "filename": "closing_21-21.json",
+          "path": "data/archive/2026/01/daily/02/closing_21-21.json",
+          "timestamp": "2026-01-02T21:21:29.737974-03:00",
+          "time": "21:21",
+          "summary": {
+            "summary": "",
+            "performance": {}
+          }
+        },
+        {
+          "type": "opening",
+          "filename": "opening_20-52.json",
+          "path": "data/archive/2026/01/daily/02/opening_20-52.json",
+          "timestamp": "2026-01-02T20:52:15.929508-03:00",
+          "time": "20:52",
+          "summary": {
+            "assets": [
+              "BTC",
+              "ETH",
+              "SOL",
+              "BNB",
+              "XRP",
+              "ADA"
+            ],
+            "setups_count": 5,
+            "fear_greed": 28,
+            "usdt_d_impact": null
+          }
+        },
+        {
+          "type": "opening",
+          "filename": "opening_20-58.json",
+          "path": "data/archive/2026/01/daily/02/opening_20-58.json",
+          "timestamp": "2026-01-02T20:58:23.579344-03:00",
+          "time": "20:58",
+          "summary": {
+            "assets": [
+              "BTC",
+              "ETH",
+              "SOL",
+              "BNB",
+              "XRP",
+              "ADA"
+            ],
+            "setups_count": 6,
+            "fear_greed": 28,
+            "usdt_d_impact": null
+          }
+        },
+        {
+          "type": "opening",
+          "filename": "opening_22-39.json",
+          "path": "data/archive/2026/01/daily/02/opening_22-39.json",
+          "timestamp": "2026-01-02T22:39:51.991508-03:00",
+          "time": "22:39",
+          "summary": {
+            "assets": [
+              "BTC",
+              "ETH",
+              "SOL",
+              "BNB",
+              "XRP",
+              "ADA"
+            ],
+            "setups_count": 6,
+            "fear_greed": 29,
+            "usdt_d_impact": "BEARISH"
+          }
+        }
+      ]
+    },
+    {
+      "date": "2026-01-03",
+      "year": "2026",
+      "month": "01",
+      "day": "03",
+      "analyses": [
+        {
+          "type": "opening",
+          "filename": "opening_11-04.json",
+          "path": "data/archive/2026/01/daily/03/opening_11-04.json",
+          "timestamp": "2026-01-03T11:04:05.451562-03:00",
+          "time": "11:04",
+          "summary": {
+            "assets": [
+              "BTC",
+              "ETH",
+              "SOL",
+              "BNB",
+              "XRP",
+              "ADA"
+            ],
+            "setups_count": 5,
+            "fear_greed": 29,
+            "usdt_d_impact": "BEARISH"
+          }
+        },
+        {
+          "type": "opening",
+          "filename": "opening_14-03.json",
+          "path": "data/archive/2026/01/daily/03/opening_14-03.json",
+          "timestamp": "2026-01-03T14:03:44.232549-03:00",
+          "time": "14:03",
+          "summary": {
+            "assets": [],
+            "setups_count": 0,
+            "fear_greed": 29,
+            "usdt_d_impact": "BULLISH"
+          }
+        }
+      ]
+    }
+  ]
+}

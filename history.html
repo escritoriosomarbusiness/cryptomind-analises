@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórico de Análises - CryptoMind IA</title>
+    <meta name="description" content="Histórico completo de análises diárias, semanais e mensais do CryptoMind IA">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .history-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .history-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-top: 6rem;
+        }
+        
+        .history-header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00D4FF 0%, #7B2DFF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+        
+        .history-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .stat-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .stat-box .label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-box .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #00D4FF;
+        }
+        
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 0.75rem 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #00D4FF;
+        }
+        
+        .filter-btn.active {
+            background: linear-gradient(135deg, #00D4FF 0%, #7B2DFF 100%);
+            border-color: transparent;
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, #00D4FF 0%, #7B2DFF 100%);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            padding-left: 2rem;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.5rem;
+            top: 0.5rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #00D4FF;
+            border: 3px solid #0a0e27;
+        }
+        
+        .timeline-date {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #00D4FF;
+            margin-bottom: 1rem;
+        }
+        
+        .analysis-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+        
+        .analysis-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .analysis-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: #00D4FF;
+            transform: translateY(-2px);
+        }
+        
+        .analysis-card .type {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .analysis-card .type.opening {
+            background: rgba(0, 212, 255, 0.2);
+            color: #00D4FF;
+        }
+        
+        .analysis-card .type.closing {
+            background: rgba(123, 45, 255, 0.2);
+            color: #7B2DFF;
+        }
+        
+        .analysis-card .time {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.875rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .analysis-card .summary {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 4rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.3s;
+            margin-bottom: 2rem;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #00D4FF;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 4L36 12V28L20 36L4 28V12L20 4Z" stroke="url(#gradient1)" stroke-width="2" fill="none"/>
+                            <circle cx="20" cy="20" r="8" fill="url(#gradient1)"/>
+                            <defs>
+                                <linearGradient id="gradient1" x1="4" y1="4" x2="36" y2="36">
+                                    <stop offset="0%" stop-color="#00D4FF"/>
+                                    <stop offset="100%" stop-color="#7B2DFF"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="logo-text">
+                        <span class="logo-name">CryptoMind</span>
+                        <span class="logo-suffix">IA</span>
+                    </div>
+                </div>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">Análise Atual</a>
+                    <a href="history.html" class="nav-link active">Histórico</a>
+                    <a href="https://cryptomindia.com" class="nav-link btn-primary" target="_blank">Site Principal</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="history-container">
+        <a href="index.html" class="back-btn">
+            ← Voltar para Análise Atual
+        </a>
+        
+        <div class="history-header">
+            <h1>📊 Histórico de Análises</h1>
+            <p style="color: rgba(255, 255, 255, 0.7);">Todas as análises diárias, semanais e mensais</p>
+        </div>
+        
+        <div class="history-stats" id="stats">
+            <div class="stat-box">
+                <div class="label">Total de Dias</div>
+                <div class="value" id="total-days">-</div>
+            </div>
+            <div class="stat-box">
+                <div class="label">Total de Análises</div>
+                <div class="value" id="total-analyses">-</div>
+            </div>
+            <div class="stat-box">
+                <div class="label">Relatórios Semanais</div>
+                <div class="value" id="total-weeks">-</div>
+            </div>
+            <div class="stat-box">
+                <div class="label">Relatórios Mensais</div>
+                <div class="value" id="total-months">-</div>
+            </div>
+        </div>
+        
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">Todas</button>
+            <button class="filter-btn" data-filter="opening">Abertura</button>
+            <button class="filter-btn" data-filter="closing">Fechamento</button>
+            <button class="filter-btn" data-filter="weekly">Semanais</button>
+            <button class="filter-btn" data-filter="monthly">Mensais</button>
+        </div>
+        
+        <div id="timeline" class="timeline">
+            <div class="loading">Carregando histórico...</div>
+        </div>
+    </div>
+
+    <script>
+        // Carregar índice mestre
+        async function loadHistory() {
+            try {
+                const response = await fetch('data/index/master_index.json');
+                const masterIndex = await response.json();
+                
+                // Atualizar estatísticas
+                document.getElementById('total-days').textContent = masterIndex.statistics.total_days;
+                document.getElementById('total-analyses').textContent = masterIndex.statistics.total_analyses;
+                document.getElementById('total-weeks').textContent = masterIndex.statistics.total_weeks;
+                document.getElementById('total-months').textContent = masterIndex.statistics.total_months;
+                
+                // Carregar índice diário
+                const dailyResponse = await fetch('data/index/daily_index.json');
+                const dailyIndex = await dailyResponse.json();
+                
+                // Renderizar timeline
+                renderTimeline(dailyIndex.days);
+                
+            } catch (error) {
+                console.error('Erro ao carregar histórico:', error);
+                document.getElementById('timeline').innerHTML = '<div class="loading">Erro ao carregar histórico</div>';
+            }
+        }
+        
+        function renderTimeline(days) {
+            const timeline = document.getElementById('timeline');
+            timeline.innerHTML = '';
+            
+            // Ordenar dias em ordem decrescente (mais recente primeiro)
+            days.sort((a, b) => b.date.localeCompare(a.date));
+            
+            days.forEach(day => {
+                const timelineItem = document.createElement('div');
+                timelineItem.className = 'timeline-item';
+                
+                const date = new Date(day.date);
+                const dateFormatted = date.toLocaleDateString('pt-BR', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                const dateDiv = document.createElement('div');
+                dateDiv.className = 'timeline-date';
+                dateDiv.textContent = dateFormatted;
+                
+                const cardsContainer = document.createElement('div');
+                cardsContainer.className = 'analysis-cards';
+                
+                day.analyses.forEach(analysis => {
+                    const card = document.createElement('div');
+                    card.className = 'analysis-card';
+                    card.dataset.type = analysis.type;
+                    
+                    const typeLabel = analysis.type === 'opening' ? 'Abertura' : 'Fechamento';
+                    
+                    card.innerHTML = `
+                        <div class="type ${analysis.type}">${typeLabel}</div>
+                        <div class="time">${analysis.time}</div>
+                        <div class="summary">
+                            ${getSummaryText(analysis)}
+                        </div>
+                    `;
+                    
+                    card.onclick = () => openAnalysis(analysis.path);
+                    
+                    cardsContainer.appendChild(card);
+                });
+                
+                timelineItem.appendChild(dateDiv);
+                timelineItem.appendChild(cardsContainer);
+                timeline.appendChild(timelineItem);
+            });
+        }
+        
+        function getSummaryText(analysis) {
+            if (analysis.type === 'opening') {
+                const summary = analysis.summary;
+                return `${summary.setups_count} setups gerados • Fear & Greed: ${summary.fear_greed} • USDT.D: ${summary.usdt_d_impact}`;
+            } else {
+                return 'Relatório de fechamento do dia';
+            }
+        }
+        
+        function openAnalysis(path) {
+            window.open(path, '_blank');
+        }
+        
+        // Filtros
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const filter = btn.dataset.filter;
+                
+                document.querySelectorAll('.analysis-card').forEach(card => {
+                    if (filter === 'all' || card.dataset.type === filter) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        // Carregar ao iniciar
+        loadHistory();
+    </script>
+</body>
+</html>

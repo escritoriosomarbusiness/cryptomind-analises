@@ -42,6 +42,22 @@ def run_morning_analysis():
     print("✓ HTML gerado com sucesso")
     print()
     
+    # 2.5. Arquivar análise
+    print("[2.5/3] Arquivando análise...")
+    from archive_manager import ArchiveManager
+    manager = ArchiveManager()
+    manager.archive_analysis('opening')
+    print("✓ Análise arquivada")
+    print()
+    
+    # 2.6. Reconstruir índices
+    print("[2.6/3] Reconstruindo índices...")
+    from index_builder import IndexBuilder
+    builder = IndexBuilder()
+    builder.build_all_indexes()
+    print("✓ Índices atualizados")
+    print()
+    
     # 3. Publicar no GitHub
     print("[3/3] Publicando no GitHub Pages...")
     publish_to_github("Análise de abertura - " + now.strftime('%d/%m/%Y %H:%M'))
@@ -77,6 +93,22 @@ def run_closing_report():
     print("[2/3] Atualizando página HTML com resultados...")
     update_html_with_closing(report)
     print("✓ HTML atualizado com KPIs")
+    print()
+    
+    # 2.5. Arquivar relatório
+    print("[2.5/3] Arquivando relatório...")
+    from archive_manager import ArchiveManager
+    manager = ArchiveManager()
+    manager.archive_analysis('closing')
+    print("✓ Relatório arquivado")
+    print()
+    
+    # 2.6. Reconstruir índices
+    print("[2.6/3] Reconstruindo índices...")
+    from index_builder import IndexBuilder
+    builder = IndexBuilder()
+    builder.build_all_indexes()
+    print("✓ Índices atualizados")
     print()
     
     # 3. Publicar no GitHub

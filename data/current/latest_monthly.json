@@ -1,0 +1,68 @@
+{
+  "timestamp": "2026-01-03T15:26:38.642269-03:00",
+  "report_type": "monthly",
+  "year": 2026,
+  "month": 1,
+  "month_name": "january",
+  "period": {
+    "start": "2026-01-01",
+    "end": "2026-01-31",
+    "start_formatted": "01 de January de 2026",
+    "end_formatted": "31 de January de 2026"
+  },
+  "kpis": {
+    "total_setups": 22,
+    "total_long": 17,
+    "total_short": 11,
+    "long_percentage": 77.3,
+    "short_percentage": 50.0,
+    "average_score": 5.3,
+    "average_daily_setups": 4.4,
+    "setups_by_asset": {
+      "BTC": 4,
+      "ETH": 4,
+      "SOL": 4,
+      "BNB": 4,
+      "XRP": 4,
+      "ADA": 2
+    },
+    "best_asset": {
+      "symbol": "BTC",
+      "setups_count": 4
+    },
+    "worst_asset": {
+      "symbol": "ADA",
+      "setups_count": 2
+    },
+    "trading_days": 5
+  },
+  "trends": {
+    "weekly_summary": [
+      {
+        "week": 1,
+        "setups": 22,
+        "avg_fear_greed": 28.6,
+        "avg_usdt_d": 5.993
+      }
+    ],
+    "best_week": {
+      "week": 1,
+      "setups": 22,
+      "avg_fear_greed": 28.6,
+      "avg_usdt_d": 5.993
+    },
+    "total_weeks": 1
+  },
+  "advanced_stats": {
+    "sharpe_ratio": null,
+    "sortino_ratio": null,
+    "max_drawdown": null,
+    "recovery_factor": null,
+    "note": "Estatísticas avançadas requerem dados de performance real"
+  },
+  "comparison": {
+    "available": false,
+    "message": "Relatório do mês anterior não disponível"
+  },
+  "analyses_count": 6
+}
