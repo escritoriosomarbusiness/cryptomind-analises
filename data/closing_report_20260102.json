@@ -1,18 +1,18 @@
 {
-  "timestamp": "2026-01-02T20:57:04.947831-03:00",
+  "timestamp": "2026-01-02T21:21:29.737974-03:00",
   "date": "02 de Janeiro de 2026",
-  "time": "20:57",
+  "time": "21:21",
   "results": {
     "BTC": {
       "symbol": "BTC",
-      "open_price": 88839.05,
-      "close_price": 89955.09,
-      "price_change": 1.26,
+      "open_price": 88833.96,
+      "close_price": 0,
+      "price_change": -100.0,
       "bias_morning": "BULLISH",
       "bias_result": {
-        "correct": true,
-        "result": "✅ ACERTO",
-        "description": "Viés bullish, mercado subiu 1.26%"
+        "correct": false,
+        "result": "❌ ERRO",
+        "description": "Viés bullish, mas mercado caiu -100.00%"
       },
       "long_setup": {
         "type": "LONG",
@@ -38,7 +38,7 @@
         "status": "target1",
         "result": "✅ ALVO 1 ATINGIDO",
         "description": "Alvo 1 atingido em $90,557.50",
-        "pnl": 2.22
+        "pnl": 2.3
       },
       "short_setup": {
         "type": "SHORT",
@@ -55,7 +55,7 @@
         "reasons": [
           "Consolidação - aguardar confirmação",
           "Preço próximo à resistência $90,000",
-          "RSI sobrecomprado (77.64)"
+          "RSI sobrecomprado (77.85)"
         ]
       },
       "short_result": {
@@ -67,14 +67,14 @@
     },
     "ETH": {
       "symbol": "ETH",
-      "open_price": 3004.19,
-      "close_price": 3123.86,
-      "price_change": 3.98,
+      "open_price": 3006.15,
+      "close_price": 0,
+      "price_change": -100.0,
       "bias_morning": "BULLISH",
       "bias_result": {
-        "correct": true,
-        "result": "✅ ACERTO",
-        "description": "Viés bullish, mercado subiu 3.98%"
+        "correct": false,
+        "result": "❌ ERRO",
+        "description": "Viés bullish, mas mercado caiu -100.00%"
       },
       "long_setup": {
         "type": "LONG",
@@ -98,21 +98,21 @@
         "status": "target2",
         "result": "✅ ALVO 2 ATINGIDO",
         "description": "Alvo 2 atingido em $3,085.50",
-        "pnl": 3.01
+        "pnl": 2.9
       },
       "short_setup": null,
       "short_result": null
     },
     "SOL": {
       "symbol": "SOL",
-      "open_price": 126.91,
-      "close_price": 132.17,
-      "price_change": 4.14,
+      "open_price": 126.79,
+      "close_price": 0,
+      "price_change": -100.0,
       "bias_morning": "BULLISH",
       "bias_result": {
-        "correct": true,
-        "result": "✅ ACERTO",
-        "description": "Viés bullish, mercado subiu 4.14%"
+        "correct": false,
+        "result": "❌ ERRO",
+        "description": "Viés bullish, mas mercado caiu -100.00%"
       },
       "long_setup": {
         "type": "LONG",
@@ -136,21 +136,21 @@
         "status": "target2",
         "result": "✅ ALVO 2 ATINGIDO",
         "description": "Alvo 2 atingido em $129.43",
-        "pnl": 2.36
+        "pnl": 2.68
       },
       "short_setup": null,
       "short_result": null
     },
     "BNB": {
       "symbol": "BNB",
-      "open_price": 864.4,
-      "close_price": 881.01,
-      "price_change": 1.92,
+      "open_price": 864.43,
+      "close_price": 0,
+      "price_change": -100.0,
       "bias_morning": "BULLISH",
       "bias_result": {
-        "correct": true,
-        "result": "✅ ACERTO",
-        "description": "Viés bullish, mercado subiu 1.92%"
+        "correct": false,
+        "result": "❌ ERRO",
+        "description": "Viés bullish, mas mercado caiu -100.00%"
       },
       "long_setup": null,
       "long_result": null,
@@ -169,26 +169,26 @@
         "reasons": [
           "Estrutura LH + LL confirmada",
           "Preço próximo à resistência $891",
-          "RSI sobrecomprado (70.18)"
+          "RSI sobrecomprado (70.65)"
         ]
       },
       "short_result": {
         "status": "ongoing",
         "result": "⏳ EM ANDAMENTO",
-        "description": "Posição aberta, preço atual $881.01",
-        "pnl": 0.69
+        "description": "Posição aberta, preço atual $882.49",
+        "pnl": 0.53
       }
     },
     "XRP": {
       "symbol": "XRP",
-      "open_price": 1.8799,
-      "close_price": 2.0064,
-      "price_change": 6.73,
+      "open_price": 1.8792,
+      "close_price": 0,
+      "price_change": -100.0,
       "bias_morning": "BULLISH",
       "bias_result": {
-        "correct": true,
-        "result": "✅ ACERTO",
-        "description": "Viés bullish, mercado subiu 6.73%"
+        "correct": false,
+        "result": "❌ ERRO",
+        "description": "Viés bullish, mas mercado caiu -100.00%"
       },
       "long_setup": {
         "type": "LONG",
@@ -213,7 +213,7 @@
         "status": "stop_loss",
         "result": "❌ STOP LOSS",
         "description": "Stop acionado em $1.98",
-        "pnl": 5.6
+        "pnl": 5.77
       },
       "short_setup": {
         "type": "SHORT",
@@ -230,7 +230,7 @@
         "reasons": [
           "Consolidação - aguardar confirmação",
           "Preço próximo à resistência $2",
-          "RSI sobrecomprado (78.61)"
+          "RSI sobrecomprado (78.58)"
         ]
       },
       "short_result": {
@@ -242,37 +242,59 @@
     },
     "ADA": {
       "symbol": "ADA",
-      "open_price": 0.3565,
-      "close_price": 0.394,
-      "price_change": 10.52,
+      "open_price": 0.3563,
+      "close_price": 0,
+      "price_change": -100.0,
       "bias_morning": "BULLISH",
       "bias_result": {
-        "correct": true,
-        "result": "✅ ACERTO",
-        "description": "Viés bullish, mercado subiu 10.52%"
+        "correct": false,
+        "result": "❌ ERRO",
+        "description": "Viés bullish, mas mercado caiu -100.00%"
       },
       "long_setup": null,
       "long_result": null,
-      "short_setup": null,
-      "short_result": null
+      "short_setup": {
+        "type": "SHORT",
+        "style": "Agressivo",
+        "entry_low": 0.4,
+        "entry_high": 0.4,
+        "stop_loss": 0.4,
+        "target1": 0.39,
+        "target2": 0.39,
+        "rr1": "1.5:1",
+        "rr2": "2.5:1",
+        "trigger": "Rejeição com volume na resistência",
+        "score": 4,
+        "reasons": [
+          "Consolidação - aguardar confirmação",
+          "Preço próximo à resistência $0",
+          "RSI sobrecomprado (78.79)"
+        ]
+      },
+      "short_result": {
+        "status": "not_activated",
+        "result": "⚪ NÃO ATIVADO",
+        "description": "Preço não atingiu zona de entrada",
+        "pnl": 0
+      }
     }
   },
   "day_stats": {
-    "total_setups": 7,
+    "total_setups": 8,
     "winning": 4,
     "losing": 2,
     "ongoing": 1,
-    "not_activated": 0,
-    "total_pnl": 14.379999999999999,
-    "bias_correct": 6,
+    "not_activated": 1,
+    "total_pnl": 14.680000000000001,
+    "bias_correct": 0,
     "bias_total": 6
   },
   "cumulative_stats": {
-    "total_setups": 7,
-    "winning_setups": 4,
-    "losing_setups": 2,
+    "total_setups": 23,
+    "winning_setups": 11,
+    "losing_setups": 5,
     "ongoing_setups": 1,
-    "win_rate": 66.7,
-    "bias_accuracy": 100.0
+    "win_rate": 68.8,
+    "bias_accuracy": 66.7
   }
 }
