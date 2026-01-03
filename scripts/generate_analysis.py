@@ -103,18 +103,20 @@ class CryptoAnalyzer:
                 trend = "bullish"  # USDT.D subindo (ruim para cripto)
             
             # Impacto no mercado cripto (inverso do USDT.D)
+            # Quando USDT.D cai (abaixo das EMAs), dinheiro sai de stablecoins e entra em cripto = BULLISH
+            # Quando USDT.D sobe (acima das EMAs), dinheiro sai de cripto e vai para stablecoins = BEARISH
             if usdt_dominance < ema_200 and usdt_dominance < ema_21:
                 crypto_impact = "BULLISH"
                 crypto_impact_class = "bullish"
-                impact_reason = "USDT.D abaixo das EMAs - dinheiro entrando em cripto"
-            elif usdt_dominance > ema_200:
+                impact_reason = "USDT.D abaixo das EMAs - dinheiro saindo de stablecoins e entrando em cripto"
+            elif usdt_dominance > ema_200 and usdt_dominance > ema_21:
                 crypto_impact = "BEARISH"
                 crypto_impact_class = "bearish"
-                impact_reason = "USDT.D acima da EMA 200 - dinheiro saindo de cripto"
+                impact_reason = "USDT.D acima das EMAs - dinheiro saindo de cripto e indo para stablecoins"
             else:
                 crypto_impact = "NEUTRO"
                 crypto_impact_class = "neutral"
-                impact_reason = "USDT.D em zona de indefinição"
+                impact_reason = "USDT.D em zona de indefinição entre EMAs"
             
             # Próximo nível
             if usdt_dominance < sr_levels['support_h4']:

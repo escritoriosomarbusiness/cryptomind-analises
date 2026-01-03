@@ -1,0 +1,38 @@
+{
+  "timestamp": "2026-01-03T14:03:44.232549-03:00",
+  "date": "03 de Janeiro de 2026",
+  "time": "14:03",
+  "fear_greed": {
+    "value": 29,
+    "classification": "Fear",
+    "yesterday": 28,
+    "week_ago": 24
+  },
+  "usdt_d": {
+    "dominance": 6.14,
+    "dominance_formatted": "6.140%",
+    "ema_9": 6.22,
+    "ema_21": 6.27,
+    "ema_200": 6.21,
+    "rsi": 41.0,
+    "atr": 0.05,
+    "macd": -0.02,
+    "sr_levels": {
+      "resistance_w1": 6.74,
+      "resistance_d1": 6.53,
+      "resistance_h4": 6.27,
+      "support_h4": 6.0,
+      "support_w1": 5.86
+    },
+    "trend": "bearish",
+    "crypto_impact": "BULLISH",
+    "crypto_impact_class": "bullish",
+    "impact_reason": "USDT.D abaixo das EMAs - dinheiro entrando em cripto",
+    "next_level": "Suporte W1: 5.86%",
+    "invalidation": "USDT.D voltar acima de 6.21% (EMA 200)",
+    "below_ema_200": true,
+    "below_ema_21": true,
+    "below_ema_9": true
+  },
+  "analyses": {}
+}

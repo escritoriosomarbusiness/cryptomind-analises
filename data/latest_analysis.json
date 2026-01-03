@@ -25,9 +25,9 @@
       "support_w1": 5.86
     },
     "trend": "bullish",
-    "crypto_impact": "BEARISH",
-    "crypto_impact_class": "bearish",
-    "impact_reason": "USDT.D acima da EMA 200 - dinheiro saindo de cripto",
+    "crypto_impact": "BULLISH",
+    "crypto_impact_class": "bullish",
+    "impact_reason": "USDT.D abaixo das EMAs - dinheiro saindo de stablecoins e entrando em cripto",
     "next_level": "Suporte W1: 5.86%",
     "invalidation": "USDT.D cair abaixo de 5.86%",
     "below_ema_200": false,
