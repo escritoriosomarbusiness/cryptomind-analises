@@ -296,6 +296,111 @@ class HTMLGenerator:
             </section>
         '''
     
+    def generate_usdt_d_section(self, usdt_d: Dict) -> str:
+        """Gera seção do USDT.D - Indicador Macro"""
+        if not usdt_d:
+            return ''
+        
+        impact_class = usdt_d.get('crypto_impact_class', 'neutral')
+        
+        # Status das EMAs
+        ema_9_status = '✅' if usdt_d.get('below_ema_9', False) else '❌'
+        ema_21_status = '✅' if usdt_d.get('below_ema_21', False) else '❌'
+        ema_200_status = '✅' if usdt_d.get('below_ema_200', False) else '❌'
+        
+        return f'''
+            <div class="usdt-d-section">
+                <div class="usdt-d-header">
+                    <div class="usdt-d-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                    </div>
+                    <div class="usdt-d-title">
+                        <h3>USDT.D - Indicador Macro</h3>
+                        <span class="usdt-d-subtitle">Dominância do USDT no mercado</span>
+                    </div>
+                    <div class="usdt-d-impact {impact_class}">
+                        <span class="impact-label">Impacto Cripto:</span>
+                        <span class="impact-value">{usdt_d.get('crypto_impact', 'NEUTRO')}</span>
+                    </div>
+                </div>
+                
+                <div class="usdt-d-body">
+                    <div class="usdt-d-metrics">
+                        <div class="usdt-metric">
+                            <span class="metric-label">Dominância Atual</span>
+                            <span class="metric-value">{usdt_d.get('dominance_formatted', '0%')}</span>
+                        </div>
+                        <div class="usdt-metric">
+                            <span class="metric-label">EMA 9</span>
+                            <span class="metric-value">{usdt_d.get('ema_9', 0):.3f}%</span>
+                            <span class="metric-status">{ema_9_status} Abaixo</span>
+                        </div>
+                        <div class="usdt-metric">
+                            <span class="metric-label">EMA 21</span>
+                            <span class="metric-value">{usdt_d.get('ema_21', 0):.3f}%</span>
+                            <span class="metric-status">{ema_21_status} Abaixo</span>
+                        </div>
+                        <div class="usdt-metric">
+                            <span class="metric-label">EMA 200</span>
+                            <span class="metric-value">{usdt_d.get('ema_200', 0):.3f}%</span>
+                            <span class="metric-status">{ema_200_status} Abaixo</span>
+                        </div>
+                        <div class="usdt-metric">
+                            <span class="metric-label">RSI</span>
+                            <span class="metric-value">{usdt_d.get('rsi', 0):.1f}</span>
+                        </div>
+                        <div class="usdt-metric">
+                            <span class="metric-label">MACD</span>
+                            <span class="metric-value">{usdt_d.get('macd', 0):.4f}%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="usdt-d-levels">
+                        <h4>Níveis de S/R</h4>
+                        <div class="levels-mini">
+                            <div class="level-item resistance">
+                                <span>Resistência W1</span>
+                                <span>{usdt_d.get('sr_levels', {}).get('resistance_w1', 0):.2f}%</span>
+                            </div>
+                            <div class="level-item resistance">
+                                <span>Resistência D1</span>
+                                <span>{usdt_d.get('sr_levels', {}).get('resistance_d1', 0):.2f}%</span>
+                            </div>
+                            <div class="level-item current">
+                                <span>Atual</span>
+                                <span>{usdt_d.get('dominance', 0):.3f}%</span>
+                            </div>
+                            <div class="level-item support">
+                                <span>Suporte H4</span>
+                                <span>{usdt_d.get('sr_levels', {}).get('support_h4', 0):.2f}%</span>
+                            </div>
+                            <div class="level-item support">
+                                <span>Suporte W1</span>
+                                <span>{usdt_d.get('sr_levels', {}).get('support_w1', 0):.2f}%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="usdt-d-analysis">
+                        <div class="analysis-item">
+                            <span class="analysis-icon">📊</span>
+                            <span class="analysis-text">{usdt_d.get('impact_reason', '')}</span>
+                        </div>
+                        <div class="analysis-item">
+                            <span class="analysis-icon">🎯</span>
+                            <span class="analysis-text">Próximo nível: {usdt_d.get('next_level', '')}</span>
+                        </div>
+                        <div class="analysis-item">
+                            <span class="analysis-icon">⚠️</span>
+                            <span class="analysis-text">Invalidação: {usdt_d.get('invalidation', '')}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        '''
+    
     def generate_fear_greed_section(self, fear_greed: Dict) -> str:
         """Gera seção de Fear & Greed"""
         value = fear_greed['value']
@@ -358,6 +463,10 @@ class HTMLGenerator:
         
         # Fear & Greed
         fear_greed_html = self.generate_fear_greed_section(fear_greed)
+        
+        # USDT.D - Indicador Macro
+        usdt_d = analysis.get('usdt_d', {})
+        usdt_d_html = self.generate_usdt_d_section(usdt_d)
         
         html = f'''<!DOCTYPE html>
 <html lang="pt-BR">
@@ -471,6 +580,9 @@ class HTMLGenerator:
                     </tbody>
                 </table>
             </div>
+            
+            <!-- USDT.D - Indicador Macro -->
+            {usdt_d_html}
             
             <!-- Fear & Greed -->
             {fear_greed_html}

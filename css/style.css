@@ -1441,3 +1441,229 @@ section {
         padding: var(--space-sm);
     }
 }
+
+
+/* USDT.D - Indicador Macro */
+.usdt-d-section {
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(123, 45, 255, 0.1) 100%);
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    border-radius: 16px;
+    padding: 24px;
+    margin-top: 32px;
+}
+
+.usdt-d-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.usdt-d-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #00D4FF, #7B2DFF);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.usdt-d-icon svg {
+    width: 24px;
+    height: 24px;
+    color: white;
+}
+
+.usdt-d-title h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+}
+
+.usdt-d-subtitle {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.usdt-d-impact {
+    margin-left: auto;
+    padding: 8px 16px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.usdt-d-impact.bullish {
+    background: rgba(16, 185, 129, 0.2);
+    border: 1px solid rgba(16, 185, 129, 0.5);
+}
+
+.usdt-d-impact.bearish {
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid rgba(239, 68, 68, 0.5);
+}
+
+.usdt-d-impact.neutral {
+    background: rgba(251, 191, 36, 0.2);
+    border: 1px solid rgba(251, 191, 36, 0.5);
+}
+
+.impact-label {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.impact-value {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.usdt-d-impact.bullish .impact-value {
+    color: #10B981;
+}
+
+.usdt-d-impact.bearish .impact-value {
+    color: #EF4444;
+}
+
+.usdt-d-impact.neutral .impact-value {
+    color: #FBBF24;
+}
+
+.usdt-d-body {
+    display: grid;
+    gap: 24px;
+}
+
+.usdt-d-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 16px;
+}
+
+.usdt-metric {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+}
+
+.usdt-metric .metric-label {
+    display: block;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 4px;
+}
+
+.usdt-metric .metric-value {
+    display: block;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.usdt-metric .metric-status {
+    display: block;
+    font-size: 0.75rem;
+    margin-top: 4px;
+}
+
+.usdt-d-levels {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.usdt-d-levels h4 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0 0 12px 0;
+}
+
+.levels-mini {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.levels-mini .level-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+}
+
+.levels-mini .level-item.resistance {
+    background: rgba(239, 68, 68, 0.1);
+    border-left: 3px solid #EF4444;
+}
+
+.levels-mini .level-item.support {
+    background: rgba(16, 185, 129, 0.1);
+    border-left: 3px solid #10B981;
+}
+
+.levels-mini .level-item.current {
+    background: rgba(0, 212, 255, 0.1);
+    border-left: 3px solid #00D4FF;
+}
+
+.levels-mini .level-item span:first-child {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.levels-mini .level-item span:last-child {
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+    color: #fff;
+}
+
+.usdt-d-analysis {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.analysis-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+}
+
+.analysis-icon {
+    font-size: 1.25rem;
+}
+
+.analysis-text {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .usdt-d-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .usdt-d-impact {
+        margin-left: 0;
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .usdt-d-metrics {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
