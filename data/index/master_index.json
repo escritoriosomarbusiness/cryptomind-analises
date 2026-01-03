@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-01-03T15:43:44.399953-03:00",
+  "generated_at": "2026-01-03T15:51:49.678338-03:00",
   "statistics": {
     "total_days": 2,
     "total_weeks": 1,
@@ -26,7 +26,7 @@
       "week": "01",
       "filename": "week_01.json",
       "path": "data/archive/2026/01/weekly/week_01.json",
-      "timestamp": "2026-01-03T15:43:39.054199-03:00",
+      "timestamp": "2026-01-03T15:51:49.611805-03:00",
       "summary": {
         "win_rate": null,
         "total_setups": 22,
