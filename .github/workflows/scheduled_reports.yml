@@ -1,0 +1,97 @@
+name: Relatórios Automatizados CryptoMind IA
+
+on:
+  schedule:
+    # Relatório Semanal - Domingos às 21:15 BRT (00:15 UTC Segunda)
+    - cron: '15 0 * * 1'
+    
+    # Relatório Mensal - Último dia do mês às 21:15 BRT (00:15 UTC)
+    - cron: '15 0 28-31 * *'
+  
+  workflow_dispatch:  # Permite execução manual
+
+jobs:
+  weekly_report:
+    name: Gerar Relatório Semanal
+    runs-on: ubuntu-latest
+    if: github.event.schedule == '15 0 * * 1' || github.event_name == 'workflow_dispatch'
+    
+    steps:
+      - name: Checkout repositório
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Instalar dependências
+        run: |
+          pip install pytz requests
+      
+      - name: Gerar relatório semanal
+        run: |
+          python3 scripts/generate_weekly_report.py
+      
+      - name: Reconstruir índices
+        run: |
+          python3 scripts/index_builder.py
+      
+      - name: Commit e push
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add data/
+          git commit -m "📊 Relatório Semanal - $(date +'%d/%m/%Y %H:%M')" || echo "Nada para commitar"
+          git push
+  
+  monthly_report:
+    name: Gerar Relatório Mensal
+    runs-on: ubuntu-latest
+    if: github.event.schedule == '15 0 28-31 * *' || github.event_name == 'workflow_dispatch'
+    
+    steps:
+      - name: Checkout repositório
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Instalar dependências
+        run: |
+          pip install pytz requests
+      
+      - name: Verificar se é último dia do mês
+        id: check_last_day
+        run: |
+          TOMORROW=$(date -d "tomorrow" +%d)
+          if [ "$TOMORROW" == "01" ]; then
+            echo "is_last_day=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_last_day=false" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Gerar relatório mensal
+        if: steps.check_last_day.outputs.is_last_day == 'true'
+        run: |
+          python3 scripts/generate_monthly_report.py
+      
+      - name: Reconstruir índices
+        if: steps.check_last_day.outputs.is_last_day == 'true'
+        run: |
+          python3 scripts/index_builder.py
+      
+      - name: Commit e push
+        if: steps.check_last_day.outputs.is_last_day == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add data/
+          git commit -m "📈 Relatório Mensal - $(date +'%B %Y')" || echo "Nada para commitar"
+          git push
