@@ -17,7 +17,7 @@ class CryptoAnalyzer:
     def __init__(self):
         self.assets = ["BTC", "ETH", "SOL", "BNB", "XRP", "ADA"]
         self.timezone = pytz.timezone('America/Sao_Paulo')
-        self.data_dir = "/home/ubuntu/cryptomind-analises/data"
+        self.data_dir = str(Path(__file__).parent.parent / "data")
     
     def get_usdt_dominance(self) -> Dict:
         """Obtém dados do USDT.D (Dominância do USDT) via CoinGecko"""

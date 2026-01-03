@@ -16,7 +16,7 @@ class WeeklyReportGenerator:
     """Gera relatórios semanais com KPIs"""
     
     def __init__(self):
-        self.base_dir = Path("/home/ubuntu/cryptomind-analises")
+        self.base_dir = Path(__file__).parent.parent.absolute()
         self.data_dir = self.base_dir / "data"
         self.archive_dir = self.data_dir / "archive"
         self.current_dir = self.data_dir / "current"

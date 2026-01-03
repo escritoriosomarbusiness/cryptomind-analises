@@ -16,8 +16,8 @@ class HTMLGenerator:
     
     def __init__(self):
         self.timezone = pytz.timezone('America/Sao_Paulo')
-        self.template_dir = "/home/ubuntu/cryptomind-analises"
-        self.data_dir = "/home/ubuntu/cryptomind-analises/data"
+        self.template_dir = str(Path(__file__).parent.parent.absolute())
+        self.data_dir = str(Path(__file__).parent.parent / "data")
         
     def load_analysis(self) -> Dict:
         """Carrega a análise mais recente"""

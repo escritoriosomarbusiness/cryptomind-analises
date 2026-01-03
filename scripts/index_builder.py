@@ -15,7 +15,7 @@ class IndexBuilder:
     """Constrói índices de análises"""
     
     def __init__(self):
-        self.base_dir = Path("/home/ubuntu/cryptomind-analises")
+        self.base_dir = Path(__file__).parent.parent.absolute()
         self.archive_dir = self.base_dir / "data" / "archive"
         self.index_dir = self.base_dir / "data" / "index"
         self.timezone = pytz.timezone('America/Sao_Paulo')

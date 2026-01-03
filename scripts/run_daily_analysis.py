@@ -11,7 +11,7 @@ from datetime import datetime
 import pytz
 
 # Adicionar diretório de scripts ao path
-sys.path.insert(0, '/home/ubuntu/cryptomind-analises/scripts')
+sys.path.insert(0, str(Path(__file__).parent.absolute()))
 
 from generate_analysis import CryptoAnalyzer
 from generate_html import HTMLGenerator
@@ -134,7 +134,7 @@ def update_html_with_closing(report):
     closing_html = generate_closing_section_html(report)
     
     # Ler HTML atual
-    html_path = "/home/ubuntu/cryptomind-analises/index.html"
+    html_path = str(Path(__file__).parent.parent / "index.html")
     with open(html_path, 'r', encoding='utf-8') as f:
         html = f.read()
     
@@ -286,7 +286,7 @@ def print_closing_summary(report):
 
 def publish_to_github(commit_message):
     """Publica alterações no GitHub Pages"""
-    repo_dir = "/home/ubuntu/cryptomind-analises"
+    repo_dir = str(Path(__file__).parent.parent.absolute())
     
     try:
         # Adicionar alterações

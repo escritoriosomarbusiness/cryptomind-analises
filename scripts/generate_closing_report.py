@@ -18,7 +18,7 @@ class ClosingReportGenerator:
     
     def __init__(self):
         self.timezone = pytz.timezone('America/Sao_Paulo')
-        self.data_dir = "/home/ubuntu/cryptomind-analises/data"
+        self.data_dir = str(Path(__file__).parent.parent / "data")
         self.assets = ["BTC", "ETH", "SOL", "BNB", "XRP", "ADA"]
         
     def get_current_prices(self) -> Dict[str, float]:
