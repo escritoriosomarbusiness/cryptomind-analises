@@ -9,6 +9,7 @@ import os
 import sys
 from datetime import datetime
 import pytz
+from pathlib import Path
 
 # Adicionar diretório de scripts ao path
 sys.path.insert(0, str(Path(__file__).parent.absolute()))

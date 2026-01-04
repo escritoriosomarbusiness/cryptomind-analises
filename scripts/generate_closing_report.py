@@ -11,6 +11,7 @@ import os
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional
 import pytz
+from pathlib import Path
 
 
 class ClosingReportGenerator:
