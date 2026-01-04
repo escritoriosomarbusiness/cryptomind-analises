@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-01-03T21:51:56.245183-03:00",
+  "timestamp": "2026-01-03T21:49:02.368163-03:00",
   "date": "03 de Janeiro de 2026",
-  "time": "21:51",
+  "time": "21:49",
   "fear_greed": {
     "value": 25,
     "classification": "Extreme Fear",
@@ -9,12 +9,12 @@
     "week_ago": 24
   },
   "usdt_d": {
-    "dominance": 5.853,
-    "dominance_formatted": "5.853%",
-    "ema_9": 5.85,
-    "ema_21": 5.85,
-    "ema_200": 5.85,
-    "rsi": 47.34,
+    "dominance": 5.861,
+    "dominance_formatted": "5.861%",
+    "ema_9": 5.86,
+    "ema_21": 5.86,
+    "ema_200": 5.86,
+    "rsi": 48.81,
     "atr": 0.0003,
     "macd": 0.0,
     "sr_levels": {
@@ -37,25 +37,25 @@
   "analyses": {
     "BTC": {
       "symbol": "BTC",
-      "price": 91204.32,
-      "price_formatted": "$91,204.32",
-      "price_change": 1.193,
-      "price_change_formatted": "+1.19%",
+      "price": 91270.87,
+      "price_formatted": "$91,270.87",
+      "price_change": 1.305,
+      "price_change_formatted": "+1.30%",
       "high_24h": 91610.17,
       "low_24h": 89314.01,
-      "volume": 8456.19699,
+      "volume": 8436.71045,
       "emas": {
-        "price": 91204.32,
-        "ema_9": 90160.8,
-        "ema_21": 89489.81,
-        "ema_200": 89162.91
+        "price": 91270.87,
+        "ema_9": 90174.11,
+        "ema_21": 89495.86,
+        "ema_200": 89163.57
       },
-      "rsi": 80.2,
+      "rsi": 80.48,
       "atr": 862.3,
       "macd": {
-        "macd_line": 643.86,
-        "signal_line": 488.76,
-        "histogram": 155.1,
+        "macd_line": 649.17,
+        "signal_line": 489.82,
+        "histogram": 159.35,
         "trend": "bullish_strong"
       },
       "structure": {
@@ -87,7 +87,7 @@
       },
       "funding_rate": 0.009488,
       "funding_formatted": "0.0095%",
-      "open_interest": 97308.88,
+      "open_interest": 97273.411,
       "long_percent": 58.0,
       "short_percent": 42.0,
       "setups": {
@@ -126,7 +126,7 @@
           "reasons": [
             "Consolidação - aguardar confirmação",
             "Preço próximo à resistência $91,610",
-            "RSI sobrecomprado (80.2)"
+            "RSI sobrecomprado (80.48)"
           ]
         }
       },
@@ -140,32 +140,32 @@
           "Fear extremo (25) - oportunidade"
         ],
         "bearish_factors": [
-          "RSI sobrecomprado (80.2)"
+          "RSI sobrecomprado (80.48)"
         ]
       },
       "has_setup": true
     },
     "ETH": {
       "symbol": "ETH",
-      "price": 3147.83,
-      "price_formatted": "$3,147.83",
-      "price_change": 0.458,
-      "price_change_formatted": "+0.46%",
+      "price": 3148.91,
+      "price_formatted": "$3,148.91",
+      "price_change": 0.565,
+      "price_change_formatted": "+0.56%",
       "high_24h": 3159.0,
       "low_24h": 3076.0,
-      "volume": 153998.0937,
+      "volume": 153816.6275,
       "emas": {
-        "price": 3147.83,
-        "ema_9": 3108.13,
-        "ema_21": 3068.14,
-        "ema_200": 3029.91
+        "price": 3148.91,
+        "ema_9": 3108.3,
+        "ema_21": 3068.22,
+        "ema_200": 3029.92
       },
-      "rsi": 83.01,
+      "rsi": 83.08,
       "atr": 38.3,
       "macd": {
-        "macd_line": 40.64,
-        "signal_line": 34.7,
-        "histogram": 5.94,
+        "macd_line": 40.72,
+        "signal_line": 34.71,
+        "histogram": 6.01,
         "trend": "bullish_strong"
       },
       "structure": {
@@ -197,7 +197,7 @@
       },
       "funding_rate": 0.007598,
       "funding_formatted": "0.0076%",
-      "open_interest": 2275566.34,
+      "open_interest": 2275427.417,
       "long_percent": 58.8,
       "short_percent": 41.2,
       "setups": {
@@ -233,7 +233,7 @@
           "Fear extremo (25) - oportunidade"
         ],
         "bearish_factors": [
-          "RSI sobrecomprado (83.01)"
+          "RSI sobrecomprado (83.08)"
         ]
       },
       "has_setup": true
@@ -242,11 +242,11 @@
       "symbol": "SOL",
       "price": 134.28,
       "price_formatted": "$134.28",
-      "price_change": 1.137,
-      "price_change_formatted": "+1.14%",
+      "price_change": 1.168,
+      "price_change_formatted": "+1.17%",
       "high_24h": 134.97,
       "low_24h": 129.6,
-      "volume": 1599998.044,
+      "volume": 1600810.858,
       "emas": {
         "price": 134.28,
         "ema_9": 131.74,
@@ -290,7 +290,7 @@
       },
       "funding_rate": 0.01,
       "funding_formatted": "0.0100%",
-      "open_interest": 9692180.38,
+      "open_interest": 9691728.32,
       "long_percent": 71.0,
       "short_percent": 29.0,
       "setups": {
@@ -332,20 +332,20 @@
     },
     "BNB": {
       "symbol": "BNB",
-      "price": 880.1,
-      "price_formatted": "$880.10",
-      "price_change": -0.183,
-      "price_change_formatted": "-0.18%",
+      "price": 880.09,
+      "price_formatted": "$880.09",
+      "price_change": -0.113,
+      "price_change_formatted": "-0.11%",
       "high_24h": 883.3,
       "low_24h": 868.65,
-      "volume": 84342.061,
+      "volume": 84414.711,
       "emas": {
-        "price": 880.1,
+        "price": 880.09,
         "ema_9": 876.07,
         "ema_21": 871.43,
         "ema_200": 868.16
       },
-      "rsi": 74.13,
+      "rsi": 74.12,
       "atr": 7.72,
       "macd": {
         "macd_line": 5.18,
@@ -382,7 +382,7 @@
       },
       "funding_rate": 0.002126,
       "funding_formatted": "0.0021%",
-      "open_interest": 501455.91,
+      "open_interest": 501441.71,
       "long_percent": 73.5,
       "short_percent": 26.5,
       "setups": {
@@ -419,28 +419,28 @@
           "Fear extremo (25) - oportunidade"
         ],
         "bearish_factors": [
-          "RSI sobrecomprado (74.13)"
+          "RSI sobrecomprado (74.12)"
         ]
       },
       "has_setup": true
     },
     "XRP": {
       "symbol": "XRP",
-      "price": 2.0429,
-      "price_formatted": "$2.0429",
-      "price_change": 1.084,
-      "price_change_formatted": "+1.08%",
+      "price": 2.0371,
+      "price_formatted": "$2.0371",
+      "price_change": 0.652,
+      "price_change_formatted": "+0.65%",
       "high_24h": 2.0561,
       "low_24h": 1.9844,
-      "volume": 74469752.6,
+      "volume": 74423216.8,
       "emas": {
-        "price": 2.0429,
+        "price": 2.0371,
         "ema_9": 2.0,
         "ema_21": 1.95,
         "ema_200": 1.97
       },
-      "rsi": 78.59,
-      "atr": 0.04,
+      "rsi": 78.21,
+      "atr": 0.03,
       "macd": {
         "macd_line": 0.04,
         "signal_line": 0.03,
@@ -474,7 +474,7 @@
       },
       "funding_rate": 0.00524,
       "funding_formatted": "0.0052%",
-      "open_interest": 228934180.7,
+      "open_interest": 228181941.2,
       "long_percent": 69.9,
       "short_percent": 30.1,
       "setups": {
@@ -512,7 +512,7 @@
           "reasons": [
             "Consolidação - aguardar confirmação",
             "Preço próximo à resistência $2",
-            "RSI sobrecomprado (78.59)"
+            "RSI sobrecomprado (78.21)"
           ]
         }
       },
@@ -526,27 +526,27 @@
           "Fear extremo (25) - oportunidade"
         ],
         "bearish_factors": [
-          "RSI sobrecomprado (78.59)"
+          "RSI sobrecomprado (78.21)"
         ]
       },
       "has_setup": true
     },
     "ADA": {
       "symbol": "ADA",
-      "price": 0.3943,
-      "price_formatted": "$0.3943",
-      "price_change": -0.48,
-      "price_change_formatted": "-0.48%",
+      "price": 0.3936,
+      "price_formatted": "$0.3936",
+      "price_change": -0.556,
+      "price_change_formatted": "-0.56%",
       "high_24h": 0.399,
       "low_24h": 0.3826,
-      "volume": 96363073.5,
+      "volume": 96166226.1,
       "emas": {
-        "price": 0.3943,
+        "price": 0.3936,
         "ema_9": 0.39,
         "ema_21": 0.37,
         "ema_200": 0.39
       },
-      "rsi": 72.35,
+      "rsi": 72.17,
       "atr": 0.01,
       "macd": {
         "macd_line": 0.01,
@@ -582,7 +582,7 @@
       },
       "funding_rate": 0.01,
       "funding_formatted": "0.0100%",
-      "open_interest": 300971897.0,
+      "open_interest": 300656648.0,
       "long_percent": 67.0,
       "short_percent": 33.0,
       "setups": {
@@ -617,7 +617,7 @@
           "Fear extremo (25) - oportunidade"
         ],
         "bearish_factors": [
-          "RSI sobrecomprado (72.35)"
+          "RSI sobrecomprado (72.17)"
         ]
       },
       "has_setup": true

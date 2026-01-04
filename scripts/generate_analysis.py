@@ -7,6 +7,7 @@ Gera análises para BTC + Top 5 Altcoins no formato do site
 import requests
 import json
 import os
+from pathlib import Path
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Tuple
 import pytz

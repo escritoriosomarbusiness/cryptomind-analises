@@ -3,588 +3,1326 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CryptoMind IA - Análise de Trading</title>
-    <style>
-        :root {
-            --bg-primary: #0f0f0f;
-            --bg-secondary: #1a1a1a;
-            --bg-card: #242424;
-            --text-primary: #ffffff;
-            --text-secondary: #a0a0a0;
-            --accent-blue: #3B82F6;
-            --accent-green: #22C55E;
-            --accent-orange: #F97316;
-            --accent-red: #EF4444;
-            --accent-yellow: #EAB308;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        header {
-            text-align: center;
-            padding: 40px 0;
-            border-bottom: 1px solid #333;
-            margin-bottom: 30px;
-        }
-        
-        header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-green));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .timestamp {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-        
-        .macro-section {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-        
-        .macro-card {
-            background: var(--bg-card);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .macro-card h3 {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-        }
-        
-        .macro-value {
-            font-size: 2rem;
-            font-weight: bold;
-        }
-        
-        .macro-label {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin-top: 5px;
-        }
-        
-        .bullish { color: var(--accent-green); }
-        .bearish { color: var(--accent-red); }
-        .neutral { color: var(--accent-yellow); }
-        
-        .section-title {
-            font-size: 1.5rem;
-            margin: 40px 0 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #333;
-        }
-        
-        .setups-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 20px;
-        }
-        
-        .setup-card {
-            background: var(--bg-card);
-            border-radius: 12px;
-            overflow: hidden;
-            transition: transform 0.2s;
-        }
-        
-        .setup-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .setup-header {
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .setup-header.ts1 { background: linear-gradient(135deg, #3B82F6, #1D4ED8); }
-        .setup-header.ts2 { background: linear-gradient(135deg, #22C55E, #15803D); }
-        .setup-header.ts3 { background: linear-gradient(135deg, #F97316, #C2410C); }
-        
-        .setup-title {
-            font-size: 1.1rem;
-            font-weight: bold;
-        }
-        
-        .setup-badge {
-            background: rgba(255,255,255,0.2);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-        }
-        
-        .setup-body {
-            padding: 20px;
-        }
-        
-        .setup-score {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .score-value {
-            font-size: 2rem;
-            font-weight: bold;
-        }
-        
-        .score-label {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-        
-        .confidence-high { color: var(--accent-green); }
-        .confidence-medium { color: var(--accent-yellow); }
-        .confidence-low { color: var(--accent-red); }
-        
-        .setup-details {
-            display: grid;
-            gap: 10px;
-        }
-        
-        .detail-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #333;
-        }
-        
-        .detail-label {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-        
-        .detail-value {
-            font-weight: 500;
-        }
-        
-        .partials-section {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #333;
-        }
-        
-        .partial-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 5px 0;
-            font-size: 0.85rem;
-        }
-        
-        .no-setups {
-            text-align: center;
-            padding: 40px;
-            color: var(--text-secondary);
-        }
-        
-        .legend {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin: 20px 0;
-            flex-wrap: wrap;
-        }
-        
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .legend-color {
-            width: 20px;
-            height: 20px;
-            border-radius: 4px;
-        }
-        
-        .legend-color.ts1 { background: var(--accent-blue); }
-        .legend-color.ts2 { background: var(--accent-green); }
-        .legend-color.ts3 { background: var(--accent-orange); }
-        
-        footer {
-            text-align: center;
-            padding: 40px 0;
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            border-top: 1px solid #333;
-            margin-top: 40px;
-        }
-        
-        @media (max-width: 768px) {
-            .setups-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            header h1 {
-                font-size: 1.8rem;
-            }
-        }
-    </style>
+    <title>CryptoMind IA - Análises Diárias de Day Trade</title>
+    <meta name="description" content="Análises diárias de criptomoedas com IA para Day Trade. BTC, ETH, SOL, BNB, XRP, ADA - Setups, níveis-chave e sentimento de mercado.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/png" href="images/favicon.png">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <nav style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 1rem;">
-                <a href="index.html" style="color: #22C55E; text-decoration: none;">Análise Atual</a>
-                <a href="history.html" style="color: #a0a0a0; text-decoration: none;">Histórico</a>
-                <a href="dashboard.html" style="color: #a0a0a0; text-decoration: none;">Dashboard</a>
-            </nav>
-            <h1>CryptoMind IA</h1>
-            <p class="timestamp">Análise gerada em 2026-01-03T18:06:15.956570-03:00</p>
-        </header>
-        
-        <section class="macro-section">
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 4L36 12V28L20 36L4 28V12L20 4Z" stroke="url(#gradient1)" stroke-width="2" fill="none"/>
+                            <circle cx="20" cy="20" r="8" fill="url(#gradient1)"/>
+                            <defs>
+                                <linearGradient id="gradient1" x1="4" y1="4" x2="36" y2="36">
+                                    <stop offset="0%" stop-color="#00D4FF"/>
+                                    <stop offset="100%" stop-color="#7B2DFF"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="logo-text">
+                        <span class="logo-name">CryptoMind</span>
+                        <span class="logo-suffix">IA</span>
+                    </div>
+                </div>
+                <nav class="nav">
+                    <a href="#resumo" class="nav-link active">Resumo</a>
+                    <a href="#btc" class="nav-link">BTC</a>
+                    <a href="#eth" class="nav-link">ETH</a>
+                    <a href="#sol" class="nav-link">SOL</a>
+                    <a href="https://cryptomindia.com" class="nav-link btn-primary" target="_blank">Site Principal</a>
+                </nav>
+                <button class="mobile-menu-btn" aria-label="Menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="pulse"></span>
+                    <span>Atualizado às <span id="update-time">21:51</span> BRT</span>
+                </div>
+                <h1 class="hero-title">Análise Pré-Mercado</h1>
+                <p class="hero-date" id="analysis-date">03 de Janeiro de 2026</p>
+                <div class="hero-stats">
+                    <div class="stat-card">
+                        <span class="stat-label">BTC/USDT</span>
+                        <span class="stat-value">$91,204.32</span>
+                        <span class="stat-change positive">+1.19%</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Fear & Greed</span>
+                        <span class="stat-value">25</span>
+                        <span class="stat-change negative">Extreme Fear</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Viés BTC</span>
+                        <span class="stat-value">BULLISH</span>
+                        <span class="stat-change bullish">Day Trade</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-bg"></div>
+    </section>
+
+    <!-- Asset Navigation -->
+    <section class="asset-nav-section" id="resumo">
+        <div class="container">
+            <div class="asset-nav-wrapper">
+                <h3>Navegação Rápida</h3>
+                <div class="asset-nav">
+                    <a href="#btc" class="asset-nav-link">BTC</a>
+<a href="#eth" class="asset-nav-link">ETH</a>
+<a href="#sol" class="asset-nav-link">SOL</a>
+<a href="#bnb" class="asset-nav-link">BNB</a>
+<a href="#xrp" class="asset-nav-link">XRP</a>
+<a href="#ada" class="asset-nav-link">ADA</a>
+                </div>
+            </div>
             
-        <div class="macro-card">
-            <h3>Fear & Greed</h3>
-            <div class="macro-value bullish">29</div>
-            <div class="macro-label">Fear</div>
+            <!-- Summary Table -->
+            <div class="summary-table-wrapper">
+                <h3>Resumo dos Ativos</h3>
+                <table class="summary-table">
+                    <thead>
+                        <tr>
+                            <th>Ativo</th>
+                            <th>Preço</th>
+                            <th>24h</th>
+                            <th>Viés</th>
+                            <th>Setup</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                <tr onclick="document.getElementById('btc').scrollIntoView({behavior: 'smooth'})">
+                    <td class="asset-symbol">BTC</td>
+                    <td class="asset-price">$91,204.32</td>
+                    <td class="asset-change positive">+1.19%</td>
+                    <td class="asset-bias bullish">BULLISH</td>
+                    <td class="asset-setup"><span class="setup-badge both">LONG + SHORT</span></td>
+                </tr>
+            
+
+                <tr onclick="document.getElementById('eth').scrollIntoView({behavior: 'smooth'})">
+                    <td class="asset-symbol">ETH</td>
+                    <td class="asset-price">$3,147.83</td>
+                    <td class="asset-change positive">+0.46%</td>
+                    <td class="asset-bias bullish">BULLISH</td>
+                    <td class="asset-setup"><span class="setup-badge long">LONG</span></td>
+                </tr>
+            
+
+                <tr onclick="document.getElementById('sol').scrollIntoView({behavior: 'smooth'})">
+                    <td class="asset-symbol">SOL</td>
+                    <td class="asset-price">$134.28</td>
+                    <td class="asset-change positive">+1.14%</td>
+                    <td class="asset-bias bullish">BULLISH</td>
+                    <td class="asset-setup"><span class="setup-badge long">LONG</span></td>
+                </tr>
+            
+
+                <tr onclick="document.getElementById('bnb').scrollIntoView({behavior: 'smooth'})">
+                    <td class="asset-symbol">BNB</td>
+                    <td class="asset-price">$880.10</td>
+                    <td class="asset-change negative">-0.18%</td>
+                    <td class="asset-bias bullish">BULLISH</td>
+                    <td class="asset-setup"><span class="setup-badge long">LONG</span></td>
+                </tr>
+            
+
+                <tr onclick="document.getElementById('xrp').scrollIntoView({behavior: 'smooth'})">
+                    <td class="asset-symbol">XRP</td>
+                    <td class="asset-price">$2.0429</td>
+                    <td class="asset-change positive">+1.08%</td>
+                    <td class="asset-bias bullish">BULLISH</td>
+                    <td class="asset-setup"><span class="setup-badge both">LONG + SHORT</span></td>
+                </tr>
+            
+
+                <tr onclick="document.getElementById('ada').scrollIntoView({behavior: 'smooth'})">
+                    <td class="asset-symbol">ADA</td>
+                    <td class="asset-price">$0.3943</td>
+                    <td class="asset-change negative">-0.48%</td>
+                    <td class="asset-bias bullish">BULLISH</td>
+                    <td class="asset-setup"><span class="setup-badge long">LONG</span></td>
+                </tr>
+            
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- USDT.D - Indicador Macro -->
+            
+            <div class="usdt-d-section">
+                <div class="usdt-d-header">
+                    <div class="usdt-d-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                    </div>
+                    <div class="usdt-d-title">
+                        <h3>USDT.D - Indicador Macro</h3>
+                        <span class="usdt-d-subtitle">Dominância do USDT no mercado</span>
+                    </div>
+                    <div class="usdt-d-impact bearish">
+                        <span class="impact-label">Impacto Cripto:</span>
+                        <span class="impact-value">BEARISH</span>
+                    </div>
+                </div>
+                
+                <div class="usdt-d-body">
+                    <div class="usdt-d-metrics">
+                        <div class="usdt-metric">
+                            <span class="metric-label">Dominância Atual</span>
+                            <span class="metric-value">5.853%</span>
+                        </div>
+                        <div class="usdt-metric">
+                            <span class="metric-label">EMA 9</span>
+                            <span class="metric-value">5.850%</span>
+                            <span class="metric-status">❌ Abaixo</span>
+                        </div>
+                        <div class="usdt-metric">
+                            <span class="metric-label">EMA 21</span>
+                            <span class="metric-value">5.850%</span>
+                            <span class="metric-status">❌ Abaixo</span>
+                        </div>
+                        <div class="usdt-metric">
+                            <span class="metric-label">EMA 200</span>
+                            <span class="metric-value">5.850%</span>
+                            <span class="metric-status">❌ Abaixo</span>
+                        </div>
+                        <div class="usdt-metric">
+                            <span class="metric-label">RSI</span>
+                            <span class="metric-value">47.3</span>
+                        </div>
+                        <div class="usdt-metric">
+                            <span class="metric-label">MACD</span>
+                            <span class="metric-value">0.0000%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="usdt-d-levels">
+                        <h4>Níveis de S/R</h4>
+                        <div class="levels-mini">
+                            <div class="level-item resistance">
+                                <span>Resistência W1</span>
+                                <span>6.74%</span>
+                            </div>
+                            <div class="level-item resistance">
+                                <span>Resistência D1</span>
+                                <span>6.53%</span>
+                            </div>
+                            <div class="level-item current">
+                                <span>Atual</span>
+                                <span>5.853%</span>
+                            </div>
+                            <div class="level-item support">
+                                <span>Suporte H4</span>
+                                <span>6.00%</span>
+                            </div>
+                            <div class="level-item support">
+                                <span>Suporte W1</span>
+                                <span>5.86%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="usdt-d-analysis">
+                        <div class="analysis-item">
+                            <span class="analysis-icon">📊</span>
+                            <span class="analysis-text">USDT.D acima das EMAs - dinheiro saindo de cripto e indo para stablecoins</span>
+                        </div>
+                        <div class="analysis-item">
+                            <span class="analysis-icon">🎯</span>
+                            <span class="analysis-text">Próximo nível: Suporte W1: 5.86%</span>
+                        </div>
+                        <div class="analysis-item">
+                            <span class="analysis-icon">⚠️</span>
+                            <span class="analysis-text">Invalidação: USDT.D cair abaixo de 5.86%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            
+            <!-- Fear & Greed -->
+            
+            <div class="fear-greed-card">
+                <h4>Fear & Greed Index</h4>
+                <div class="gauge-container">
+                    <div class="gauge">
+                        <div class="gauge-fill" style="--value: 25;"></div>
+                        <div class="gauge-center">
+                            <span class="gauge-value">25</span>
+                            <span class="gauge-label">Extreme Fear</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="sentiment-history">
+                    <div class="history-item">
+                        <span>Ontem</span>
+                        <span class="extreme-fear">29</span>
+                    </div>
+                    <div class="history-item">
+                        <span>Semana passada</span>
+                        <span class="extreme-fear">24</span>
+                    </div>
+                </div>
+            </div>
+        
         </div>
-        <div class="macro-card">
-            <h3>BTC Dominance</h3>
-            <div class="macro-value bearish">56.92%</div>
-            <div class="macro-label">BEARISH</div>
-        </div>
-        <div class="macro-card">
-            <h3>USDT Dominance</h3>
-            <div class="macro-value neutral">5.92%</div>
-            <div class="macro-label">NEUTRO</div>
-        </div>
-        <div class="macro-card">
-            <h3>Sentimento Geral</h3>
-            <div class="macro-value">NEUTRO</div>
-            <div class="macro-label">Baseado em múltiplos fatores</div>
-        </div>
+    </section>
+
+    <!-- Asset Sections -->
     
-        </section>
+            <section class="asset-section first" id="btc">
+                <div class="container">
+                    <div class="asset-header">
+                        <h2>BTC/USDT</h2>
+                        <div class="asset-price-display">
+                            <span class="price">$91,204.32</span>
+                            <span class="change positive">+1.19%</span>
+                        </div>
+                    </div>
+                    
+                    
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon blue">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                    </div>
+                    <div class="metric-info">
+                        <span class="metric-label">Preço Atual</span>
+                        <span class="metric-value">$91,204.32</span>
+                    </div>
+                    <span class="metric-badge positive">+1.19%</span>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-icon purple">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                    </div>
+                    <div class="metric-info">
+                        <span class="metric-label">Funding Rate</span>
+                        <span class="metric-value">0.0095%</span>
+                    </div>
+                    <span class="metric-badge positive">Bullish</span>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-icon orange">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6l4 2"/>
+                        </svg>
+                    </div>
+                    <div class="metric-info">
+                        <span class="metric-label">RSI (14)</span>
+                        <span class="metric-value">80.2</span>
+                    </div>
+                    <span class="metric-badge negative">Sobrecomprado</span>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-icon red">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2a10 10 0 1 0 10 10H12V2z"/>
+                        </svg>
+                    </div>
+                    <div class="metric-info">
+                        <span class="metric-label">Long/Short</span>
+                        <span class="metric-value">58.0/42.0</span>
+                    </div>
+                    <span class="metric-badge neutral">Long Heavy</span>
+                </div>
+            </div>
         
-        <div class="legend">
-            <div class="legend-item">
-                <div class="legend-color ts1"></div>
-                <span>TS1 - Rompimento</span>
+                    
+            <div class="levels-section">
+                <h3>Níveis-Chave do Dia</h3>
+                <div class="levels-grid">
+                    <div class="level-card resistance">
+                        <span class="level-type">Resistência 2</span>
+                        <span class="level-price">$92,000</span>
+                        <span class="level-note">Zona de liquidez</span>
+                    </div>
+                    <div class="level-card resistance">
+                        <span class="level-type">Resistência 1</span>
+                        <span class="level-price">$91,610</span>
+                        <span class="level-note">High do dia (PDH)</span>
+                    </div>
+                    <div class="level-card current">
+                        <span class="level-type">Preço Atual</span>
+                        <span class="level-price">$91,204.32</span>
+                        <span class="level-note">BTC/USDT</span>
+                    </div>
+                    <div class="level-card support">
+                        <span class="level-type">Suporte 1</span>
+                        <span class="level-price">$89,314</span>
+                        <span class="level-note">Low do dia (PDL)</span>
+                    </div>
+                    <div class="level-card support">
+                        <span class="level-type">Suporte 2</span>
+                        <span class="level-price">$89,314</span>
+                        <span class="level-note">Suporte forte</span>
+                    </div>
+                </div>
             </div>
-            <div class="legend-item">
-                <div class="legend-color ts2"></div>
-                <span>TS2 - Continuação</span>
+        
+                    
+            <div class="setups-section">
+                <h3>Setups do Dia</h3>
+                <div class="setups-grid">
+                    
+            <div class="setup-card long">
+                <div class="setup-header">
+                    <span class="setup-type">LONG</span>
+                    <span class="setup-badge">Conservador</span>
+                </div>
+                <div class="setup-body">
+                    <div class="setup-row">
+                        <span class="setup-label">Entrada</span>
+                        <span class="setup-value">$91,091 - $91,455</span>
+                    </div>
+                    <div class="setup-row">
+                        <span class="setup-label">Stop Loss</span>
+                        <span class="setup-value stop">$90,090</span>
+                    </div>
+                    <div class="setup-row">
+                        <span class="setup-label">Alvo 1</span>
+                        <span class="setup-value target">$92,592 <small>(R/R 1.5:1)</small></span>
+                    </div>
+                    <div class="setup-row">
+                        <span class="setup-label">Alvo 2</span>
+                        <span class="setup-value target">$93,594 <small>(R/R 2.5:1)</small></span>
+                    </div>
+                    <div class="setup-trigger">
+                        <strong>Gatilho:</strong> Rejeição com volume no suporte
+                    </div>
+                </div>
             </div>
-            <div class="legend-item">
-                <div class="legend-color ts3"></div>
-                <span>TS3 - Reversão</span>
+        
+            <div class="setup-card short">
+                <div class="setup-header">
+                    <span class="setup-type">SHORT</span>
+                    <span class="setup-badge">Agressivo</span>
+                </div>
+                <div class="setup-body">
+                    <div class="setup-row">
+                        <span class="setup-label">Entrada</span>
+                        <span class="setup-value">$91,152 - $91,519</span>
+                    </div>
+                    <div class="setup-row">
+                        <span class="setup-label">Stop Loss</span>
+                        <span class="setup-value stop">$92,526</span>
+                    </div>
+                    <div class="setup-row">
+                        <span class="setup-label">Alvo 1</span>
+                        <span class="setup-value target">$90,007 <small>(R/R 1.5:1)</small></span>
+                    </div>
+                    <div class="setup-row">
+                        <span class="setup-label">Alvo 2</span>
+                        <span class="setup-value target">$88,999 <small>(R/R 2.5:1)</small></span>
+                    </div>
+                    <div class="setup-trigger">
+                        <strong>Gatilho:</strong> Rejeição com volume na resistência
+                    </div>
+                </div>
+            </div>
+        
+                </div>
+            </div>
+        
+                    
+            <div class="bias-section">
+                <h3>Viés do Dia</h3>
+                <div class="bias-card-wrapper">
+                    <div class="bias-indicator bullish">
+                        <span class="bias-text">BULLISH</span>
+                    </div>
+                    <div class="bias-reasons">
+                        <div class="reason positive"><span>✓</span> Preço acima da EMA 200</div>
+<div class="reason positive"><span>✓</span> EMA 9 > EMA 21</div>
+<div class="reason positive"><span>✓</span> Funding Rate saudável</div>
+<div class="reason positive"><span>✓</span> Fear extremo (25) - oportunidade</div>
+                        <div class="reason negative"><span>✗</span> RSI sobrecomprado (80.2)</div>
+                    </div>
+                </div>
+            </div>
+        
+                </div>
+            </section>
+        
+            <section class="asset-section" id="eth">
+                <div class="container">
+                    <div class="asset-header">
+                        <h2>ETH/USDT</h2>
+                        <div class="asset-price-display">
+                            <span class="price">$3,147.83</span>
+                            <span class="change positive">+0.46%</span>
+                        </div>
+                    </div>
+                    
+                    
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon blue">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                    </div>
+                    <div class="metric-info">
+                        <span class="metric-label">Preço Atual</span>
+                        <span class="metric-value">$3,147.83</span>
+                    </div>
+                    <span class="metric-badge positive">+0.46%</span>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-icon purple">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                    </div>
+                    <div class="metric-info">
+                        <span class="metric-label">Funding Rate</span>
+                        <span class="metric-value">0.0076%</span>
+                    </div>
+                    <span class="metric-badge positive">Bullish</span>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-icon orange">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6l4 2"/>
+                        </svg>
+                    </div>
+                    <div class="metric-info">
+                        <span class="metric-label">RSI (14)</span>
+                        <span class="metric-value">83.0</span>
+                    </div>
+                    <span class="metric-badge negative">Sobrecomprado</span>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-icon red">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2a10 10 0 1 0 10 10H12V2z"/>
+                        </svg>
+                    </div>
+                    <div class="metric-info">
+                        <span class="metric-label">Long/Short</span>
+                        <span class="metric-value">58.8/41.2</span>
+                    </div>
+                    <span class="metric-badge neutral">Long Heavy</span>
+                </div>
+            </div>
+        
+                    
+            <div class="levels-section">
+                <h3>Níveis-Chave do Dia</h3>
+                <div class="levels-grid">
+                    <div class="level-card resistance">
+                        <span class="level-type">Resistência 2</span>
+                        <span class="level-price">$4,000</span>
+                        <span class="level-note">Zona de liquidez</span>
+                    </div>
+                    <div class="level-card resistance">
+                        <span class="level-type">Resistência 1</span>
+                        <span class="level-price">$3,159</span>
+                        <span class="level-note">High do dia (PDH)</span>
+                    </div>
+                    <div class="level-card current">
+                        <span class="level-type">Preço Atual</span>
+                        <span class="level-price">$3,147.83</span>
+                        <span class="level-note">ETH/USDT</span>
+                    </div>
+                    <div class="level-card support">
+                        <span class="level-type">Suporte 1</span>
+                        <span class="level-price">$3,076</span>
+                        <span class="level-note">Low do dia (PDL)</span>
+                    </div>
+                    <div class="level-card support">
+                        <span class="level-type">Suporte 2</span>
+                        <span class="level-price">$3,000</span>
+                        <span class="level-note">Suporte forte</span>
+                    </div>
+                </div>
+            </div>
+        
+                    
+            <div class="setups-section">
+                <h3>Setups do Dia</h3>
+                <div class="setups-grid">
+                    
+            <div class="setup-card long">
+                <div class="setup-header">
+                    <span class="setup-type">LONG</span>
+                    <span class="setup-badge">Conservador</span>
+                </div>
+                <div class="setup-body">
+                    <div class="setup-row">
+                        <span class="setup-label">Entrada</span>
+                        <span class="setup-value">$3,079 - $3,091</span>
+                    </div>
+                    <div class="setup-row">
+                        <span class="setup-label">Stop Loss</span>
+                        <span class="setup-value stop">$3,045</span>
+                    </div>
+                    <div class="setup-row">
+                        <span class="setup-label">Alvo 1</span>
+                        <span class="setup-value target">$3,130 <small>(R/R 1.5:1)</small></span>
+                    </div>
+                    <div class="setup-row">
+                        <span class="setup-label">Alvo 2</span>
+                        <span class="setup-value target">$3,164 <small>(R/R 2.5:1)</small></span>
+                    </div>
+                    <div class="setup-trigger">
+                        <strong>Gatilho:</strong> Rejeição com volume no suporte
+                    </div>
+                </div>
+            </div>
+        
+                </div>
+            </div>
+        
+                    
+            <div class="bias-section">
+                <h3>Viés do Dia</h3>
+                <div class="bias-card-wrapper">
+                    <div class="bias-indicator bullish">
+                        <span class="bias-text">BULLISH</span>
+                    </div>
+                    <div class="bias-reasons">
+                        <div class="reason positive"><span>✓</span> Estrutura de alta (HH + HL)</div>
+<div class="reason positive"><span>✓</span> Preço acima da EMA 200</div>
+<div class="reason positive"><span>✓</span> EMA 9 > EMA 21</div>
+<div class="reason positive"><span>✓</span> Funding Rate saudável</div>
+<div class="reason positive"><span>✓</span> Fear extremo (25) - oportunidade</div>
+                        <div class="reason negative"><span>✗</span> RSI sobrecomprado (83.01)</div>
+                    </div>
+                </div>
+            </div>
+        
+                </div>
+            </section>
+        
+            <section class="asset-section" id="sol">
+                <div class="container">
+                    <div class="asset-header">
+                        <h2>SOL/USDT</h2>
+                        <div class="asset-price-display">
+                            <span class="price">$134.28</span>
+                            <span class="change positive">+1.14%</span>
+                        </div>
+                    </div>
+                    
+                    
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon blue">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                    </div>
+                    <div class="metric-info">
+                        <span class="metric-label">Preço Atual</span>
+                        <span class="metric-value">$134.28</span>
+                    </div>
+                    <span class="metric-badge positive">+1.14%</span>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-icon purple">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                    </div>
+                    <div class="metric-info">
+                        <span class="metric-label">Funding Rate</span>
+                        <span class="metric-value">0.0100%</span>
+                    </div>
+                    <span class="metric-badge neutral">Neutro</span>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-icon orange">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6l4 2"/>
+                        </svg>
+                    </div>
+                    <div class="metric-info">
+                        <span class="metric-label">RSI (14)</span>
+                        <span class="metric-value">78.8</span>
+                    </div>
+                    <span class="metric-badge negative">Sobrecomprado</span>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-icon red">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2a10 10 0 1 0 10 10H12V2z"/>
+                        </svg>
+                    </div>
+                    <div class="metric-info">
+                        <span class="metric-label">Long/Short</span>
+                        <span class="metric-value">71.0/29.0</span>
+                    </div>
+                    <span class="metric-badge neutral">Long Heavy</span>
+                </div>
+            </div>
+        
+                    
+            <div class="levels-section">
+                <h3>Níveis-Chave do Dia</h3>
+                <div class="levels-grid">
+                    <div class="level-card resistance">
+                        <span class="level-type">Resistência 2</span>
+                        <span class="level-price">$200.00</span>
+                        <span class="level-note">Zona de liquidez</span>
+                    </div>
+                    <div class="level-card resistance">
+                        <span class="level-type">Resistência 1</span>
+                        <span class="level-price">$134.97</span>
+                        <span class="level-note">High do dia (PDH)</span>
+                    </div>
+                    <div class="level-card current">
+                        <span class="level-type">Preço Atual</span>
+                        <span class="level-price">$134.28</span>
+                        <span class="level-note">SOL/USDT</span>
+                    </div>
+                    <div class="level-card support">
+                        <span class="level-type">Suporte 1</span>
+                        <span class="level-price">$129.60</span>
+                        <span class="level-note">Low do dia (PDL)</span>
+                    </div>
+                    <div class="level-card support">
+                        <span class="level-type">Suporte 2</span>
+                        <span class="level-price">$100.00</span>
+                        <span class="level-note">Suporte forte</span>
+                    </div>
+                </div>
+            </div>
+        
+                    
+            <div class="setups-section">
+                <h3>Setups do Dia</h3>
+                <div class="setups-grid">
+                    
+            <div class="setup-card long">
+                <div class="setup-header">
+                    <span class="setup-type">LONG</span>
+                    <span class="setup-badge">Moderado</span>
+                </div>
+                <div class="setup-body">
+                    <div class="setup-row">
+                        <span class="setup-label">Entrada</span>
+                        <span class="setup-value">$129.73 - $130.25</span>
+                    </div>
+                    <div class="setup-row">
+                        <span class="setup-label">Stop Loss</span>
+                        <span class="setup-value stop">$128.30</span>
+                    </div>
+                    <div class="setup-row">
+                        <span class="setup-label">Alvo 1</span>
+                        <span class="setup-value target">$131.87 <small>(R/R 1.5:1)</small></span>
+                    </div>
+                    <div class="setup-row">
+                        <span class="setup-label">Alvo 2</span>
+                        <span class="setup-value target">$133.29 <small>(R/R 2.5:1)</small></span>
+                    </div>
+                    <div class="setup-trigger">
+                        <strong>Gatilho:</strong> Rejeição com volume no suporte
+                    </div>
+                </div>
+            </div>
+        
+                </div>
+            </div>
+        
+                    
+            <div class="bias-section">
+                <h3>Viés do Dia</h3>
+                <div class="bias-card-wrapper">
+                    <div class="bias-indicator bullish">
+                        <span class="bias-text">BULLISH</span>
+                    </div>
+                    <div class="bias-reasons">
+                        <div class="reason positive"><span>✓</span> Estrutura de alta (HH + HL)</div>
+<div class="reason positive"><span>✓</span> Preço acima da EMA 200</div>
+<div class="reason positive"><span>✓</span> EMA 9 > EMA 21</div>
+<div class="reason positive"><span>✓</span> Funding Rate saudável</div>
+<div class="reason positive"><span>✓</span> Fear extremo (25) - oportunidade</div>
+                        <div class="reason negative"><span>✗</span> RSI sobrecomprado (78.82)</div>
+                    </div>
+                </div>
+            </div>
+        
+                </div>
+            </section>
+        
+            <section class="asset-section" id="bnb">
+                <div class="container">
+                    <div class="asset-header">
+                        <h2>BNB/USDT</h2>
+                        <div class="asset-price-display">
+                            <span class="price">$880.10</span>
+                            <span class="change negative">-0.18%</span>
+                        </div>
+                    </div>
+                    
+                    
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon blue">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                    </div>
+                    <div class="metric-info">
+                        <span class="metric-label">Preço Atual</span>
+                        <span class="metric-value">$880.10</span>
+                    </div>
+                    <span class="metric-badge negative">-0.18%</span>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-icon purple">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                    </div>
+                    <div class="metric-info">
+                        <span class="metric-label">Funding Rate</span>
+                        <span class="metric-value">0.0021%</span>
+                    </div>
+                    <span class="metric-badge positive">Bullish</span>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-icon orange">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6l4 2"/>
+                        </svg>
+                    </div>
+                    <div class="metric-info">
+                        <span class="metric-label">RSI (14)</span>
+                        <span class="metric-value">74.1</span>
+                    </div>
+                    <span class="metric-badge negative">Sobrecomprado</span>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-icon red">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2a10 10 0 1 0 10 10H12V2z"/>
+                        </svg>
+                    </div>
+                    <div class="metric-info">
+                        <span class="metric-label">Long/Short</span>
+                        <span class="metric-value">73.5/26.5</span>
+                    </div>
+                    <span class="metric-badge neutral">Long Heavy</span>
+                </div>
+            </div>
+        
+                    
+            <div class="levels-section">
+                <h3>Níveis-Chave do Dia</h3>
+                <div class="levels-grid">
+                    <div class="level-card resistance">
+                        <span class="level-type">Resistência 2</span>
+                        <span class="level-price">$900.00</span>
+                        <span class="level-note">Zona de liquidez</span>
+                    </div>
+                    <div class="level-card resistance">
+                        <span class="level-type">Resistência 1</span>
+                        <span class="level-price">$883.30</span>
+                        <span class="level-note">High do dia (PDH)</span>
+                    </div>
+                    <div class="level-card current">
+                        <span class="level-type">Preço Atual</span>
+                        <span class="level-price">$880.10</span>
+                        <span class="level-note">BNB/USDT</span>
+                    </div>
+                    <div class="level-card support">
+                        <span class="level-type">Suporte 1</span>
+                        <span class="level-price">$868.65</span>
+                        <span class="level-note">Low do dia (PDL)</span>
+                    </div>
+                    <div class="level-card support">
+                        <span class="level-type">Suporte 2</span>
+                        <span class="level-price">$800.00</span>
+                        <span class="level-note">Suporte forte</span>
+                    </div>
+                </div>
+            </div>
+        
+                    
+            <div class="setups-section">
+                <h3>Setups do Dia</h3>
+                <div class="setups-grid">
+                    
+            <div class="setup-card long">
+                <div class="setup-header">
+                    <span class="setup-type">LONG</span>
+                    <span class="setup-badge">Conservador</span>
+                </div>
+                <div class="setup-body">
+                    <div class="setup-row">
+                        <span class="setup-label">Entrada</span>
+                        <span class="setup-value">$869.52 - $872.99</span>
+                    </div>
+                    <div class="setup-row">
+                        <span class="setup-label">Stop Loss</span>
+                        <span class="setup-value stop">$859.96</span>
+                    </div>
+                    <div class="setup-row">
+                        <span class="setup-label">Alvo 1</span>
+                        <span class="setup-value target">$883.85 <small>(R/R 1.5:1)</small></span>
+                    </div>
+                    <div class="setup-row">
+                        <span class="setup-label">Alvo 2</span>
+                        <span class="setup-value target">$893.41 <small>(R/R 2.5:1)</small></span>
+                    </div>
+                    <div class="setup-trigger">
+                        <strong>Gatilho:</strong> Rejeição com volume no suporte
+                    </div>
+                </div>
+            </div>
+        
+                </div>
+            </div>
+        
+                    
+            <div class="bias-section">
+                <h3>Viés do Dia</h3>
+                <div class="bias-card-wrapper">
+                    <div class="bias-indicator bullish">
+                        <span class="bias-text">BULLISH</span>
+                    </div>
+                    <div class="bias-reasons">
+                        <div class="reason positive"><span>✓</span> Estrutura de alta (HH + HL)</div>
+<div class="reason positive"><span>✓</span> Preço acima da EMA 200</div>
+<div class="reason positive"><span>✓</span> EMA 9 > EMA 21</div>
+<div class="reason positive"><span>✓</span> Funding Rate saudável</div>
+<div class="reason positive"><span>✓</span> Fear extremo (25) - oportunidade</div>
+                        <div class="reason negative"><span>✗</span> RSI sobrecomprado (74.13)</div>
+                    </div>
+                </div>
+            </div>
+        
+                </div>
+            </section>
+        
+            <section class="asset-section" id="xrp">
+                <div class="container">
+                    <div class="asset-header">
+                        <h2>XRP/USDT</h2>
+                        <div class="asset-price-display">
+                            <span class="price">$2.0429</span>
+                            <span class="change positive">+1.08%</span>
+                        </div>
+                    </div>
+                    
+                    
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon blue">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                    </div>
+                    <div class="metric-info">
+                        <span class="metric-label">Preço Atual</span>
+                        <span class="metric-value">$2.0429</span>
+                    </div>
+                    <span class="metric-badge positive">+1.08%</span>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-icon purple">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                    </div>
+                    <div class="metric-info">
+                        <span class="metric-label">Funding Rate</span>
+                        <span class="metric-value">0.0052%</span>
+                    </div>
+                    <span class="metric-badge positive">Bullish</span>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-icon orange">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6l4 2"/>
+                        </svg>
+                    </div>
+                    <div class="metric-info">
+                        <span class="metric-label">RSI (14)</span>
+                        <span class="metric-value">78.6</span>
+                    </div>
+                    <span class="metric-badge negative">Sobrecomprado</span>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-icon red">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2a10 10 0 1 0 10 10H12V2z"/>
+                        </svg>
+                    </div>
+                    <div class="metric-info">
+                        <span class="metric-label">Long/Short</span>
+                        <span class="metric-value">69.9/30.1</span>
+                    </div>
+                    <span class="metric-badge neutral">Long Heavy</span>
+                </div>
+            </div>
+        
+                    
+            <div class="levels-section">
+                <h3>Níveis-Chave do Dia</h3>
+                <div class="levels-grid">
+                    <div class="level-card resistance">
+                        <span class="level-type">Resistência 2</span>
+                        <span class="level-price">$12.00</span>
+                        <span class="level-note">Zona de liquidez</span>
+                    </div>
+                    <div class="level-card resistance">
+                        <span class="level-type">Resistência 1</span>
+                        <span class="level-price">$2.06</span>
+                        <span class="level-note">High do dia (PDH)</span>
+                    </div>
+                    <div class="level-card current">
+                        <span class="level-type">Preço Atual</span>
+                        <span class="level-price">$2.0429</span>
+                        <span class="level-note">XRP/USDT</span>
+                    </div>
+                    <div class="level-card support">
+                        <span class="level-type">Suporte 1</span>
+                        <span class="level-price">$1.98</span>
+                        <span class="level-note">Low do dia (PDL)</span>
+                    </div>
+                    <div class="level-card support">
+                        <span class="level-type">Suporte 2</span>
+                        <span class="level-price">$1.98</span>
+                        <span class="level-note">Suporte forte</span>
+                    </div>
+                </div>
+            </div>
+        
+                    
+            <div class="setups-section">
+                <h3>Setups do Dia</h3>
+                <div class="setups-grid">
+                    
+            <div class="setup-card long">
+                <div class="setup-header">
+                    <span class="setup-type">LONG</span>
+                    <span class="setup-badge">Moderado</span>
+                </div>
+                <div class="setup-body">
+                    <div class="setup-row">
+                        <span class="setup-label">Entrada</span>
+                        <span class="setup-value">$2.00 - $2.01</span>
+                    </div>
+                    <div class="setup-row">
+                        <span class="setup-label">Stop Loss</span>
+                        <span class="setup-value stop">$1.98</span>
+                    </div>
+                    <div class="setup-row">
+                        <span class="setup-label">Alvo 1</span>
+                        <span class="setup-value target">$2.03 <small>(R/R 1.5:1)</small></span>
+                    </div>
+                    <div class="setup-row">
+                        <span class="setup-label">Alvo 2</span>
+                        <span class="setup-value target">$2.06 <small>(R/R 2.5:1)</small></span>
+                    </div>
+                    <div class="setup-trigger">
+                        <strong>Gatilho:</strong> Rejeição com volume no suporte
+                    </div>
+                </div>
+            </div>
+        
+            <div class="setup-card short">
+                <div class="setup-header">
+                    <span class="setup-type">SHORT</span>
+                    <span class="setup-badge">Agressivo</span>
+                </div>
+                <div class="setup-body">
+                    <div class="setup-row">
+                        <span class="setup-label">Entrada</span>
+                        <span class="setup-value">$2.05 - $2.06</span>
+                    </div>
+                    <div class="setup-row">
+                        <span class="setup-label">Stop Loss</span>
+                        <span class="setup-value stop">$2.08</span>
+                    </div>
+                    <div class="setup-row">
+                        <span class="setup-label">Alvo 1</span>
+                        <span class="setup-value target">$2.02 <small>(R/R 1.5:1)</small></span>
+                    </div>
+                    <div class="setup-row">
+                        <span class="setup-label">Alvo 2</span>
+                        <span class="setup-value target">$2.00 <small>(R/R 2.5:1)</small></span>
+                    </div>
+                    <div class="setup-trigger">
+                        <strong>Gatilho:</strong> Rejeição com volume na resistência
+                    </div>
+                </div>
+            </div>
+        
+                </div>
+            </div>
+        
+                    
+            <div class="bias-section">
+                <h3>Viés do Dia</h3>
+                <div class="bias-card-wrapper">
+                    <div class="bias-indicator bullish">
+                        <span class="bias-text">BULLISH</span>
+                    </div>
+                    <div class="bias-reasons">
+                        <div class="reason positive"><span>✓</span> Preço acima da EMA 200</div>
+<div class="reason positive"><span>✓</span> EMA 9 > EMA 21</div>
+<div class="reason positive"><span>✓</span> Funding Rate saudável</div>
+<div class="reason positive"><span>✓</span> Fear extremo (25) - oportunidade</div>
+                        <div class="reason negative"><span>✗</span> RSI sobrecomprado (78.59)</div>
+                    </div>
+                </div>
+            </div>
+        
+                </div>
+            </section>
+        
+            <section class="asset-section" id="ada">
+                <div class="container">
+                    <div class="asset-header">
+                        <h2>ADA/USDT</h2>
+                        <div class="asset-price-display">
+                            <span class="price">$0.3943</span>
+                            <span class="change negative">-0.48%</span>
+                        </div>
+                    </div>
+                    
+                    
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon blue">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                    </div>
+                    <div class="metric-info">
+                        <span class="metric-label">Preço Atual</span>
+                        <span class="metric-value">$0.3943</span>
+                    </div>
+                    <span class="metric-badge negative">-0.48%</span>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-icon purple">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                    </div>
+                    <div class="metric-info">
+                        <span class="metric-label">Funding Rate</span>
+                        <span class="metric-value">0.0100%</span>
+                    </div>
+                    <span class="metric-badge neutral">Neutro</span>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-icon orange">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6l4 2"/>
+                        </svg>
+                    </div>
+                    <div class="metric-info">
+                        <span class="metric-label">RSI (14)</span>
+                        <span class="metric-value">72.3</span>
+                    </div>
+                    <span class="metric-badge negative">Sobrecomprado</span>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-icon red">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2a10 10 0 1 0 10 10H12V2z"/>
+                        </svg>
+                    </div>
+                    <div class="metric-info">
+                        <span class="metric-label">Long/Short</span>
+                        <span class="metric-value">67.0/33.0</span>
+                    </div>
+                    <span class="metric-badge neutral">Long Heavy</span>
+                </div>
+            </div>
+        
+                    
+            <div class="levels-section">
+                <h3>Níveis-Chave do Dia</h3>
+                <div class="levels-grid">
+                    <div class="level-card resistance">
+                        <span class="level-type">Resistência 2</span>
+                        <span class="level-price">$0.4000</span>
+                        <span class="level-note">Zona de liquidez</span>
+                    </div>
+                    <div class="level-card resistance">
+                        <span class="level-type">Resistência 1</span>
+                        <span class="level-price">$0.4000</span>
+                        <span class="level-note">High do dia (PDH)</span>
+                    </div>
+                    <div class="level-card current">
+                        <span class="level-type">Preço Atual</span>
+                        <span class="level-price">$0.3943</span>
+                        <span class="level-note">ADA/USDT</span>
+                    </div>
+                    <div class="level-card support">
+                        <span class="level-type">Suporte 1</span>
+                        <span class="level-price">$0.3800</span>
+                        <span class="level-note">Low do dia (PDL)</span>
+                    </div>
+                    <div class="level-card support">
+                        <span class="level-type">Suporte 2</span>
+                        <span class="level-price">$0.3724</span>
+                        <span class="level-note">Suporte forte</span>
+                    </div>
+                </div>
+            </div>
+        
+                    
+            <div class="setups-section">
+                <h3>Setups do Dia</h3>
+                <div class="setups-grid">
+                    
+            <div class="setup-card long">
+                <div class="setup-header">
+                    <span class="setup-type">LONG</span>
+                    <span class="setup-badge">Moderado</span>
+                </div>
+                <div class="setup-body">
+                    <div class="setup-row">
+                        <span class="setup-label">Entrada</span>
+                        <span class="setup-value">$0.3800 - $0.3800</span>
+                    </div>
+                    <div class="setup-row">
+                        <span class="setup-label">Stop Loss</span>
+                        <span class="setup-value stop">$0.3800</span>
+                    </div>
+                    <div class="setup-row">
+                        <span class="setup-label">Alvo 1</span>
+                        <span class="setup-value target">$0.3900 <small>(R/R 1.5:1)</small></span>
+                    </div>
+                    <div class="setup-row">
+                        <span class="setup-label">Alvo 2</span>
+                        <span class="setup-value target">$0.3900 <small>(R/R 2.5:1)</small></span>
+                    </div>
+                    <div class="setup-trigger">
+                        <strong>Gatilho:</strong> Rejeição com volume no suporte
+                    </div>
+                </div>
+            </div>
+        
+                </div>
+            </div>
+        
+                    
+            <div class="bias-section">
+                <h3>Viés do Dia</h3>
+                <div class="bias-card-wrapper">
+                    <div class="bias-indicator bullish">
+                        <span class="bias-text">BULLISH</span>
+                    </div>
+                    <div class="bias-reasons">
+                        <div class="reason positive"><span>✓</span> Estrutura de alta (HH + HL)</div>
+<div class="reason positive"><span>✓</span> Preço acima da EMA 200</div>
+<div class="reason positive"><span>✓</span> EMA 9 > EMA 21</div>
+<div class="reason positive"><span>✓</span> Funding Rate saudável</div>
+<div class="reason positive"><span>✓</span> Fear extremo (25) - oportunidade</div>
+                        <div class="reason negative"><span>✗</span> RSI sobrecomprado (72.35)</div>
+                    </div>
+                </div>
+            </div>
+        
+                </div>
+            </section>
+        
+
+    <!-- Disclaimer -->
+    <section class="disclaimer">
+        <div class="container">
+            <div class="disclaimer-content">
+                <p><strong>⚠️ Aviso:</strong> Esta análise não constitui recomendação de investimento. Trading de criptomoedas envolve riscos significativos. Faça sua própria pesquisa e opere com responsabilidade.</p>
             </div>
         </div>
-        
-        <h2 class="section-title">Setups Identificados</h2>
-        
-        <div class="setups-grid">
-            
-            <div class="setup-card">
-                <div class="setup-header ts1">
-                    <span class="setup-title">LONG BNB</span>
-                    <span class="setup-badge">Rompimento</span>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="logo">
+                        <div class="logo-icon">
+                            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M20 4L36 12V28L20 36L4 28V12L20 4Z" stroke="url(#gradient2)" stroke-width="2" fill="none"/>
+                                <circle cx="20" cy="20" r="8" fill="url(#gradient2)"/>
+                                <defs>
+                                    <linearGradient id="gradient2" x1="4" y1="4" x2="36" y2="36">
+                                        <stop offset="0%" stop-color="#00D4FF"/>
+                                        <stop offset="100%" stop-color="#7B2DFF"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <span class="logo-name">CryptoMind <span class="logo-suffix">IA</span></span>
+                    </div>
+                    <p>Análises de criptomoedas com inteligência artificial</p>
                 </div>
-                <div class="setup-body">
-                    <div class="setup-score">
-                        <span class="score-value confidence-medium">7/10</span>
-                        <span class="score-label">MÉDIA</span>
-                    </div>
-                    <div class="setup-details">
-                        <div class="detail-row">
-                            <span class="detail-label">Entrada</span>
-                            <span class="detail-value">$875.55 - $897.19</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">Stop Loss</span>
-                            <span class="detail-value">$831.16 (6.23%)</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">Risco</span>
-                            <span class="detail-value">2.0% da banca</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">Alavancagem</span>
-                            <span class="detail-value">10x (máx: 10x)</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">R:R</span>
-                            <span class="detail-value">2.6</span>
-                        </div>
-                    </div>
-                    <div class="partials-section">
-                        <div class="detail-label" style="margin-bottom: 10px;">Plano de Parciais</div>
-                        <div class="partial-item"><span>$996.79 (2.0R)</span><span>50%</span></div><div class="partial-item"><span>$1052.00 (3.0R)</span><span>30%</span></div><div class="partial-item"><span>Trailing Stop</span><span>20%</span></div>
-                    </div>
+                <div class="footer-links">
+                    <a href="https://cryptomindia.com" target="_blank">Site Principal</a>
+                    <a href="#resumo">Resumo</a>
+                    <a href="#btc">BTC</a>
+                    <a href="#eth">ETH</a>
                 </div>
             </div>
-            
-            <div class="setup-card">
-                <div class="setup-header ts1">
-                    <span class="setup-title">LONG BTC</span>
-                    <span class="setup-badge">Rompimento</span>
-                </div>
-                <div class="setup-body">
-                    <div class="setup-score">
-                        <span class="score-value confidence-medium">6/10</span>
-                        <span class="score-label">MÉDIA</span>
-                    </div>
-                    <div class="setup-details">
-                        <div class="detail-row">
-                            <span class="detail-label">Entrada</span>
-                            <span class="detail-value">$90027.00 - $92908.66</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">Stop Loss</span>
-                            <span class="detail-value">$87156.56 (4.71%)</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">Risco</span>
-                            <span class="detail-value">2.0% da banca</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">Alavancagem</span>
-                            <span class="detail-value">10x (máx: 10x)</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">R:R</span>
-                            <span class="detail-value">3.0</span>
-                        </div>
-                    </div>
-                    <div class="partials-section">
-                        <div class="detail-label" style="margin-bottom: 10px;">Plano de Parciais</div>
-                        <div class="partial-item"><span>$100090.37 (2.0R)</span><span>50%</span></div><div class="partial-item"><span>$104401.64 (3.0R)</span><span>30%</span></div><div class="partial-item"><span>Trailing Stop</span><span>20%</span></div>
-                    </div>
-                </div>
+            <div class="footer-bottom">
+                <p>© 2026 CryptoMind IA. Todos os direitos reservados.</p>
+                <p>Análises geradas por IA às 21:51 BRT</p>
             </div>
-            
-            <div class="setup-card">
-                <div class="setup-header ts1">
-                    <span class="setup-title">LONG ETH</span>
-                    <span class="setup-badge">Rompimento</span>
-                </div>
-                <div class="setup-body">
-                    <div class="setup-score">
-                        <span class="score-value confidence-medium">6/10</span>
-                        <span class="score-label">MÉDIA</span>
-                    </div>
-                    <div class="setup-details">
-                        <div class="detail-row">
-                            <span class="detail-label">Entrada</span>
-                            <span class="detail-value">$3106.81 - $3201.80</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">Stop Loss</span>
-                            <span class="detail-value">$2904.25 (7.93%)</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">Risco</span>
-                            <span class="detail-value">2.0% da banca</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">Alavancagem</span>
-                            <span class="detail-value">10x (máx: 10x)</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">R:R</span>
-                            <span class="detail-value">2.6</span>
-                        </div>
-                    </div>
-                    <div class="partials-section">
-                        <div class="detail-label" style="margin-bottom: 10px;">Plano de Parciais</div>
-                        <div class="partial-item"><span>$3654.42 (2.0R)</span><span>50%</span></div><div class="partial-item"><span>$3904.47 (3.0R)</span><span>30%</span></div><div class="partial-item"><span>Trailing Stop</span><span>20%</span></div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="setup-card">
-                <div class="setup-header ts1">
-                    <span class="setup-title">SHORT XRP</span>
-                    <span class="setup-badge">Rompimento</span>
-                </div>
-                <div class="setup-body">
-                    <div class="setup-score">
-                        <span class="score-value confidence-medium">5/10</span>
-                        <span class="score-label">MÉDIA</span>
-                    </div>
-                    <div class="setup-details">
-                        <div class="detail-row">
-                            <span class="detail-label">Entrada</span>
-                            <span class="detail-value">$1.95 - $2.00</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">Stop Loss</span>
-                            <span class="detail-value">$2.11 (6.84%)</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">Risco</span>
-                            <span class="detail-value">2.0% da banca</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">Alavancagem</span>
-                            <span class="detail-value">10x (máx: 10x)</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">R:R</span>
-                            <span class="detail-value">2.6</span>
-                        </div>
-                    </div>
-                    <div class="partials-section">
-                        <div class="detail-label" style="margin-bottom: 10px;">Plano de Parciais</div>
-                        <div class="partial-item"><span>$1.71 (2.0R)</span><span>50%</span></div><div class="partial-item"><span>$1.57 (3.0R)</span><span>30%</span></div><div class="partial-item"><span>Trailing Stop</span><span>20%</span></div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="setup-card">
-                <div class="setup-header ts1">
-                    <span class="setup-title">SHORT BTC</span>
-                    <span class="setup-badge">Rompimento</span>
-                </div>
-                <div class="setup-body">
-                    <div class="setup-score">
-                        <span class="score-value confidence-low">4/10</span>
-                        <span class="score-label">BAIXA</span>
-                    </div>
-                    <div class="setup-details">
-                        <div class="detail-row">
-                            <span class="detail-label">Entrada</span>
-                            <span class="detail-value">$86982.25 - $90027.00</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">Stop Loss</span>
-                            <span class="detail-value">$92723.21 (4.77%)</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">Risco</span>
-                            <span class="detail-value">2.0% da banca</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">Alavancagem</span>
-                            <span class="detail-value">10x (máx: 10x)</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">R:R</span>
-                            <span class="detail-value">3.1</span>
-                        </div>
-                    </div>
-                    <div class="partials-section">
-                        <div class="detail-label" style="margin-bottom: 10px;">Plano de Parciais</div>
-                        <div class="partial-item"><span>$80067.45 (2.0R)</span><span>50%</span></div><div class="partial-item"><span>$75848.87 (3.0R)</span><span>30%</span></div><div class="partial-item"><span>Trailing Stop</span><span>20%</span></div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="setup-card">
-                <div class="setup-header ts1">
-                    <span class="setup-title">SHORT SOL</span>
-                    <span class="setup-badge">Rompimento</span>
-                </div>
-                <div class="setup-body">
-                    <div class="setup-score">
-                        <span class="score-value confidence-low">4/10</span>
-                        <span class="score-label">BAIXA</span>
-                    </div>
-                    <div class="setup-details">
-                        <div class="detail-row">
-                            <span class="detail-label">Entrada</span>
-                            <span class="detail-value">$127.37 - $131.38</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">Stop Loss</span>
-                            <span class="detail-value">$142.92 (10.47%)</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">Risco</span>
-                            <span class="detail-value">2.0% da banca</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">Alavancagem</span>
-                            <span class="detail-value">10x (máx: 10x)</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">R:R</span>
-                            <span class="detail-value">2.4</span>
-                        </div>
-                    </div>
-                    <div class="partials-section">
-                        <div class="detail-label" style="margin-bottom: 10px;">Plano de Parciais</div>
-                        <div class="partial-item"><span>$102.29 (2.0R)</span><span>50%</span></div><div class="partial-item"><span>$88.74 (3.0R)</span><span>30%</span></div><div class="partial-item"><span>Trailing Stop</span><span>20%</span></div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="setup-card">
-                <div class="setup-header ts3">
-                    <span class="setup-title">SHORT BTC</span>
-                    <span class="setup-badge">Reversão</span>
-                </div>
-                <div class="setup-body">
-                    <div class="setup-score">
-                        <span class="score-value confidence-low">2/10</span>
-                        <span class="score-label">SEM SETUP</span>
-                    </div>
-                    <div class="setup-details">
-                        <div class="detail-row">
-                            <span class="detail-label">Entrada</span>
-                            <span class="detail-value">$92259.59 - $92908.66</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">Stop Loss</span>
-                            <span class="detail-value">$94114.06 (1.65%)</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">Risco</span>
-                            <span class="detail-value">1.0% da banca</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">Alavancagem</span>
-                            <span class="detail-value">5x (máx: 5x)</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">R:R</span>
-                            <span class="detail-value">5.1</span>
-                        </div>
-                    </div>
-                    <div class="partials-section">
-                        <div class="detail-label" style="margin-bottom: 10px;">Plano de Parciais</div>
-                        <div class="partial-item"><span>$86464.39 (4.0R)</span><span>40%</span></div><div class="partial-item"><span>$83404.52 (6.0R)</span><span>30%</span></div><div class="partial-item"><span>Trailing Stop</span><span>30%</span></div>
-                    </div>
-                </div>
-            </div>
-            
         </div>
-        
-        <footer>
-            <p>CryptoMind IA - Sistema de Análise Automatizada</p>
-            <p>Disclaimer: Esta análise não constitui recomendação de investimento.</p>
-        </footer>
-    </div>
+    </footer>
+
+    <script src="js/main.js"></script>
 </body>
 </html>

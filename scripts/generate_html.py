@@ -6,6 +6,7 @@ Gera a página HTML completa com análises de BTC + Altcoins
 
 import json
 import os
+from pathlib import Path
 from datetime import datetime
 from typing import Dict, List
 import pytz
