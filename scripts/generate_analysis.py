@@ -88,36 +88,40 @@ class CryptoAnalyzer:
             ema_26 = self.calculate_ema(dominance_history, 26)
             macd_line = ema_12 - ema_26
             
-            # Níveis de S/R baseados na análise visual do TradingView
-            # Estes valores são aproximados e podem ser ajustados
+            # Níveis de S/R baseados na análise visual do TradingView (atualizado 03/01/2026)
+            # USDT.D tem relação INVERSAMENTE PROPORCIONAL com o mercado cripto
             sr_levels = {
-                "resistance_w1": 6.74,  # Resistência semanal
+                "resistance_w1": 6.74,  # Resistência semanal (topo anterior)
                 "resistance_d1": 6.53,  # Resistência diária
-                "resistance_h4": 6.27,  # Resistência H4 (EMA 21)
+                "resistance_h4": 6.17,  # Resistência H4 (antiga EMA 200, agora rompida)
                 "support_h4": 6.00,     # Suporte H4
-                "support_w1": 5.86      # Suporte semanal
+                "support_w1": 5.86      # Suporte semanal (próximo alvo de queda)
             }
             
-            # Determinar tendência e impacto no mercado
-            trend = "bearish"  # USDT.D caindo
-            if usdt_dominance > ema_200:
-                trend = "bullish"  # USDT.D subindo (ruim para cripto)
+            # Usar EMA 200 fixa baseada no gráfico real (a API não calcula corretamente)
+            ema_200_real = 6.17  # Valor real da EMA 200 do gráfico
             
-            # Impacto no mercado cripto (inverso do USDT.D)
-            # Quando USDT.D cai (abaixo das EMAs), dinheiro sai de stablecoins e entra em cripto = BULLISH
-            # Quando USDT.D sobe (acima das EMAs), dinheiro sai de cripto e vai para stablecoins = BEARISH
-            if usdt_dominance < ema_200 and usdt_dominance < ema_21:
+            # Determinar tendência e impacto no mercado
+            # IMPORTANTE: Usar EMA 200 real do gráfico, não a calculada pela API
+            trend = "bearish"  # USDT.D caindo = BOM para cripto
+            if usdt_dominance > ema_200_real:
+                trend = "bullish"  # USDT.D subindo = RUIM para cripto
+            
+            # Impacto no mercado cripto (INVERSO do USDT.D)
+            # Quando USDT.D cai (abaixo das EMAs), dinheiro sai de stablecoins e entra em cripto = BULLISH para cripto
+            # Quando USDT.D sobe (acima das EMAs), dinheiro sai de cripto e vai para stablecoins = BEARISH para cripto
+            if usdt_dominance < ema_200_real:
                 crypto_impact = "BULLISH"
                 crypto_impact_class = "bullish"
-                impact_reason = "USDT.D abaixo das EMAs - dinheiro saindo de stablecoins e entrando em cripto"
-            elif usdt_dominance > ema_200 and usdt_dominance > ema_21:
+                impact_reason = "USDT.D abaixo da EMA 200 - dinheiro entrando em cripto (tendência de alta)"
+            elif usdt_dominance > ema_200_real and usdt_dominance > sr_levels['resistance_h4']:
                 crypto_impact = "BEARISH"
                 crypto_impact_class = "bearish"
-                impact_reason = "USDT.D acima das EMAs - dinheiro saindo de cripto e indo para stablecoins"
+                impact_reason = "USDT.D acima da EMA 200 - dinheiro saindo de cripto (tendência de baixa)"
             else:
                 crypto_impact = "NEUTRO"
                 crypto_impact_class = "neutral"
-                impact_reason = "USDT.D em zona de indefinição entre EMAs"
+                impact_reason = "USDT.D em zona de indefinição próximo à EMA 200"
             
             # Próximo nível
             if usdt_dominance < sr_levels['support_h4']:
@@ -129,7 +133,7 @@ class CryptoAnalyzer:
             
             # Invalidação do cenário
             if crypto_impact == "BULLISH":
-                invalidation = f"USDT.D voltar acima de {ema_200:.2f}% (EMA 200)"
+                invalidation = f"USDT.D voltar acima de {ema_200_real:.2f}% (EMA 200)"
             else:
                 invalidation = f"USDT.D cair abaixo de {sr_levels['support_w1']:.2f}%"
             
@@ -138,7 +142,7 @@ class CryptoAnalyzer:
                 "dominance_formatted": f"{usdt_dominance:.3f}%",
                 "ema_9": round(ema_9, 3),
                 "ema_21": round(ema_21, 3),
-                "ema_200": round(ema_200, 3),
+                "ema_200": round(ema_200_real, 3),  # Usar EMA 200 real do gráfico
                 "rsi": round(rsi, 2),
                 "atr": round(atr, 4),
                 "macd": round(macd_line, 4),
@@ -149,7 +153,7 @@ class CryptoAnalyzer:
                 "impact_reason": impact_reason,
                 "next_level": next_level,
                 "invalidation": invalidation,
-                "below_ema_200": usdt_dominance < ema_200,
+                "below_ema_200": usdt_dominance < ema_200_real,  # Usar EMA 200 real
                 "below_ema_21": usdt_dominance < ema_21,
                 "below_ema_9": usdt_dominance < ema_9
             }

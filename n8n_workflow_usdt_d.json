@@ -1,0 +1,146 @@
+{
+  "name": "CryptoMind IA - USDT.D Monitor",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "usdt-d-update",
+        "responseMode": "onReceived",
+        "responseData": "allEntries"
+      },
+      "id": "webhook-usdt-d",
+      "name": "Webhook USDT.D",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300],
+      "webhookId": "usdt-d-update"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Processar dados do USDT.D recebidos do TradingView\nconst data = $input.first().json;\n\n// Extrair dados\nconst dominance = parseFloat(data.dominance) || 0;\nconst ema9 = parseFloat(data.ema_9) || 0;\nconst ema21 = parseFloat(data.ema_21) || 0;\nconst ema200 = parseFloat(data.ema_200) || 0;\nconst resistance = parseFloat(data.resistance) || 0;\nconst support = parseFloat(data.support) || 0;\nconst cryptoImpact = data.crypto_impact || 'NEUTRO';\nconst timeframe = data.timeframe || 'H4';\nconst alertType = data.type || 'usdt_d_update';\nconst level = data.level || '';\n\n// Determinar se é um alerta de nível S/R\nconst isAlert = alertType.includes('alert');\nconst nearEMA200 = data.near_ema_200 === true || data.near_ema_200 === 'true';\nconst nearResistance = data.near_resistance === true || data.near_resistance === 'true';\nconst nearSupport = data.near_support === true || data.near_support === 'true';\n\n// Determinar emoji e cor baseado no impacto\nlet impactEmoji = '🟡';\nlet impactText = 'Neutro';\nif (cryptoImpact === 'BULLISH') {\n  impactEmoji = '🟢';\n  impactText = 'BULLISH para Cripto';\n} else if (cryptoImpact === 'BEARISH') {\n  impactEmoji = '🔴';\n  impactText = 'BEARISH para Cripto';\n}\n\n// Determinar nível mais próximo\nlet nearestLevel = '';\nlet nearestLevelName = '';\nif (nearEMA200) {\n  nearestLevel = ema200;\n  nearestLevelName = 'EMA 200';\n} else if (nearResistance) {\n  nearestLevel = resistance;\n  nearestLevelName = 'Resistência';\n} else if (nearSupport) {\n  nearestLevel = support;\n  nearestLevelName = 'Suporte';\n}\n\n// Calcular distâncias\nconst distToEMA200 = Math.abs(dominance - ema200);\nconst distToEMA200Pct = ((distToEMA200 / ema200) * 100).toFixed(3);\n\nreturn {\n  dominance,\n  ema9,\n  ema21,\n  ema200,\n  resistance,\n  support,\n  cryptoImpact,\n  impactEmoji,\n  impactText,\n  timeframe,\n  alertType,\n  isAlert,\n  nearEMA200,\n  nearResistance,\n  nearSupport,\n  nearestLevel,\n  nearestLevelName,\n  distToEMA200,\n  distToEMA200Pct,\n  level,\n  belowEMA200: dominance < ema200,\n  belowEMA21: dominance < ema21,\n  belowEMA9: dominance < ema9,\n  timestamp: new Date().toISOString()\n};"
+      },
+      "id": "process-usdt-d",
+      "name": "Processar Dados USDT.D",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [470, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.isAlert }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "check-alert",
+      "name": "É Alerta S/R?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [690, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.telegram.org/bot8437212177:AAEsm0d-ARdcj8zDGDqdpjeaSoQgsY-Byqc/sendMessage",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "chat_id",
+              "value": "1372841832"
+            },
+            {
+              "name": "parse_mode",
+              "value": "HTML"
+            },
+            {
+              "name": "text",
+              "value": "=🚨 <b>ALERTA USDT.D</b> 🚨\n\n━━━━━━━━━━━━━━━━━━━━\n📊 <b>USDT Dominance</b>\n━━━━━━━━━━━━━━━━━━━━\n\n💰 <b>Dominância:</b> {{ $json.dominance.toFixed(3) }}%\n📍 <b>Nível Próximo:</b> {{ $json.nearestLevelName }}\n🎯 <b>Preço do Nível:</b> {{ $json.nearestLevel.toFixed(3) }}%\n⏱️ <b>Timeframe:</b> {{ $json.timeframe }}\n\n━━━━━━━━━━━━━━━━━━━━\n📈 <b>EMAs</b>\n━━━━━━━━━━━━━━━━━━━━\n• EMA 9: {{ $json.ema9.toFixed(3) }}% {{ $json.belowEMA9 ? '✅' : '❌' }}\n• EMA 21: {{ $json.ema21.toFixed(3) }}% {{ $json.belowEMA21 ? '✅' : '❌' }}\n• EMA 200: {{ $json.ema200.toFixed(3) }}% {{ $json.belowEMA200 ? '✅' : '❌' }}\n\n━━━━━━━━━━━━━━━━━━━━\n{{ $json.impactEmoji }} <b>Impacto:</b> {{ $json.impactText }}\n━━━━━━━━━━━━━━━━━━━━\n\n💡 <i>USDT.D é INVERSAMENTE proporcional ao mercado cripto.</i>\n<i>Abaixo das EMAs = dinheiro entrando em cripto.</i>"
+            }
+          ]
+        }
+      },
+      "id": "send-telegram-alert",
+      "name": "Enviar Alerta Telegram",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [910, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.github.com/repos/escritoriosomarbusiness/cryptomind-analises/dispatches",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "event_type",
+              "value": "usdt_d_update"
+            },
+            {
+              "name": "client_payload",
+              "value": "={{ JSON.stringify($json) }}"
+            }
+          ]
+        }
+      },
+      "id": "update-github",
+      "name": "Atualizar GitHub (opcional)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [910, 400],
+      "disabled": true
+    }
+  ],
+  "connections": {
+    "Webhook USDT.D": {
+      "main": [
+        [
+          {
+            "node": "Processar Dados USDT.D",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Processar Dados USDT.D": {
+      "main": [
+        [
+          {
+            "node": "É Alerta S/R?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "É Alerta S/R?": {
+      "main": [
+        [
+          {
+            "node": "Enviar Alerta Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Atualizar GitHub (opcional)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

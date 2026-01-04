@@ -1,0 +1,136 @@
+// This Pine Script™ code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © CryptoMind IA - Monitor USDT.D
+
+//@version=5
+indicator("CryptoMind - USDT.D Monitor", overlay=true, max_labels_count=50)
+
+// ============================================
+// CONFIGURAÇÕES
+// ============================================
+emaLength9 = input.int(9, "Período EMA 9", minval=1)
+emaLength21 = input.int(21, "Período EMA 21", minval=1)
+emaLength200 = input.int(200, "Período EMA 200", minval=1)
+pivotLookback = input.int(10, "Lookback para Pivots (S/R)", minval=5, maxval=50)
+alertTolerance = input.float(0.05, "Tolerância para alerta (%)", minval=0.01, maxval=0.5, step=0.01)
+showEMAs = input.bool(true, "Mostrar EMAs")
+showSR = input.bool(true, "Mostrar Níveis S/R")
+
+// ============================================
+// CÁLCULOS DAS EMAs
+// ============================================
+ema9 = ta.ema(close, emaLength9)
+ema21 = ta.ema(close, emaLength21)
+ema200 = ta.ema(close, emaLength200)
+
+// Plotar EMAs
+plot(showEMAs ? ema9 : na, "EMA 9", color=color.yellow, linewidth=1)
+plot(showEMAs ? ema21 : na, "EMA 21", color=color.orange, linewidth=1)
+plot(showEMAs ? ema200 : na, "EMA 200", color=color.white, linewidth=2)
+
+// ============================================
+// DETECÇÃO DE PIVOTS (SUPORTE E RESISTÊNCIA)
+// ============================================
+pivotHigh = ta.pivothigh(high, pivotLookback, pivotLookback)
+pivotLow = ta.pivotlow(low, pivotLookback, pivotLookback)
+
+// Armazenar últimos pivots
+var float lastPivotHigh = na
+var float lastPivotLow = na
+var float prevPivotHigh = na
+var float prevPivotLow = na
+
+if not na(pivotHigh)
+    prevPivotHigh := lastPivotHigh
+    lastPivotHigh := pivotHigh
+
+if not na(pivotLow)
+    prevPivotLow := lastPivotLow
+    lastPivotLow := pivotLow
+
+// Plotar níveis S/R
+plot(showSR and not na(lastPivotHigh) ? lastPivotHigh : na, "Resistência", color=color.red, linewidth=1, style=plot.style_linebr)
+plot(showSR and not na(lastPivotLow) ? lastPivotLow : na, "Suporte", color=color.green, linewidth=1, style=plot.style_linebr)
+
+// ============================================
+// ANÁLISE DE TENDÊNCIA E IMPACTO
+// ============================================
+// USDT.D é INVERSAMENTE proporcional ao mercado cripto
+// USDT.D caindo = BULLISH para cripto
+// USDT.D subindo = BEARISH para cripto
+
+belowEMA200 = close < ema200
+belowEMA21 = close < ema21
+belowEMA9 = close < ema9
+
+// Determinar impacto no mercado cripto
+cryptoImpact = belowEMA200 and belowEMA21 ? "BULLISH" : (close > ema200 and close > ema21 ? "BEARISH" : "NEUTRO")
+
+// ============================================
+// DETECÇÃO DE PROXIMIDADE A NÍVEIS S/R
+// ============================================
+// Calcular distância para cada nível
+distToEMA200 = math.abs(close - ema200)
+distToEMA200Pct = (distToEMA200 / ema200) * 100
+
+distToResistance = not na(lastPivotHigh) ? math.abs(close - lastPivotHigh) : na
+distToResistancePct = not na(lastPivotHigh) ? (distToResistance / lastPivotHigh) * 100 : na
+
+distToSupport = not na(lastPivotLow) ? math.abs(close - lastPivotLow) : na
+distToSupportPct = not na(lastPivotLow) ? (distToSupport / lastPivotLow) * 100 : na
+
+// Verificar se está próximo de algum nível
+nearEMA200 = distToEMA200Pct <= alertTolerance
+nearResistance = not na(distToResistancePct) and distToResistancePct <= alertTolerance
+nearSupport = not na(distToSupportPct) and distToSupportPct <= alertTolerance
+
+// ============================================
+// ALERTAS
+// ============================================
+
+// Alerta quando próximo da EMA 200
+alertcondition(nearEMA200, title="USDT.D próximo EMA 200", message='{"type":"usdt_d_alert","level":"EMA 200","symbol":"USDT.D","dominance":"{{close}}","ema_200":"{{plot_2}}","ema_21":"{{plot_1}}","ema_9":"{{plot_0}}","distance_pct":"' + str.tostring(distToEMA200Pct, "#.###") + '","crypto_impact":"' + cryptoImpact + '","timeframe":"{{interval}}"}')
+
+// Alerta quando próximo de resistência
+alertcondition(nearResistance, title="USDT.D próximo Resistência", message='{"type":"usdt_d_alert","level":"Resistência","symbol":"USDT.D","dominance":"{{close}}","resistance":"' + str.tostring(lastPivotHigh, "#.###") + '","distance_pct":"' + str.tostring(distToResistancePct, "#.###") + '","crypto_impact":"BEARISH se romper","timeframe":"{{interval}}"}')
+
+// Alerta quando próximo de suporte
+alertcondition(nearSupport, title="USDT.D próximo Suporte", message='{"type":"usdt_d_alert","level":"Suporte","symbol":"USDT.D","dominance":"{{close}}","support":"' + str.tostring(lastPivotLow, "#.###") + '","distance_pct":"' + str.tostring(distToSupportPct, "#.###") + '","crypto_impact":"BULLISH se romper","timeframe":"{{interval}}"}')
+
+// Alerta de atualização periódica (a cada fechamento de candle)
+alertcondition(barstate.isconfirmed, title="USDT.D Atualização", message='{"type":"usdt_d_update","symbol":"USDT.D","dominance":"{{close}}","ema_9":"{{plot_0}}","ema_21":"{{plot_1}}","ema_200":"{{plot_2}}","resistance":"' + str.tostring(lastPivotHigh, "#.###") + '","support":"' + str.tostring(lastPivotLow, "#.###") + '","below_ema_200":' + str.tostring(belowEMA200) + ',"below_ema_21":' + str.tostring(belowEMA21) + ',"crypto_impact":"' + cryptoImpact + '","timeframe":"{{interval}}","high":"{{high}}","low":"{{low}}","open":"{{open}}"}')
+
+// Alerta combinado (qualquer proximidade)
+alertcondition(nearEMA200 or nearResistance or nearSupport, title="USDT.D Nível Importante", message='{"type":"usdt_d_sr_alert","symbol":"USDT.D","dominance":"{{close}}","ema_200":"{{plot_2}}","near_ema_200":' + str.tostring(nearEMA200) + ',"near_resistance":' + str.tostring(nearResistance) + ',"near_support":' + str.tostring(nearSupport) + ',"crypto_impact":"' + cryptoImpact + '","timeframe":"{{interval}}"}')
+
+// ============================================
+// TABELA DE INFORMAÇÕES
+// ============================================
+var table infoTable = table.new(position.top_right, 2, 8, bgcolor=color.new(color.black, 80))
+
+if barstate.islast
+    // Cor do impacto
+    impactColor = cryptoImpact == "BULLISH" ? color.green : (cryptoImpact == "BEARISH" ? color.red : color.yellow)
+    
+    table.cell(infoTable, 0, 0, "USDT.D Monitor", text_color=color.orange, text_size=size.small)
+    table.cell(infoTable, 1, 0, "CryptoMind IA", text_color=color.white, text_size=size.small)
+    
+    table.cell(infoTable, 0, 1, "Dominância:", text_color=color.gray, text_size=size.tiny)
+    table.cell(infoTable, 1, 1, str.tostring(close, "#.###") + "%", text_color=color.white, text_size=size.tiny)
+    
+    table.cell(infoTable, 0, 2, "EMA 9:", text_color=color.gray, text_size=size.tiny)
+    table.cell(infoTable, 1, 2, str.tostring(ema9, "#.###") + "%", text_color=close < ema9 ? color.green : color.red, text_size=size.tiny)
+    
+    table.cell(infoTable, 0, 3, "EMA 21:", text_color=color.gray, text_size=size.tiny)
+    table.cell(infoTable, 1, 3, str.tostring(ema21, "#.###") + "%", text_color=close < ema21 ? color.green : color.red, text_size=size.tiny)
+    
+    table.cell(infoTable, 0, 4, "EMA 200:", text_color=color.gray, text_size=size.tiny)
+    table.cell(infoTable, 1, 4, str.tostring(ema200, "#.###") + "%", text_color=close < ema200 ? color.green : color.red, text_size=size.tiny)
+    
+    table.cell(infoTable, 0, 5, "Resistência:", text_color=color.gray, text_size=size.tiny)
+    table.cell(infoTable, 1, 5, not na(lastPivotHigh) ? str.tostring(lastPivotHigh, "#.###") + "%" : "N/A", text_color=color.red, text_size=size.tiny)
+    
+    table.cell(infoTable, 0, 6, "Suporte:", text_color=color.gray, text_size=size.tiny)
+    table.cell(infoTable, 1, 6, not na(lastPivotLow) ? str.tostring(lastPivotLow, "#.###") + "%" : "N/A", text_color=color.green, text_size=size.tiny)
+    
+    table.cell(infoTable, 0, 7, "Impacto Cripto:", text_color=color.gray, text_size=size.tiny)
+    table.cell(infoTable, 1, 7, cryptoImpact, text_color=impactColor, text_size=size.tiny)
