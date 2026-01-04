@@ -1,0 +1,206 @@
+// This Pine Script™ code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © CryptoMind IA - Setup 9.1 Larry Williams v2.0
+
+//@version=5
+indicator("CryptoMind - Setup 9.1 v2.0", overlay=true, max_labels_count=50)
+
+// ============================================
+// CONFIGURAÇÕES
+// ============================================
+emaLength = input.int(9, "Período EMA", minval=1)
+minCandlesBelowAbove = input.int(5, "Mín. candles do mesmo lado da EMA", minval=3, maxval=20)
+pivotLookback = input.int(10, "Lookback para Pivots (SR)", minval=5, maxval=50)
+pivotTolerance = input.float(0.5, "Tolerância zona SR (%)", minval=0.1, maxval=2.0, step=0.1)
+cooldownCandles = input.int(10, "Cooldown entre sinais", minval=5, maxval=30)
+showLabels = input.bool(true, "Mostrar Labels")
+showEMA = input.bool(true, "Mostrar EMA 9")
+showPivots = input.bool(true, "Mostrar Pivots (SR)")
+
+// ============================================
+// CÁLCULOS BASE
+// ============================================
+ema9 = ta.ema(close, emaLength)
+
+// Plotar EMA
+plot(showEMA ? ema9 : na, "EMA 9", color=color.orange, linewidth=2)
+
+// ============================================
+// DETECÇÃO DE PIVOTS (SUPORTE E RESISTÊNCIA)
+// ============================================
+// Pivot High (Resistência) - máxima local
+pivotHigh = ta.pivothigh(high, pivotLookback, pivotLookback)
+// Pivot Low (Suporte) - mínima local
+pivotLow = ta.pivotlow(low, pivotLookback, pivotLookback)
+
+// Armazenar últimos pivots válidos
+var float lastPivotHigh = na
+var float lastPivotLow = na
+var int lastPivotHighBar = na
+var int lastPivotLowBar = na
+
+if not na(pivotHigh)
+    lastPivotHigh := pivotHigh
+    lastPivotHighBar := bar_index - pivotLookback
+
+if not na(pivotLow)
+    lastPivotLow := pivotLow
+    lastPivotLowBar := bar_index - pivotLookback
+
+// Plotar níveis de SR
+plot(showPivots and not na(lastPivotHigh) ? lastPivotHigh : na, "Resistência", color=color.red, style=plot.style_circles, linewidth=2)
+plot(showPivots and not na(lastPivotLow) ? lastPivotLow : na, "Suporte", color=color.green, style=plot.style_circles, linewidth=2)
+
+// ============================================
+// CONTAGEM DE CANDLES DO MESMO LADO DA EMA
+// ============================================
+// Contar candles consecutivos abaixo da EMA
+var int candlesBelowEMA = 0
+var int candlesAboveEMA = 0
+
+if close < ema9
+    candlesBelowEMA := candlesBelowEMA + 1
+    candlesAboveEMA := 0
+else if close > ema9
+    candlesAboveEMA := candlesAboveEMA + 1
+    candlesBelowEMA := 0
+else
+    candlesBelowEMA := 0
+    candlesAboveEMA := 0
+
+// ============================================
+// VERIFICAR TOQUE EM ZONA DE SR
+// ============================================
+// Tolerância em valor absoluto
+toleranceValue = close * (pivotTolerance / 100)
+
+// Verificar se tocou suporte recentemente (últimos 5 candles)
+touchedSupport = false
+for i = 1 to 5
+    if not na(lastPivotLow)
+        if low[i] <= lastPivotLow + toleranceValue and low[i] >= lastPivotLow - toleranceValue
+            touchedSupport := true
+            break
+
+// Verificar se tocou resistência recentemente (últimos 5 candles)
+touchedResistance = false
+for i = 1 to 5
+    if not na(lastPivotHigh)
+        if high[i] >= lastPivotHigh - toleranceValue and high[i] <= lastPivotHigh + toleranceValue
+            touchedResistance := true
+            break
+
+// ============================================
+// COOLDOWN - EVITAR SINAIS REPETIDOS
+// ============================================
+var int lastSignalBar = 0
+cooldownActive = bar_index - lastSignalBar < cooldownCandles
+
+// ============================================
+// SETUP 9.1 - REVERSÃO DE ALTA (LONG)
+// ============================================
+// Condições:
+// 1. Estava abaixo da EMA por pelo menos X candles
+// 2. Tocou zona de suporte recentemente
+// 3. Cruza e fecha acima da EMA 9
+// 4. Candle mostra força (fecha no terço superior)
+// 5. Não está em cooldown
+
+// Verificar cruzamento de alta
+crossAboveEMA = close[1] < ema9[1] and close > ema9
+
+// Verificar força do candle
+candleRange = high - low
+upperThird = low + (candleRange * 0.66)
+strongBullCandle = close >= upperThird and close > open
+
+// Verificar se teve período suficiente abaixo da EMA
+hadPeriodBelowEMA = candlesBelowEMA[1] >= minCandlesBelowAbove
+
+// Setup 9.1 LONG confirmado
+setup91Long = crossAboveEMA and strongBullCandle and hadPeriodBelowEMA and touchedSupport and not cooldownActive
+
+// ============================================
+// SETUP 9.1 - REVERSÃO DE BAIXA (SHORT)
+// ============================================
+// Condições similares mas invertidas
+
+// Verificar cruzamento de baixa
+crossBelowEMA = close[1] > ema9[1] and close < ema9
+
+// Verificar força do candle
+lowerThird = high - (candleRange * 0.66)
+strongBearCandle = close <= lowerThird and close < open
+
+// Verificar se teve período suficiente acima da EMA
+hadPeriodAboveEMA = candlesAboveEMA[1] >= minCandlesBelowAbove
+
+// Setup 9.1 SHORT confirmado
+setup91Short = crossBelowEMA and strongBearCandle and hadPeriodAboveEMA and touchedResistance and not cooldownActive
+
+// ============================================
+// ATUALIZAR COOLDOWN
+// ============================================
+if setup91Long or setup91Short
+    lastSignalBar := bar_index
+
+// ============================================
+// VISUALIZAÇÃO
+// ============================================
+// Labels para Setup 9.1 LONG
+if setup91Long and showLabels
+    label.new(bar_index, low, "9.1 LONG\n✓ SR", 
+              style=label.style_label_up, 
+              color=color.green, 
+              textcolor=color.white,
+              size=size.small)
+
+// Labels para Setup 9.1 SHORT
+if setup91Short and showLabels
+    label.new(bar_index, high, "9.1 SHORT\n✓ SR", 
+              style=label.style_label_down, 
+              color=color.red, 
+              textcolor=color.white,
+              size=size.small)
+
+// Background highlight
+bgcolor(setup91Long ? color.new(color.green, 85) : na)
+bgcolor(setup91Short ? color.new(color.red, 85) : na)
+
+// ============================================
+// ALERTAS
+// ============================================
+// Alerta para LONG
+alertcondition(setup91Long, title="Setup 9.1 LONG", message='{"symbol":"{{ticker}}","action":"LONG","setup":"9.1","timeframe":"{{interval}}","price":"{{close}}","trigger_high":"{{high}}","trigger_low":"{{low}}"}')
+
+// Alerta para SHORT
+alertcondition(setup91Short, title="Setup 9.1 SHORT", message='{"symbol":"{{ticker}}","action":"SHORT","setup":"9.1","timeframe":"{{interval}}","price":"{{close}}","trigger_high":"{{high}}","trigger_low":"{{low}}"}')
+
+// Alerta combinado (qualquer setup)
+alertcondition(setup91Long or setup91Short, title="Setup 9.1 (Qualquer)", message='{"symbol":"{{ticker}}","action":"{{close > open ? "LONG" : "SHORT"}}","setup":"9.1","timeframe":"{{interval}}","price":"{{close}}","trigger_high":"{{high}}","trigger_low":"{{low}}"}')
+
+// ============================================
+// INFORMAÇÕES NA TELA
+// ============================================
+var table infoTable = table.new(position.top_right, 2, 7, bgcolor=color.new(color.black, 80))
+
+if barstate.islast
+    table.cell(infoTable, 0, 0, "CryptoMind IA", text_color=color.orange, text_size=size.small)
+    table.cell(infoTable, 1, 0, "Setup 9.1 v2", text_color=color.white, text_size=size.small)
+    
+    table.cell(infoTable, 0, 1, "EMA 9:", text_color=color.gray, text_size=size.tiny)
+    table.cell(infoTable, 1, 1, str.tostring(ema9, "#.####"), text_color=color.orange, text_size=size.tiny)
+    
+    table.cell(infoTable, 0, 2, "Preço:", text_color=color.gray, text_size=size.tiny)
+    table.cell(infoTable, 1, 2, str.tostring(close, "#.####"), text_color=close > ema9 ? color.green : color.red, text_size=size.tiny)
+    
+    table.cell(infoTable, 0, 3, "Lado EMA:", text_color=color.gray, text_size=size.tiny)
+    table.cell(infoTable, 1, 3, close > ema9 ? "ACIMA (" + str.tostring(candlesAboveEMA) + ")" : "ABAIXO (" + str.tostring(candlesBelowEMA) + ")", text_color=close > ema9 ? color.green : color.red, text_size=size.tiny)
+    
+    table.cell(infoTable, 0, 4, "Suporte:", text_color=color.gray, text_size=size.tiny)
+    table.cell(infoTable, 1, 4, not na(lastPivotLow) ? str.tostring(lastPivotLow, "#.####") : "N/A", text_color=color.green, text_size=size.tiny)
+    
+    table.cell(infoTable, 0, 5, "Resistência:", text_color=color.gray, text_size=size.tiny)
+    table.cell(infoTable, 1, 5, not na(lastPivotHigh) ? str.tostring(lastPivotHigh, "#.####") : "N/A", text_color=color.red, text_size=size.tiny)
+    
+    table.cell(infoTable, 0, 6, "Cooldown:", text_color=color.gray, text_size=size.tiny)
+    table.cell(infoTable, 1, 6, cooldownActive ? "ATIVO" : "OK", text_color=cooldownActive ? color.yellow : color.green, text_size=size.tiny)

@@ -1,0 +1,110 @@
+// This Pine Script™ code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © CryptoMind IA - Setup 9.1 Larry Williams
+
+//@version=5
+indicator("CryptoMind - Setup 9.1 Larry Williams", overlay=true, max_labels_count=50)
+
+// ============================================
+// CONFIGURAÇÕES
+// ============================================
+emaLength = input.int(9, "Período EMA", minval=1)
+showLabels = input.bool(true, "Mostrar Labels")
+showEMA = input.bool(true, "Mostrar EMA 9")
+
+// Webhook URL (para referência)
+webhookURL = "https://cryptomindia.app.n8n.cloud/webhook/cryptomind-alert"
+
+// ============================================
+// CÁLCULOS
+// ============================================
+ema9 = ta.ema(close, emaLength)
+
+// Plotar EMA
+plot(showEMA ? ema9 : na, "EMA 9", color=color.orange, linewidth=2)
+
+// ============================================
+// SETUP 9.1 - REVERSÃO DE ALTA (LONG)
+// ============================================
+// Condições:
+// 1. Candle anterior fechou ABAIXO da EMA 9
+// 2. Candle atual fecha ACIMA da EMA 9 (cruzamento)
+// 3. Candle atual mostra força (fecha no terço superior)
+
+// Verificar cruzamento de alta
+crossAboveEMA = close[1] < ema9[1] and close > ema9
+
+// Verificar força do candle (fecha no terço superior do range)
+candleRange = high - low
+upperThird = low + (candleRange * 0.66)
+strongBullCandle = close >= upperThird and close > open
+
+// Setup 9.1 LONG confirmado
+setup91Long = crossAboveEMA and strongBullCandle
+
+// ============================================
+// SETUP 9.1 - REVERSÃO DE BAIXA (SHORT)
+// ============================================
+// Condições:
+// 1. Candle anterior fechou ACIMA da EMA 9
+// 2. Candle atual fecha ABAIXO da EMA 9 (cruzamento)
+// 3. Candle atual mostra força (fecha no terço inferior)
+
+// Verificar cruzamento de baixa
+crossBelowEMA = close[1] > ema9[1] and close < ema9
+
+// Verificar força do candle (fecha no terço inferior do range)
+lowerThird = high - (candleRange * 0.66)
+strongBearCandle = close <= lowerThird and close < open
+
+// Setup 9.1 SHORT confirmado
+setup91Short = crossBelowEMA and strongBearCandle
+
+// ============================================
+// VISUALIZAÇÃO
+// ============================================
+// Labels para Setup 9.1 LONG
+if setup91Long and showLabels
+    label.new(bar_index, low, "9.1 LONG", 
+              style=label.style_label_up, 
+              color=color.green, 
+              textcolor=color.white,
+              size=size.small)
+
+// Labels para Setup 9.1 SHORT
+if setup91Short and showLabels
+    label.new(bar_index, high, "9.1 SHORT", 
+              style=label.style_label_down, 
+              color=color.red, 
+              textcolor=color.white,
+              size=size.small)
+
+// Background highlight
+bgcolor(setup91Long ? color.new(color.green, 90) : na)
+bgcolor(setup91Short ? color.new(color.red, 90) : na)
+
+// ============================================
+// ALERTAS
+// ============================================
+// Alerta para LONG
+alertcondition(setup91Long, title="Setup 9.1 LONG", message='{"symbol":"{{ticker}}","action":"LONG","setup":"9.1","timeframe":"{{interval}}","price":"{{close}}","trigger_high":"{{high}}","trigger_low":"{{low}}"}')
+
+// Alerta para SHORT
+alertcondition(setup91Short, title="Setup 9.1 SHORT", message='{"symbol":"{{ticker}}","action":"SHORT","setup":"9.1","timeframe":"{{interval}}","price":"{{close}}","trigger_high":"{{high}}","trigger_low":"{{low}}"}')
+
+// Alerta combinado (qualquer setup)
+alertcondition(setup91Long or setup91Short, title="Setup 9.1 (Qualquer)", message='{"symbol":"{{ticker}}","action":"{{close > open ? "LONG" : "SHORT"}}","setup":"9.1","timeframe":"{{interval}}","price":"{{close}}","trigger_high":"{{high}}","trigger_low":"{{low}}"}')
+
+// ============================================
+// INFORMAÇÕES NA TELA
+// ============================================
+var table infoTable = table.new(position.top_right, 2, 4, bgcolor=color.new(color.black, 80))
+
+if barstate.islast
+    table.cell(infoTable, 0, 0, "CryptoMind IA", text_color=color.orange, text_size=size.small)
+    table.cell(infoTable, 1, 0, "Setup 9.1", text_color=color.white, text_size=size.small)
+    table.cell(infoTable, 0, 1, "EMA 9:", text_color=color.gray, text_size=size.tiny)
+    table.cell(infoTable, 1, 1, str.tostring(ema9, "#.##"), text_color=color.orange, text_size=size.tiny)
+    table.cell(infoTable, 0, 2, "Preço:", text_color=color.gray, text_size=size.tiny)
+    table.cell(infoTable, 1, 2, str.tostring(close, "#.##"), text_color=close > ema9 ? color.green : color.red, text_size=size.tiny)
+    table.cell(infoTable, 0, 3, "Status:", text_color=color.gray, text_size=size.tiny)
+    table.cell(infoTable, 1, 3, close > ema9 ? "Acima EMA" : "Abaixo EMA", text_color=close > ema9 ? color.green : color.red, text_size=size.tiny)

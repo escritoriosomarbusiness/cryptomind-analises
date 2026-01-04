@@ -1,0 +1,142 @@
+{
+  "name": "CryptoMind IA - Alertas TradingView",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "cryptomind-alert",
+        "responseMode": "onReceived",
+        "responseData": "allEntries"
+      },
+      "id": "webhook-tradingview",
+      "name": "Webhook TradingView",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300],
+      "webhookId": "cryptomind-alert"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Processar dados do TradingView\nconst data = $input.first().json.body || $input.first().json;\n\n// Extrair informações do alerta\nconst symbol = data.symbol || 'BTCUSDT';\nconst action = data.action || 'LONG'; // LONG ou SHORT\nconst setup = data.setup || '9.1';\nconst timeframe = data.timeframe || 'M15';\nconst price = parseFloat(data.price) || 0;\nconst triggerCandle = {\n  high: parseFloat(data.trigger_high) || price * 1.002,\n  low: parseFloat(data.trigger_low) || price * 0.998\n};\n\n// Calcular entrada, stop e alvos\nlet entry, stopLoss, target1, target2, target3;\nlet riskPercent;\n\nif (action === 'LONG') {\n  // Entrada acima da máxima do candle gatilho\n  entry = triggerCandle.high * 1.0001; // 1 tick acima\n  stopLoss = triggerCandle.low * 0.9999; // 1 tick abaixo da mínima\n  riskPercent = ((entry - stopLoss) / entry) * 100;\n  \n  // Alvos: 1R, 2R, 3R\n  const riskValue = entry - stopLoss;\n  target1 = entry + riskValue; // 1R\n  target2 = entry + (riskValue * 2); // 2R\n  target3 = entry + (riskValue * 3); // 3R\n} else {\n  // SHORT\n  entry = triggerCandle.low * 0.9999; // 1 tick abaixo\n  stopLoss = triggerCandle.high * 1.0001; // 1 tick acima da máxima\n  riskPercent = ((stopLoss - entry) / entry) * 100;\n  \n  const riskValue = stopLoss - entry;\n  target1 = entry - riskValue; // 1R\n  target2 = entry - (riskValue * 2); // 2R\n  target3 = entry - (riskValue * 3); // 3R\n}\n\n// Validar risco (máximo 2% para setup 9.1)\nconst maxRisk = 2.0;\nconst isValid = riskPercent <= maxRisk;\n\n// Calcular alavancagem sugerida (risco real máximo 15%)\nconst maxRealRisk = 15;\nconst suggestedLeverage = Math.min(10, Math.floor(maxRealRisk / riskPercent));\nconst realRisk = riskPercent * suggestedLeverage;\n\n// Determinar cor do setup\nconst setupColor = setup === '9.1' ? '🟧' : '🟩'; // Reversão = laranja, Continuação = verde\nconst setupName = setup === '9.1' ? 'Reversão (9.1)' : `Continuação (${setup})`;\n\n// Formatar preços\nconst formatPrice = (p) => {\n  if (p >= 1000) return p.toFixed(2);\n  if (p >= 1) return p.toFixed(4);\n  return p.toFixed(6);\n};\n\nreturn {\n  json: {\n    symbol,\n    action,\n    setup,\n    setupName,\n    setupColor,\n    timeframe,\n    price: formatPrice(price),\n    entry: formatPrice(entry),\n    stopLoss: formatPrice(stopLoss),\n    riskPercent: riskPercent.toFixed(2),\n    target1: formatPrice(target1),\n    target2: formatPrice(target2),\n    target3: formatPrice(target3),\n    suggestedLeverage,\n    realRisk: realRisk.toFixed(1),\n    isValid,\n    triggerHigh: formatPrice(triggerCandle.high),\n    triggerLow: formatPrice(triggerCandle.low),\n    timestamp: new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })\n  }\n};"
+      },
+      "id": "process-alert",
+      "name": "Processar Alerta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [470, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.isValid }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "validate-risk",
+      "name": "Validar Risco",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [690, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "telegramApi",
+        "requestMethod": "POST",
+        "url": "https://api.telegram.org/bot8437212177:AAEsm0d-ARdcj8zDGDqdpjeaSoQgsY-Byqc/sendMessage",
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "chat_id",
+              "value": "1372841832"
+            },
+            {
+              "name": "parse_mode",
+              "value": "HTML"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.setupColor }} <b>{{ $json.action }} {{ $json.symbol }}</b> - {{ $json.setupName }}\n\n📊 <b>Setup Larry Williams {{ $json.setup }}</b>\n⏱️ Timeframe: {{ $json.timeframe }}\n🕐 {{ $json.timestamp }}\n\n📍 <b>Candle Gatilho:</b>\n• Máxima: ${{ $json.triggerHigh }}\n• Mínima: ${{ $json.triggerLow }}\n\n🎯 <b>Entrada:</b> ${{ $json.entry }}\n   (1 tick {{ $json.action === 'LONG' ? 'acima da máxima' : 'abaixo da mínima' }})\n\n🛑 <b>Stop Loss:</b> ${{ $json.stopLoss }} ({{ $json.riskPercent }}%)\n\n⚙️ <b>Gestão:</b>\n• Risco: 1% da banca\n• Alavancagem: {{ $json.suggestedLeverage }}x\n• Risco Real: {{ $json.realRisk }}%\n\n📈 <b>Alvos:</b>\n1. ${{ $json.target1 }} (1R) → Realizar 40%\n   ⚡ Mover SL para entrada + Ativar Trailing 1%\n2. ${{ $json.target2 }} (2R) → Realizar 30%\n3. ${{ $json.target3 }} (3R) → Realizar 30%\n\n❌ <b>Invalidação:</b> Se EMA 9 virar antes da entrada\n\n⚠️ <i>Não é recomendação de investimento</i>\" }}\n"
+            }
+          ]
+        }
+      },
+      "id": "send-telegram",
+      "name": "Enviar Telegram",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [910, 200]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "status",
+              "value": "rejected"
+            },
+            {
+              "name": "reason",
+              "value": "Risco muito alto: {{ $json.riskPercent }}%"
+            }
+          ]
+        }
+      },
+      "id": "reject-alert",
+      "name": "Alerta Rejeitado",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [910, 400]
+    }
+  ],
+  "connections": {
+    "Webhook TradingView": {
+      "main": [
+        [
+          {
+            "node": "Processar Alerta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Processar Alerta": {
+      "main": [
+        [
+          {
+            "node": "Validar Risco",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar Risco": {
+      "main": [
+        [
+          {
+            "node": "Enviar Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Alerta Rejeitado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

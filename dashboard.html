@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | CryptoMind IA</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a24;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --accent-green: #00d4aa;
+            --accent-red: #ff4757;
+            --accent-orange: #ffa502;
+            --accent-blue: #3742fa;
+            --border-color: #2a2a3a;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .logo span {
+            color: var(--accent-green);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--accent-green);
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .page-title {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .page-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+        
+        /* KPI Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .kpi-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .kpi-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .kpi-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        
+        .kpi-value.positive { color: var(--accent-green); }
+        .kpi-value.negative { color: var(--accent-red); }
+        .kpi-value.neutral { color: var(--accent-orange); }
+        
+        .kpi-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .kpi-change {
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+        
+        .kpi-change.up { color: var(--accent-green); }
+        .kpi-change.down { color: var(--accent-red); }
+        
+        /* Charts Section */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .chart-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+        
+        .chart-title {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .chart-container {
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Performance Table */
+        .table-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .table-title {
+            font-size: 1.2rem;
+        }
+        
+        .performance-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .performance-table th,
+        .performance-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .performance-table th {
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+        
+        .performance-table tbody tr:hover {
+            background: rgba(255,255,255,0.02);
+        }
+        
+        .asset-cell {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .asset-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+        
+        .win-rate-bar {
+            width: 100px;
+            height: 8px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .win-rate-fill {
+            height: 100%;
+            background: var(--accent-green);
+            border-radius: 4px;
+        }
+        
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .badge.success { background: rgba(0, 212, 170, 0.15); color: var(--accent-green); }
+        .badge.warning { background: rgba(255, 165, 2, 0.15); color: var(--accent-orange); }
+        .badge.danger { background: rgba(255, 71, 87, 0.15); color: var(--accent-red); }
+        
+        /* Recent Calls */
+        .recent-calls {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+        
+        .call-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .call-item:last-child {
+            border-bottom: none;
+        }
+        
+        .call-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .call-direction {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        
+        .call-direction.long {
+            background: rgba(0, 212, 170, 0.15);
+            color: var(--accent-green);
+        }
+        
+        .call-direction.short {
+            background: rgba(255, 71, 87, 0.15);
+            color: var(--accent-red);
+        }
+        
+        .call-asset {
+            font-weight: 600;
+        }
+        
+        .call-setup {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .call-result {
+            text-align: right;
+        }
+        
+        .call-pnl {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .call-pnl.positive { color: var(--accent-green); }
+        .call-pnl.negative { color: var(--accent-red); }
+        
+        .call-date {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+        
+        /* Loading State */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--accent-green);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .performance-table {
+                font-size: 0.9rem;
+            }
+            
+            .performance-table th,
+            .performance-table td {
+                padding: 0.75rem 0.5rem;
+            }
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            🤖 CryptoMind <span>IA</span>
+        </div>
+        <nav class="nav-links">
+            <a href="index.html">Análise Atual</a>
+            <a href="history.html">Histórico</a>
+            <a href="dashboard.html" class="active">Dashboard</a>
+        </nav>
+    </header>
+    
+    <main class="container">
+        <h1 class="page-title">📊 Dashboard de Performance</h1>
+        <p class="page-subtitle">Métricas e estatísticas do sistema CryptoMind IA</p>
+        
+        <!-- KPIs Principais -->
+        <div class="kpi-grid" id="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-icon">🎯</div>
+                <span class="kpi-value positive" id="win-rate">--</span>
+                <span class="kpi-label">Taxa de Acerto</span>
+                <div class="kpi-change up" id="win-rate-change">--</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">💰</div>
+                <span class="kpi-value" id="total-pnl">--</span>
+                <span class="kpi-label">P&L Total</span>
+                <div class="kpi-change" id="pnl-change">--</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">📈</div>
+                <span class="kpi-value" id="total-setups">--</span>
+                <span class="kpi-label">Total de Setups</span>
+                <div class="kpi-change" id="setups-change">--</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">🔥</div>
+                <span class="kpi-value" id="best-streak">--</span>
+                <span class="kpi-label">Melhor Sequência</span>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">📊</div>
+                <span class="kpi-value" id="bias-accuracy">--</span>
+                <span class="kpi-label">Precisão do Viés</span>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">⚡</div>
+                <span class="kpi-value" id="avg-rr">--</span>
+                <span class="kpi-label">R:R Médio</span>
+            </div>
+        </div>
+        
+        <!-- Performance por Ativo -->
+        <div class="table-card">
+            <div class="table-header">
+                <h2 class="table-title">📈 Performance por Ativo</h2>
+            </div>
+            <table class="performance-table">
+                <thead>
+                    <tr>
+                        <th>Ativo</th>
+                        <th>Setups</th>
+                        <th>Vencedores</th>
+                        <th>Taxa de Acerto</th>
+                        <th>P&L</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="performance-tbody">
+                    <tr>
+                        <td colspan="6">
+                            <div class="loading">
+                                <div class="spinner"></div>
+                                <span>Carregando dados...</span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Últimos Calls -->
+        <div class="recent-calls">
+            <h2 class="table-title" style="margin-bottom: 1rem;">🔔 Últimos Calls</h2>
+            <div id="recent-calls-list">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <span>Carregando calls...</span>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="footer">
+        <p>CryptoMind IA © 2026 - Sistema automatizado de análise técnica</p>
+        <p style="margin-top: 0.5rem; font-size: 0.8rem;">⚠️ Não é recomendação de investimento</p>
+    </footer>
+    
+    <script>
+        // Carregar dados do dashboard
+        async function loadDashboardData() {
+            try {
+                // Tentar carregar dados de performance
+                const response = await fetch('data/current/performance_stats.json');
+                if (response.ok) {
+                    const data = await response.json();
+                    updateDashboard(data);
+                } else {
+                    // Usar dados de exemplo se não houver dados reais
+                    updateDashboardWithSampleData();
+                }
+            } catch (error) {
+                console.error('Erro ao carregar dados:', error);
+                updateDashboardWithSampleData();
+            }
+        }
+        
+        function updateDashboard(data) {
+            // Atualizar KPIs
+            document.getElementById('win-rate').textContent = `${data.win_rate || 0}%`;
+            document.getElementById('total-pnl').textContent = `${data.total_pnl >= 0 ? '+' : ''}${data.total_pnl || 0}%`;
+            document.getElementById('total-pnl').className = `kpi-value ${data.total_pnl >= 0 ? 'positive' : 'negative'}`;
+            document.getElementById('total-setups').textContent = data.total_setups || 0;
+            document.getElementById('best-streak').textContent = data.best_streak || 0;
+            document.getElementById('bias-accuracy').textContent = `${data.bias_accuracy || 0}%`;
+            document.getElementById('avg-rr').textContent = `${data.avg_rr || 0}:1`;
+            
+            // Atualizar tabela de performance
+            if (data.by_asset) {
+                updatePerformanceTable(data.by_asset);
+            }
+            
+            // Atualizar calls recentes
+            if (data.recent_calls) {
+                updateRecentCalls(data.recent_calls);
+            }
+        }
+        
+        function updateDashboardWithSampleData() {
+            // Dados de exemplo para demonstração
+            const sampleData = {
+                win_rate: 68.5,
+                total_pnl: 12.4,
+                total_setups: 47,
+                best_streak: 7,
+                bias_accuracy: 72.3,
+                avg_rr: 2.1,
+                by_asset: {
+                    'BTC': { setups: 12, winners: 9, pnl: 4.2 },
+                    'ETH': { setups: 10, winners: 7, pnl: 3.1 },
+                    'SOL': { setups: 8, winners: 5, pnl: 2.8 },
+                    'BNB': { setups: 7, winners: 4, pnl: 1.5 },
+                    'XRP': { setups: 5, winners: 3, pnl: 0.5 },
+                    'ADA': { setups: 5, winners: 4, pnl: 0.3 }
+                },
+                recent_calls: [
+                    { asset: 'BTC', direction: 'LONG', setup: 'TS1 Rompimento', pnl: 1.8, date: '03/01/2026' },
+                    { asset: 'ETH', direction: 'SHORT', setup: 'TS3 Reversão', pnl: -0.5, date: '03/01/2026' },
+                    { asset: 'SOL', direction: 'LONG', setup: 'TS2 Continuação', pnl: 2.1, date: '02/01/2026' },
+                    { asset: 'BNB', direction: 'LONG', setup: 'TS1 Rompimento', pnl: 0.8, date: '02/01/2026' },
+                    { asset: 'XRP', direction: 'SHORT', setup: 'TS3 Reversão', pnl: 1.2, date: '01/01/2026' }
+                ]
+            };
+            
+            updateDashboard(sampleData);
+        }
+        
+        function updatePerformanceTable(byAsset) {
+            const tbody = document.getElementById('performance-tbody');
+            let html = '';
+            
+            for (const [asset, data] of Object.entries(byAsset)) {
+                const winRate = data.setups > 0 ? ((data.winners / data.setups) * 100).toFixed(1) : 0;
+                const pnlClass = data.pnl >= 0 ? 'positive' : 'negative';
+                const statusBadge = winRate >= 60 ? 'success' : (winRate >= 40 ? 'warning' : 'danger');
+                const statusText = winRate >= 60 ? 'Excelente' : (winRate >= 40 ? 'Regular' : 'Revisar');
+                
+                html += `
+                    <tr>
+                        <td>
+                            <div class="asset-cell">
+                                <div class="asset-icon">${asset.substring(0, 2)}</div>
+                                <span>${asset}</span>
+                            </div>
+                        </td>
+                        <td>${data.setups}</td>
+                        <td>${data.winners}</td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <div class="win-rate-bar">
+                                    <div class="win-rate-fill" style="width: ${winRate}%"></div>
+                                </div>
+                                <span>${winRate}%</span>
+                            </div>
+                        </td>
+                        <td class="${pnlClass}">${data.pnl >= 0 ? '+' : ''}${data.pnl.toFixed(1)}%</td>
+                        <td><span class="badge ${statusBadge}">${statusText}</span></td>
+                    </tr>
+                `;
+            }
+            
+            tbody.innerHTML = html;
+        }
+        
+        function updateRecentCalls(calls) {
+            const container = document.getElementById('recent-calls-list');
+            let html = '';
+            
+            for (const call of calls) {
+                const pnlClass = call.pnl >= 0 ? 'positive' : 'negative';
+                const directionClass = call.direction.toLowerCase();
+                
+                html += `
+                    <div class="call-item">
+                        <div class="call-info">
+                            <span class="call-direction ${directionClass}">${call.direction}</span>
+                            <div>
+                                <div class="call-asset">${call.asset}</div>
+                                <div class="call-setup">${call.setup}</div>
+                            </div>
+                        </div>
+                        <div class="call-result">
+                            <div class="call-pnl ${pnlClass}">${call.pnl >= 0 ? '+' : ''}${call.pnl.toFixed(1)}%</div>
+                            <div class="call-date">${call.date}</div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = html;
+        }
+        
+        // Carregar dados ao iniciar
+        document.addEventListener('DOMContentLoaded', loadDashboardData);
+    </script>
+</body>
+</html>

@@ -8,6 +8,7 @@ import subprocess
 import os
 import sys
 from datetime import datetime
+from pathlib import Path
 import pytz
 from pathlib import Path
 
@@ -331,11 +332,21 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='CryptoMind IA - Automação de Análises')
     parser.add_argument('--mode', choices=['morning', 'closing', 'both'], default='morning',
                         help='Modo de execução: morning (11:00), closing (21:05), both (ambos)')
+    parser.add_argument('--type', choices=['opening', 'closing'], default=None,
+                        help='Tipo de análise: opening (abertura), closing (fechamento)')
     
     args = parser.parse_args()
     
-    if args.mode in ['morning', 'both']:
-        run_morning_analysis()
-    
-    if args.mode in ['closing', 'both']:
-        run_closing_report()
+    # Suporte para --type (usado pelo GitHub Actions)
+    if args.type:
+        if args.type == 'opening':
+            run_morning_analysis()
+        elif args.type == 'closing':
+            run_closing_report()
+    else:
+        # Modo legado
+        if args.mode in ['morning', 'both']:
+            run_morning_analysis()
+        
+        if args.mode in ['closing', 'both']:
+            run_closing_report()
