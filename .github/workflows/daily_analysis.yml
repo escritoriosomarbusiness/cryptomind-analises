@@ -1,0 +1,64 @@
+name: CryptoMind IA - Análise Diária
+
+on:
+  schedule:
+    # Análise de Abertura - 09:00 BRT (12:00 UTC)
+    - cron: '0 12 * * 1-5'
+    # Análise de Fechamento - 21:00 BRT (00:00 UTC do dia seguinte)
+    - cron: '0 0 * * 2-6'
+  workflow_dispatch:
+    inputs:
+      analysis_type:
+        description: 'Tipo de análise'
+        required: true
+        default: 'opening'
+        type: choice
+        options:
+          - opening
+          - closing
+
+jobs:
+  daily-analysis:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Install dependencies
+        run: |
+          pip install requests pytz
+          
+      - name: Determine analysis type
+        id: analysis-type
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "type=${{ github.event.inputs.analysis_type }}" >> $GITHUB_OUTPUT
+          else
+            HOUR=$(TZ='America/Sao_Paulo' date +%H)
+            if [ "$HOUR" -lt 15 ]; then
+              echo "type=opening" >> $GITHUB_OUTPUT
+            else
+              echo "type=closing" >> $GITHUB_OUTPUT
+            fi
+          fi
+          
+      - name: Run analysis
+        run: |
+          cd scripts
+          python run_daily_analysis.py --type ${{ steps.analysis-type.outputs.type }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git diff --staged --quiet || git commit -m "📊 Análise ${{ steps.analysis-type.outputs.type }} - $(TZ='America/Sao_Paulo' date '+%d/%m/%Y %H:%M')"
+          git push
