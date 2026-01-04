@@ -1,10 +1,10 @@
 {
-  "total_setups": 35,
-  "winning_setups": 17,
+  "total_setups": 41,
+  "winning_setups": 20,
   "losing_setups": 5,
   "ongoing_setups": 2,
-  "bias_correct": 19,
-  "bias_total": 30,
+  "bias_correct": 25,
+  "bias_total": 36,
   "daily_results": [
     {
       "date": "2026-01-02",
@@ -67,6 +67,19 @@
         "ongoing": 2,
         "not_activated": 1,
         "total_pnl": 4.92,
+        "bias_correct": 6,
+        "bias_total": 6
+      }
+    },
+    {
+      "date": "2026-01-03",
+      "stats": {
+        "total_setups": 6,
+        "winning": 3,
+        "losing": 0,
+        "ongoing": 2,
+        "not_activated": 1,
+        "total_pnl": 5.880000000000001,
         "bias_correct": 6,
         "bias_total": 6
       }
