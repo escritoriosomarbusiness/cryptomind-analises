@@ -1,24 +1,11 @@
 {
-  "win_rate": 68.5,
-  "total_pnl": 21.75,
-  "total_setups": 35,
-  "best_streak": 5,
-  "bias_accuracy": 73.3,
-  "avg_rr": 2.1,
-  "by_asset": {
-    "BTC": { "setups": 8, "winners": 6, "pnl": 8.2 },
-    "ETH": { "setups": 7, "winners": 5, "pnl": 5.1 },
-    "SOL": { "setups": 6, "winners": 4, "pnl": 3.8 },
-    "BNB": { "setups": 5, "winners": 3, "pnl": 2.5 },
-    "XRP": { "setups": 5, "winners": 3, "pnl": 1.2 },
-    "ADA": { "setups": 4, "winners": 2, "pnl": 0.95 }
-  },
-  "recent_calls": [
-    { "asset": "BTC", "direction": "LONG", "setup": "TS1 Rompimento", "pnl": 2.8, "date": "03/01/2026" },
-    { "asset": "ETH", "direction": "LONG", "setup": "TS2 Continuação", "pnl": 1.5, "date": "03/01/2026" },
-    { "asset": "SOL", "direction": "SHORT", "setup": "TS3 Reversão", "pnl": -0.8, "date": "02/01/2026" },
-    { "asset": "BNB", "direction": "LONG", "setup": "TS1 Rompimento", "pnl": 1.2, "date": "02/01/2026" },
-    { "asset": "XRP", "direction": "LONG", "setup": "TS2 Continuação", "pnl": 0.9, "date": "01/01/2026" }
-  ],
-  "last_updated": "2026-01-03T21:55:00-03:00"
+  "win_rate": 0,
+  "total_pnl": 0,
+  "total_setups": 0,
+  "best_streak": 0,
+  "bias_accuracy": 0,
+  "avg_rr": 0,
+  "by_asset": {},
+  "recent_calls": [],
+  "last_updated": "2026-01-03T22:10:00-03:00"
 }

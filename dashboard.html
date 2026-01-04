@@ -514,32 +514,36 @@
         }
         
         function updateDashboardWithSampleData() {
-            // Dados de exemplo para demonstração
-            const sampleData = {
-                win_rate: 68.5,
-                total_pnl: 12.4,
-                total_setups: 47,
-                best_streak: 7,
-                bias_accuracy: 72.3,
-                avg_rr: 2.1,
-                by_asset: {
-                    'BTC': { setups: 12, winners: 9, pnl: 4.2 },
-                    'ETH': { setups: 10, winners: 7, pnl: 3.1 },
-                    'SOL': { setups: 8, winners: 5, pnl: 2.8 },
-                    'BNB': { setups: 7, winners: 4, pnl: 1.5 },
-                    'XRP': { setups: 5, winners: 3, pnl: 0.5 },
-                    'ADA': { setups: 5, winners: 4, pnl: 0.3 }
-                },
-                recent_calls: [
-                    { asset: 'BTC', direction: 'LONG', setup: 'TS1 Rompimento', pnl: 1.8, date: '03/01/2026' },
-                    { asset: 'ETH', direction: 'SHORT', setup: 'TS3 Reversão', pnl: -0.5, date: '03/01/2026' },
-                    { asset: 'SOL', direction: 'LONG', setup: 'TS2 Continuação', pnl: 2.1, date: '02/01/2026' },
-                    { asset: 'BNB', direction: 'LONG', setup: 'TS1 Rompimento', pnl: 0.8, date: '02/01/2026' },
-                    { asset: 'XRP', direction: 'SHORT', setup: 'TS3 Reversão', pnl: 1.2, date: '01/01/2026' }
-                ]
+            // Mostrar dados zerados - aguardando dados reais
+            const emptyData = {
+                win_rate: 0,
+                total_pnl: 0,
+                total_setups: 0,
+                best_streak: 0,
+                bias_accuracy: 0,
+                avg_rr: 0,
+                by_asset: {},
+                recent_calls: []
             };
             
-            updateDashboard(sampleData);
+            updateDashboard(emptyData);
+            
+            // Mostrar mensagem de aguardando dados
+            document.getElementById('performance-tbody').innerHTML = `
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 2rem; color: #888;">
+                        📊 Aguardando dados de performance...<br>
+                        <small>Os dados serão atualizados conforme os setups forem concluídos.</small>
+                    </td>
+                </tr>
+            `;
+            
+            document.getElementById('recent-calls-list').innerHTML = `
+                <div style="text-align: center; padding: 2rem; color: #888;">
+                    🔔 Nenhum call registrado ainda.<br>
+                    <small>Os calls aparecerão aqui conforme forem gerados.</small>
+                </div>
+            `;
         }
         
         function updatePerformanceTable(byAsset) {
