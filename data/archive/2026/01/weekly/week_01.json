@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-01-03T15:51:49.611805-03:00",
+  "timestamp": "2026-01-04T23:38:46.650947-03:00",
   "report_type": "weekly",
   "week_number": 1,
   "year": 2025,
@@ -10,41 +10,41 @@
     "end_formatted": "04 de January de 2026"
   },
   "kpis": {
-    "total_setups": 22,
-    "total_long": 17,
-    "total_short": 11,
-    "long_percentage": 77.3,
-    "short_percentage": 50.0,
+    "total_setups": 28,
+    "total_long": 23,
+    "total_short": 13,
+    "long_percentage": 82.1,
+    "short_percentage": 46.4,
     "average_score": 5.3,
     "setups_by_asset": {
-      "BTC": 4,
-      "ETH": 4,
-      "SOL": 4,
-      "BNB": 4,
-      "XRP": 4,
-      "ADA": 2
+      "BTC": 5,
+      "ETH": 5,
+      "SOL": 5,
+      "BNB": 5,
+      "XRP": 5,
+      "ADA": 3
     },
     "best_asset": {
       "symbol": "BTC",
-      "setups_count": 4
+      "setups_count": 5
     },
     "worst_asset": {
       "symbol": "ADA",
-      "setups_count": 2
+      "setups_count": 3
     },
-    "trading_days": 5
+    "trading_days": 6
   },
   "macro_analysis": {
     "fear_greed": {
-      "average": 28.6,
+      "average": 28.0,
       "classification": "Fear",
-      "min": 28,
+      "min": 25,
       "max": 29
     },
     "usdt_d": {
-      "average": 5.993,
+      "average": 5.958,
       "dominant_impact": "BEARISH",
-      "min": 5.911,
+      "min": 5.853,
       "max": 6.14
     }
   },
@@ -57,7 +57,7 @@
       "entry": 90090.0,
       "target": 91575.0
     },
-    "total_trading_days": 5
+    "total_trading_days": 6
   },
-  "analyses_count": 6
+  "analyses_count": 9
 }
