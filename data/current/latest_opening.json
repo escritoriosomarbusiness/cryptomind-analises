@@ -1,20 +1,20 @@
 {
-  "timestamp": "2026-01-05T09:35:56.074388-03:00",
-  "date": "05 de Janeiro de 2026",
-  "time": "09:35",
+  "timestamp": "2026-01-06T09:34:11.615314-03:00",
+  "date": "06 de Janeiro de 2026",
+  "time": "09:34",
   "fear_greed": {
-    "value": 26,
+    "value": 44,
     "classification": "Fear",
-    "yesterday": 25,
-    "week_ago": 23
+    "yesterday": 26,
+    "week_ago": 21
   },
   "usdt_d": {
-    "dominance": 5.766,
-    "dominance_formatted": "5.766%",
-    "ema_9": 5.77,
-    "ema_21": 5.77,
+    "dominance": 5.664,
+    "dominance_formatted": "5.664%",
+    "ema_9": 5.66,
+    "ema_21": 5.66,
     "ema_200": 6.17,
-    "rsi": 40.53,
+    "rsi": 40.61,
     "atr": 0.0003,
     "macd": 0.0,
     "sr_levels": {
@@ -31,8 +31,8 @@
     "next_level": "Suporte W1: 5.86%",
     "invalidation": "USDT.D voltar acima de 6.17% (EMA 200)",
     "below_ema_200": true,
-    "below_ema_21": true,
-    "below_ema_9": true
+    "below_ema_21": false,
+    "below_ema_9": false
   },
   "analyses": {}
 }
