@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-01-06T22:28:48.910517-03:00",
-  "total_days": 4,
+  "generated_at": "2026-01-07T09:35:16.922922-03:00",
+  "total_days": 5,
   "days": [
     {
       "date": "2026-01-02",
@@ -223,6 +223,27 @@
             "assets": [],
             "setups_count": 0,
             "fear_greed": 44,
+            "usdt_d_impact": "BULLISH"
+          }
+        }
+      ]
+    },
+    {
+      "date": "2026-01-07",
+      "year": "2026",
+      "month": "01",
+      "day": "07",
+      "analyses": [
+        {
+          "type": "opening",
+          "filename": "opening_09-34.json",
+          "path": "data/archive/2026/01/daily/07/opening_09-34.json",
+          "timestamp": "2026-01-07T09:34:51.381850-03:00",
+          "time": "09:34",
+          "summary": {
+            "assets": [],
+            "setups_count": 0,
+            "fear_greed": 42,
             "usdt_d_impact": "BULLISH"
           }
         }
