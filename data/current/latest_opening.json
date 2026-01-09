@@ -1,21 +1,21 @@
 {
-  "timestamp": "2026-01-08T09:34:51.349226-03:00",
-  "date": "08 de Janeiro de 2026",
-  "time": "09:34",
+  "timestamp": "2026-01-09T09:33:44.636689-03:00",
+  "date": "09 de Janeiro de 2026",
+  "time": "09:33",
   "fear_greed": {
-    "value": 28,
+    "value": 27,
     "classification": "Fear",
-    "yesterday": 42,
-    "week_ago": 28
+    "yesterday": 28,
+    "week_ago": 29
   },
   "usdt_d": {
-    "dominance": 5.91,
-    "dominance_formatted": "5.910%",
-    "ema_9": 5.91,
-    "ema_21": 5.91,
+    "dominance": 5.894,
+    "dominance_formatted": "5.894%",
+    "ema_9": 5.89,
+    "ema_21": 5.89,
     "ema_200": 6.17,
-    "rsi": 27.7,
-    "atr": 0.0003,
+    "rsi": 28.31,
+    "atr": 0.0002,
     "macd": 0.0,
     "sr_levels": {
       "resistance_w1": 6.74,
