@@ -1,0 +1,53 @@
+{
+  "name": "Setup DNP - Alertas TradingView",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "dnp-alert",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Processar dados do TradingView - Setup DNP v1.0\nconst data = $input.first().json.body || $input.first().json;\n\n// Extrair informações do alerta\nconst symbol = data.symbol || 'BTCUSDT';\nconst action = data.action || 'TRIGGER';\nconst direction = data.direction || 'LONG';\nconst setup = data.setup || 'DNP';\nconst timeframe = data.timeframe || '5';\nconst price = parseFloat(data.price) || 0;\n\n// Dados específicos do DNP\nconst adx = parseFloat(data.adx) || 0;\nconst remi = parseFloat(data.remi) || 0;\n\n// Dados do candle gatilho e cálculos (só para CONFIRMED)\nconst triggerHigh = parseFloat(data.triggerHigh) || 0;\nconst triggerLow = parseFloat(data.triggerLow) || 0;\nconst entry = parseFloat(data.entry) || 0;\nconst stopLoss = parseFloat(data.stopLoss) || 0;\nconst risk = parseFloat(data.risk) || 0;\nconst riskPercent = parseFloat(data.riskPercent) || 0;\nconst target1 = parseFloat(data.target1) || 0;\nconst target2 = parseFloat(data.target2) || 0;\nconst trailingDistance = parseFloat(data.trailingDistance) || 0;\n\n// Determinar tipo de alerta\nconst isTrigger = action === 'TRIGGER';\nconst isConfirmed = action === 'CONFIRMED';\n\n// Emoji de direção\nconst directionEmoji = direction === 'LONG' ? '🟢' : '🔴';\n\n// Formatar preços\nconst formatPrice = (p) => {\n  if (p === 0) return '0.00';\n  if (p >= 1000) return p.toFixed(2);\n  if (p >= 1) return p.toFixed(4);\n  return p.toFixed(8);\n};\n\n// Calcular alavancagem sugerida\nconst maxRealRisk = 15;\nconst suggestedLeverage = riskPercent > 0 ? Math.min(10, Math.floor(maxRealRisk / riskPercent)) : 1;\nconst realRisk = riskPercent * suggestedLeverage;\n\nreturn {\n  json: {\n    symbol,\n    action,\n    direction,\n    directionEmoji,\n    setup,\n    timeframe,\n    price: formatPrice(price),\n    adx: adx.toFixed(2),\n    remi: remi.toFixed(2),\n    isTrigger,\n    isConfirmed,\n    triggerHigh: formatPrice(triggerHigh),\n    triggerLow: formatPrice(triggerLow),\n    entry: formatPrice(entry),\n    stopLoss: formatPrice(stopLoss),\n    risk: formatPrice(risk),\n    riskPercent: riskPercent.toFixed(2),\n    target1: formatPrice(target1),\n    target2: formatPrice(target2),\n    trailingDistance: formatPrice(trailingDistance),\n    suggestedLeverage,\n    realRisk: realRisk.toFixed(1),\n    timestamp: new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })\n  }\n};"
+      },
+      "name": "Processar Alerta DNP",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "chatId": "YOUR_TELEGRAM_CHAT_ID",
+        "text": "={{ $json.isTrigger ? '🔔 <b>' + $json.directionEmoji + ' ' + $json.direction + ' ' + $json.symbol + '</b>\\n\\n📊 <b>Setup DNP by CryptoMind IA</b>\\n⏱️ ' + $json.timeframe + 'm • 🕐 ' + $json.timestamp + '\\n\\n🔔 <b>GATILHO ARMADO</b>\\n\\n🎯 <b>Indicadores:</b>\\n• ADX: ' + $json.adx + '\\n• REMI: ' + $json.remi + '\\n\\n💰 <b>Preço Atual:</b> $' + $json.price + '\\n\\n📍 <b>Aguardando Rompimento</b>\\n\\n⚠️ <i>Entrada será confirmada no rompimento do gatilho</i>' : '✅ <b>' + $json.directionEmoji + ' ' + $json.direction + ' ' + $json.symbol + '</b>\\n\\n📊 <b>Setup DNP by CryptoMind IA</b>\\n⏱️ ' + $json.timeframe + 'm • 🕐 ' + $json.timestamp + '\\n\\n✅ <b>CONFIRMADO POR ROMPIMENTO</b>\\n\\n🎯 <b>Indicadores:</b>\\n• ADX: ' + $json.adx + '\\n• REMI: ' + $json.remi + '\\n\\n💰 <b>Preço Atual:</b> $' + $json.price + '\\n\\n🚀 <b>Entrada Ativa</b>\\n\\n🎯 <b>Entrada:</b> $' + $json.entry + '\\n🛑 <b>Stop Loss:</b> $' + $json.stopLoss + ' (' + $json.riskPercent + '%)\\n\\n⚙️ <b>Gestão de Risco:</b>\\n• Risco: 1% da banca\\n• Alavancagem: ' + $json.suggestedLeverage + 'x\\n• Risco Real: ' + $json.realRisk + '%\\n\\n📈 <b>Alvos:</b>\\n1️⃣ $' + $json.target1 + ' (1R) → Realizar 40%\\n   ⚡ Mover SL para entrada + Trailing ' + $json.riskPercent + '%\\n2️⃣ $' + $json.target2 + ' (2R) → Ativar Trailing Stop ($' + $json.trailingDistance + ')\\n\\n❌ <b>Invalidação:</b> Se não romper no próximo candle' }}\\n\\n⚠️ <i>Não é recomendação de investimento</i>",
+        "additionalFields": {
+          "parseMode": "HTML"
+        }
+      },
+      "name": "Enviar Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [650, 300],
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_TELEGRAM_CREDENTIALS_ID",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{"node": "Processar Alerta DNP", "type": "main", "index": 0}]]
+    },
+    "Processar Alerta DNP": {
+      "main": [[{"node": "Enviar Telegram", "type": "main", "index": 0}]]
+    }
+  }
+}

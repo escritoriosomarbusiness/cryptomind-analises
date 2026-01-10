@@ -1,0 +1,444 @@
+//@version=6
+indicator("DNP by CryptoMindIA", shorttitle="DNP", overlay=true)
+
+// ============================================================================
+// INPUTS CONFIGURÁVEIS
+// ============================================================================
+
+// Didi Index
+curtaLength = input.int(3, "Didi Curta", minval=1, group="Didi Index")
+mediaLength = input.int(8, "Didi Média", minval=1, group="Didi Index")
+longaLength = input.int(20, "Didi Longa", minval=1, group="Didi Index")
+maxDistanceFromAxis = input.float(0.15, "Distância Máx. do Eixo (%)", minval=0.05, maxval=2.0, step=0.05, group="Didi Index", tooltip="5min: 0.10 | 15min: 0.20 | 1H: 0.30 | 4H: 0.50")
+
+// ADX/DMI
+adxLength = input.int(8, "ADX Length", minval=1, group="ADX/DMI")
+adxSmoothing = input.int(8, "ADX Smoothing", minval=1, group="ADX/DMI")
+adxMinValue = input.float(20.0, "ADX Mínimo", minval=10, maxval=50, step=1, group="ADX/DMI")
+adxMinSlope = input.float(1.5, "Inclinação Mínima ADX", minval=0.5, maxval=10.0, step=0.5, group="ADX/DMI", tooltip="5min: 1.5 | 15min: 2.5 | 1H: 3.0 | 4H: 4.0")
+
+// Bollinger Bands
+bbLength = input.int(8, "BB Length", minval=1, group="Bollinger Bands")
+bbMult = input.float(2.0, "BB Mult", minval=0.1, maxval=5, step=0.1, group="Bollinger Bands")
+bbExpansionLookback = input.int(7, "Períodos para Média BB", minval=3, maxval=10, group="Bollinger Bands", tooltip="Candles anteriores para calcular expansão")
+bbExpansionRatio = input.float(1.5, "Razão Mínima de Expansão", minval=1.0, maxval=3.0, step=0.1, group="Bollinger Bands", tooltip="REMI mínimo para validar")
+
+// Pivots
+pivotLookback = input.int(5, "Pivot Lookback", minval=3, maxval=10, group="Pivots S/R")
+pivotBreakMethod = input.string("Por Fechamento (Close)", "Validação Pivot Breakout", options=["Por Pavio (High/Low)", "Por Fechamento (Close)"], group="Pivots S/R", tooltip="Pavio: valida por HIGH/LOW | Fechamento: valida por CLOSE")
+
+// Setup
+setupWindow = input.int(2, "Janela de Construção (candles)", minval=2, maxval=5, group="Setup", tooltip="Máximo de candles para todas condições se alinharem")
+strongCandleThreshold = input.float(0.67, "Filtro Candle Forte", minval=0.5, maxval=0.9, step=0.01, group="Setup", tooltip="Fecha nos 33% superiores/inferiores")
+maxWickPercent = input.float(0.20, "Pavio Máximo (%)", minval=0.05, maxval=0.30, step=0.05, group="Setup", tooltip="Pavio não pode ser maior que X% do corpo")
+slMethod = input.string("3 Candles Anteriores", "Método Stop Loss", options=["3 Candles Anteriores", "Pivots (S/R)"], group="Setup", tooltip="3 Candles: SL no menor/maior dos 3 anteriores | Pivots: SL no suporte/resistência")
+
+// Dashboard
+showDashboard = input.bool(true, "Mostrar Dashboard", group="Visual")
+
+// ============================================================================
+// CÁLCULO DO DIDI INDEX
+// ============================================================================
+
+media = ta.sma(close, mediaLength)
+curta = ta.sma(close, curtaLength) / media
+longa = ta.sma(close, longaLength) / media
+
+didiCrossUp = ta.crossover(curta, longa)
+didiCrossDown = ta.crossunder(curta, longa)
+
+// Calcular distância do eixo no momento do cruzamento
+var float crossDistance = na
+if didiCrossUp or didiCrossDown
+    crossDistance := math.abs(longa - 1.0) * 100
+
+// Validar se cruzamento foi próximo ao eixo
+nearAxis = not na(crossDistance) and crossDistance <= maxDistanceFromAxis
+
+// ============================================================================
+// CÁLCULO DO ADX/DMI
+// ============================================================================
+
+[diPlus, diMinus, adx] = ta.dmi(adxLength, adxSmoothing)
+
+// ADX subindo com inclinação mínima
+adxSlope = adx - adx[1]
+adxRising = adxSlope >= adxMinSlope and adx >= adxMinValue
+
+// Direção predominante
+diPlusAbove = diPlus > diMinus
+diMinusAbove = diMinus > diPlus
+
+// ============================================================================
+// CÁLCULO DAS BOLLINGER BANDS (LÓGICA REMI) - CORRIGIDO
+// ============================================================================
+
+bbBasis = ta.sma(close, bbLength)
+bbDev = bbMult * ta.stdev(close, bbLength)
+bbUpper = bbBasis + bbDev
+bbLower = bbBasis - bbDev
+
+// BBW do candle atual (gatilho)
+bbwCurrent = bbUpper - bbLower
+
+// Buscar menor e maior BBW nos últimos N candles
+float minBBW = 999999.0
+float maxBBW = 0.0
+
+for i = 1 to bbExpansionLookback
+    // CORREÇÃO: Calcular BBW histórico corretamente
+    bbBasis_i = ta.sma(close, bbLength)[i]
+    bbDev_i = bbMult * ta.stdev(close, bbLength)[i]
+    bbUpper_i = bbBasis_i + bbDev_i
+    bbLower_i = bbBasis_i - bbDev_i
+    bbwTemp = bbUpper_i - bbLower_i
+    
+    if bbwTemp < minBBW
+        minBBW := bbwTemp
+    if bbwTemp > maxBBW
+        maxBBW := bbwTemp
+
+// Calcular BBW médio
+bbwMedio = (minBBW + maxBBW) / 2
+
+// Calcular razão de expansão (REMI)
+remiRatio = bbwMedio > 0 ? bbwCurrent / bbwMedio : 0
+
+// Validar expansão
+bbExpanding = remiRatio >= bbExpansionRatio
+
+// ============================================================================
+// CÁLCULO DOS PIVOTS S/R
+// ============================================================================
+
+pivotHigh = ta.pivothigh(high, pivotLookback, pivotLookback)
+var float resistance = na
+if not na(pivotHigh)
+    resistance := pivotHigh
+
+pivotLow = ta.pivotlow(low, pivotLookback, pivotLookback)
+var float support = na
+if not na(pivotLow)
+    support := pivotLow
+
+// Breakout de resistência/suporte - CONFIGURÁVEL
+bool breakoutResistance = false
+bool breakoutSupport = false
+
+if pivotBreakMethod == "Por Pavio (High/Low)"
+    // Validação por HIGH/LOW (pavios)
+    breakoutResistance := not na(resistance) and high > resistance and high[1] <= resistance
+    breakoutSupport := not na(support) and low < support and low[1] >= support
+else
+    // Validação por CLOSE (corpo do candle)
+    breakoutResistance := not na(resistance) and close > resistance and close[1] <= resistance
+    breakoutSupport := not na(support) and close < support and close[1] >= support
+
+// ============================================================================
+// FILTRO DE CANDLE FORTE
+// ============================================================================
+
+candleBody = math.abs(close - open)
+candleRange = high - low
+
+// Fecha nos 33% superiores/inferiores
+upperThird = low + (candleRange * strongCandleThreshold)
+lowerThird = high - (candleRange * strongCandleThreshold)
+
+// Filtro de pavio
+upperWick = high - math.max(close, open)
+lowerWick = math.min(close, open) - low
+
+wickFilterLong = candleBody > 0 ? (upperWick / candleBody) <= maxWickPercent : false
+wickFilterShort = candleBody > 0 ? (lowerWick / candleBody) <= maxWickPercent : false
+
+// Candle forte validado
+strongBullCandle = close >= upperThird and close > open and wickFilterLong
+strongBearCandle = close <= lowerThird and close < open and wickFilterShort
+
+// ============================================================================
+// LÓGICA DO SETUP - CONSTRUÇÃO SEQUENCIAL
+// ============================================================================
+
+// Estados do setup
+var int setupStateLong = 0  // 0=inativo, 1=construindo, 2=trigger formado, 3=confirmado
+var int setupStateShort = 0
+
+// Contadores de candles
+var int setupStartBarLong = na
+var int setupStartBarShort = na
+
+// Trigger levels
+var float triggerHighLong = na
+var float triggerLowShort = na
+var int triggerBarLong = na
+var int triggerBarShort = na
+
+// ============================================================================
+// SETUP LONG
+// ============================================================================
+
+// Resetar se passou muito tempo
+if setupStateLong == 1 and not na(setupStartBarLong) and (bar_index - setupStartBarLong) > setupWindow
+    setupStateLong := 0
+    setupStartBarLong := na
+
+// Iniciar construção se Didi cruzar
+if setupStateLong == 0 and didiCrossUp and nearAxis
+    setupStateLong := 1
+    setupStartBarLong := bar_index
+
+// Validar todas as condições dentro da janela
+if setupStateLong == 1
+    allConditionsMet = didiCrossUp[0] or (not na(setupStartBarLong) and (bar_index - setupStartBarLong) <= setupWindow)
+    allConditionsMet := allConditionsMet and adxRising and bbExpanding and breakoutResistance and strongBullCandle and diPlusAbove
+    
+    if allConditionsMet
+        setupStateLong := 2
+        triggerHighLong := high
+        triggerBarLong := bar_index
+
+// Confirmação apenas no candle seguinte
+if setupStateLong == 2 and bar_index == triggerBarLong + 1
+    if close > triggerHighLong
+        setupStateLong := 3
+    else
+        // Expirou
+        setupStateLong := 0
+        triggerHighLong := na
+        triggerBarLong := na
+        setupStartBarLong := na
+
+// Resetar após confirmação
+if setupStateLong == 3
+    setupStateLong := 0
+    triggerHighLong := na
+    triggerBarLong := na
+    setupStartBarLong := na
+
+// ============================================================================
+// SETUP SHORT
+// ============================================================================
+
+// Resetar se passou muito tempo
+if setupStateShort == 1 and not na(setupStartBarShort) and (bar_index - setupStartBarShort) > setupWindow
+    setupStateShort := 0
+    setupStartBarShort := na
+
+// Iniciar construção se Didi cruzar
+if setupStateShort == 0 and didiCrossDown and nearAxis
+    setupStateShort := 1
+    setupStartBarShort := bar_index
+
+// Validar todas as condições dentro da janela
+if setupStateShort == 1
+    allConditionsMet = didiCrossDown[0] or (not na(setupStartBarShort) and (bar_index - setupStartBarShort) <= setupWindow)
+    allConditionsMet := allConditionsMet and adxRising and bbExpanding and breakoutSupport and strongBearCandle and diMinusAbove
+    
+    if allConditionsMet
+        setupStateShort := 2
+        triggerLowShort := low
+        triggerBarShort := bar_index
+
+// Confirmação apenas no candle seguinte
+if setupStateShort == 2 and bar_index == triggerBarShort + 1
+    if close < triggerLowShort
+        setupStateShort := 3
+    else
+        // Expirou
+        setupStateShort := 0
+        triggerLowShort := na
+        triggerBarShort := na
+        setupStartBarShort := na
+
+// Resetar após confirmação
+if setupStateShort == 3
+    setupStateShort := 0
+    triggerLowShort := na
+    triggerBarShort := na
+    setupStartBarShort := na
+
+// ============================================================================
+// SINAIS
+// ============================================================================
+
+triggerLong = setupStateLong == 2 and bar_index == triggerBarLong
+triggerShort = setupStateShort == 2 and bar_index == triggerBarShort
+
+confirmedLong = setupStateLong == 3
+confirmedShort = setupStateShort == 3
+
+// ============================================================================
+// GESTÃO DE RISCO
+// ============================================================================
+
+var float entryLong = na
+var float stopLossLong = na
+var float target1Long = na
+var float target2Long = na
+var float riskLong = na
+var float riskPercentLong = na
+var float trailingLong = na
+
+if confirmedLong
+    // Entry: HIGH do candle gatilho
+    entryLong := triggerHighLong
+    
+    // SL: Baseado no método escolhido
+    tickSize = syminfo.mintick
+    
+    if slMethod == "3 Candles Anteriores"
+        // SL: 1 tick abaixo do menor LOW dos 3 candles anteriores
+        lowestLow = math.min(low[1], low[2], low[3])
+        stopLossLong := lowestLow - tickSize
+    else
+        // SL: 1 tick abaixo do último suporte (pivot)
+        stopLossLong := support - tickSize
+    
+    // Gestão de risco
+    riskLong := entryLong - stopLossLong
+    riskPercentLong := (riskLong / entryLong) * 100
+    target1Long := entryLong + (riskLong * 1.0)
+    target2Long := entryLong + (riskLong * 2.0)
+    trailingLong := riskLong * 0.5
+
+var float entryShort = na
+var float stopLossShort = na
+var float target1Short = na
+var float target2Short = na
+var float riskShort = na
+var float riskPercentShort = na
+var float trailingShort = na
+
+if confirmedShort
+    // Entry: LOW do candle gatilho
+    entryShort := triggerLowShort
+    
+    // SL: Baseado no método escolhido
+    tickSize = syminfo.mintick
+    
+    if slMethod == "3 Candles Anteriores"
+        // SL: 1 tick acima do maior HIGH dos 3 candles anteriores
+        highestHigh = math.max(high[1], high[2], high[3])
+        stopLossShort := highestHigh + tickSize
+    else
+        // SL: 1 tick acima da última resistência (pivot)
+        stopLossShort := resistance + tickSize
+    
+    // Gestão de risco
+    riskShort := stopLossShort - entryShort
+    riskPercentShort := (riskShort / entryShort) * 100
+    target1Short := entryShort - (riskShort * 1.0)
+    target2Short := entryShort - (riskShort * 2.0)
+    trailingShort := riskShort * 0.5
+
+// ============================================================================
+// VISUALIZAÇÃO
+// ============================================================================
+
+// TRIGGER - Labels
+if triggerLong
+    label.new(bar_index, low, "DNP LONG", color=color.new(color.green, 0), textcolor=color.white, style=label.style_label_up, size=size.small)
+
+if triggerShort
+    label.new(bar_index, high, "DNP SHORT", color=color.new(color.red, 0), textcolor=color.white, style=label.style_label_down, size=size.small)
+
+// CONFIRMED - Setinhas
+plotshape(confirmedLong, title="CONFIRMED LONG", location=location.belowbar, color=color.new(color.green, 0), style=shape.triangleup, size=size.small)
+plotshape(confirmedShort, title="CONFIRMED SHORT", location=location.abovebar, color=color.new(color.orange, 0), style=shape.triangledown, size=size.small)
+
+// ============================================================================
+// DASHBOARD
+// ============================================================================
+
+if showDashboard
+    // Criar tabela
+    var table dashboard = table.new(position.top_right, 2, 16, border_width=1)
+    
+    // Cabeçalho
+    table.cell(dashboard, 0, 0, "CryptoMind IA", text_color=color.orange, text_size=size.normal, bgcolor=color.new(color.black, 10))
+    table.cell(dashboard, 1, 0, "DNP v1.1", text_color=color.yellow, text_size=size.normal, bgcolor=color.new(color.black, 10))
+    
+    // Parâmetros Didi
+    table.cell(dashboard, 0, 1, "Didi Dist. Eixo:", text_color=color.gray, text_size=size.small, bgcolor=color.new(color.black, 10))
+    table.cell(dashboard, 1, 1, str.tostring(maxDistanceFromAxis, '#.##') + "%", text_color=color.white, text_size=size.small, bgcolor=color.new(color.black, 10))
+    
+    table.cell(dashboard, 0, 2, "Didi Cruzamento:", text_color=color.gray, text_size=size.small, bgcolor=color.new(color.black, 10))
+    didiStatus = (didiCrossUp or didiCrossDown) and nearAxis
+    table.cell(dashboard, 1, 2, didiStatus ? "✓ ATIVO" : "✗ INATIVO", text_color=didiStatus ? color.green : color.red, text_size=size.small, bgcolor=color.new(color.black, 10))
+    
+    // Parâmetros ADX
+    table.cell(dashboard, 0, 3, "ADX Atual:", text_color=color.gray, text_size=size.small, bgcolor=color.new(color.black, 10))
+    table.cell(dashboard, 1, 3, str.tostring(adx, '#.##'), text_color=adx >= adxMinValue ? color.green : color.red, text_size=size.small, bgcolor=color.new(color.black, 10))
+    
+    table.cell(dashboard, 0, 4, "ADX Inclinação:", text_color=color.gray, text_size=size.small, bgcolor=color.new(color.black, 10))
+    table.cell(dashboard, 1, 4, str.tostring(adxSlope, '#.##'), text_color=adxSlope >= adxMinSlope ? color.green : color.red, text_size=size.small, bgcolor=color.new(color.black, 10))
+    
+    table.cell(dashboard, 0, 5, "ADX Rising:", text_color=color.gray, text_size=size.small, bgcolor=color.new(color.black, 10))
+    table.cell(dashboard, 1, 5, adxRising ? "✓ ATIVO" : "✗ INATIVO", text_color=adxRising ? color.green : color.red, text_size=size.small, bgcolor=color.new(color.black, 10))
+    
+    // Parâmetros Bollinger
+    table.cell(dashboard, 0, 6, "REMI Atual:", text_color=color.gray, text_size=size.small, bgcolor=color.new(color.black, 10))
+    table.cell(dashboard, 1, 6, str.tostring(remiRatio, '#.##'), text_color=remiRatio >= bbExpansionRatio ? color.green : color.red, text_size=size.small, bgcolor=color.new(color.black, 10))
+    
+    table.cell(dashboard, 0, 7, "BB Expansion:", text_color=color.gray, text_size=size.small, bgcolor=color.new(color.black, 10))
+    table.cell(dashboard, 1, 7, bbExpanding ? "✓ ATIVO" : "✗ INATIVO", text_color=bbExpanding ? color.green : color.red, text_size=size.small, bgcolor=color.new(color.black, 10))
+    
+    // Pivots
+    table.cell(dashboard, 0, 8, "Resistência:", text_color=color.gray, text_size=size.small, bgcolor=color.new(color.black, 10))
+    table.cell(dashboard, 1, 8, not na(resistance) ? str.tostring(resistance, format.mintick) : "N/A", text_color=color.red, text_size=size.small, bgcolor=color.new(color.black, 10))
+    
+    table.cell(dashboard, 0, 9, "Suporte:", text_color=color.gray, text_size=size.small, bgcolor=color.new(color.black, 10))
+    table.cell(dashboard, 1, 9, not na(support) ? str.tostring(support, format.mintick) : "N/A", text_color=color.green, text_size=size.small, bgcolor=color.new(color.black, 10))
+    
+    table.cell(dashboard, 0, 10, "Pivot Breakout:", text_color=color.gray, text_size=size.small, bgcolor=color.new(color.black, 10))
+    pivotBreak = breakoutResistance or breakoutSupport
+    table.cell(dashboard, 1, 10, pivotBreak ? "✓ ATIVO" : "✗ INATIVO", text_color=pivotBreak ? color.green : color.red, text_size=size.small, bgcolor=color.new(color.black, 10))
+    
+    // Método Pivot Breakout
+    table.cell(dashboard, 0, 11, "Método Pivot:", text_color=color.gray, text_size=size.small, bgcolor=color.new(color.black, 10))
+    pivotMethodShort = pivotBreakMethod == "Por Pavio (High/Low)" ? "PAVIO" : "CLOSE"
+    table.cell(dashboard, 1, 11, pivotMethodShort, text_color=color.yellow, text_size=size.small, bgcolor=color.new(color.black, 10))
+    
+    // Candle Forte
+    table.cell(dashboard, 0, 12, "Candle Forte:", text_color=color.gray, text_size=size.small, bgcolor=color.new(color.black, 10))
+    candleOk = strongBullCandle or strongBearCandle
+    table.cell(dashboard, 1, 12, candleOk ? "✓ ATIVO" : "✗ INATIVO", text_color=candleOk ? color.green : color.red, text_size=size.small, bgcolor=color.new(color.black, 10))
+    
+    // Status Setup
+    table.cell(dashboard, 0, 13, "Setup State:", text_color=color.gray, text_size=size.small, bgcolor=color.new(color.black, 10))
+    setupState = setupStateLong > 0 ? setupStateLong : setupStateShort
+    stateText = setupState == 0 ? "INATIVO" : setupState == 1 ? "CONSTRUINDO" : setupState == 2 ? "TRIGGER" : "CONFIRMADO"
+    stateColor = setupState == 0 ? color.gray : setupState == 1 ? color.yellow : setupState == 2 ? color.orange : color.green
+    table.cell(dashboard, 1, 13, stateText, text_color=stateColor, text_size=size.small, bgcolor=color.new(color.black, 10))
+    
+    // Trigger Level
+    table.cell(dashboard, 0, 14, "Trigger Level:", text_color=color.gray, text_size=size.small, bgcolor=color.new(color.black, 10))
+    triggerLevel = not na(triggerHighLong) ? str.tostring(triggerHighLong, format.mintick) : not na(triggerLowShort) ? str.tostring(triggerLowShort, format.mintick) : "N/A"
+    table.cell(dashboard, 1, 14, triggerLevel, text_color=color.white, text_size=size.small, bgcolor=color.new(color.black, 10))
+    
+    // Direção
+    table.cell(dashboard, 0, 15, "Direção:", text_color=color.gray, text_size=size.small, bgcolor=color.new(color.black, 10))
+    direction = diPlusAbove ? "LONG (DI+)" : diMinusAbove ? "SHORT (DI-)" : "NEUTRO"
+    dirColor = diPlusAbove ? color.green : diMinusAbove ? color.red : color.gray
+    table.cell(dashboard, 1, 15, direction, text_color=dirColor, text_size=size.small, bgcolor=color.new(color.black, 10))
+
+// ============================================================================
+// ALERTAS
+// ============================================================================
+
+if triggerLong
+    alertJson = '{"symbol":"' + syminfo.ticker + '","action":"TRIGGER","direction":"LONG","setup":"DNP","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close, format.mintick) + '","triggerHigh":"' + str.tostring(triggerHighLong, format.mintick) + '","adx":"' + str.tostring(adx, '#.##') + '","remi":"' + str.tostring(remiRatio, '#.##') + '"}'
+    alert(alertJson, alert.freq_once_per_bar_close)
+
+if triggerShort
+    alertJson = '{"symbol":"' + syminfo.ticker + '","action":"TRIGGER","direction":"SHORT","setup":"DNP","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close, format.mintick) + '","triggerLow":"' + str.tostring(triggerLowShort, format.mintick) + '","adx":"' + str.tostring(adx, '#.##') + '","remi":"' + str.tostring(remiRatio, '#.##') + '"}'
+    alert(alertJson, alert.freq_once_per_bar_close)
+
+if confirmedLong
+    alertJson = '{"symbol":"' + syminfo.ticker + '","action":"CONFIRMED","direction":"LONG","setup":"DNP","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close, format.mintick) + '","entry":"' + str.tostring(entryLong, format.mintick) + '","stopLoss":"' + str.tostring(stopLossLong, format.mintick) + '","risk":"' + str.tostring(riskLong, format.mintick) + '","riskPercent":"' + str.tostring(riskPercentLong, '#.##') + '","target1":"' + str.tostring(target1Long, format.mintick) + '","target2":"' + str.tostring(target2Long, format.mintick) + '","trailingDistance":"' + str.tostring(trailingLong, format.mintick) + '","triggerHigh":"' + str.tostring(triggerHighLong, format.mintick) + '","adx":"' + str.tostring(adx, '#.##') + '","remi":"' + str.tostring(remiRatio, '#.##') + '"}'
+    alert(alertJson, alert.freq_once_per_bar_close)
+
+if confirmedShort
+    alertJson = '{"symbol":"' + syminfo.ticker + '","action":"CONFIRMED","direction":"SHORT","setup":"DNP","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close, format.mintick) + '","entry":"' + str.tostring(entryShort, format.mintick) + '","stopLoss":"' + str.tostring(stopLossShort, format.mintick) + '","risk":"' + str.tostring(riskShort, format.mintick) + '","riskPercent":"' + str.tostring(riskPercentShort, '#.##') + '","target1":"' + str.tostring(target1Short, format.mintick) + '","target2":"' + str.tostring(target2Short, format.mintick) + '","trailingDistance":"' + str.tostring(trailingShort, format.mintick) + '","triggerLow":"' + str.tostring(triggerLowShort, format.mintick) + '","adx":"' + str.tostring(adx, '#.##') + '","remi":"' + str.tostring(remiRatio, '#.##') + '"}'
+    alert(alertJson, alert.freq_once_per_bar_close)
