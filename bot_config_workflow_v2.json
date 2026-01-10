@@ -1,0 +1,547 @@
+{
+  "name": "Bot Telegram - Configuração",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": ["message", "callback_query"],
+        "additionalFields": {}
+      },
+      "id": "telegram-trigger",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.1,
+      "position": [0, 0],
+      "credentials": {
+        "telegramApi": {
+          "id": "CONFIGURAR",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "start",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "/start",
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
+              }
+            },
+            {
+              "id": "config",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "/config",
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
+              }
+            },
+            {
+              "id": "status",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "/status",
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
+              }
+            },
+            {
+              "id": "callback",
+              "leftValue": "={{ $json.callback_query }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "exists"
+              }
+            }
+          ],
+          "combinator": "or"
+        }
+      },
+      "id": "switch-comando",
+      "name": "Switch Comando",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [220, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Dados do usuário\nconst chat_id = $input.first().json.message.chat.id;\nconst username = $input.first().json.message.chat.username || '';\nconst first_name = $input.first().json.message.chat.first_name || '';\n\nreturn {\n  chat_id: chat_id,\n  username: username,\n  first_name: first_name,\n  filtro_moedas: 'TODOS',\n  filtro_usdt_d: true,\n  ativo: true\n};"
+      },
+      "id": "processar-start",
+      "name": "Processar Start",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [440, -200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.airtable.com/v0/BASE_ID/Preferencias",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"fields\": {\n    \"chat_id\": {{ $json.chat_id }},\n    \"username\": \"{{ $json.username }}\",\n    \"first_name\": \"{{ $json.first_name }}\",\n    \"filtro_moedas\": \"{{ $json.filtro_moedas }}\",\n    \"filtro_usdt_d\": {{ $json.filtro_usdt_d }},\n    \"ativo\": {{ $json.ativo }}\n  }\n}",
+        "options": {}
+      },
+      "id": "criar-usuario-airtable",
+      "name": "Criar Usuário Airtable",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [660, -200],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURAR",
+          "name": "Airtable API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.telegram.org/bot8437212177:AAEsm0d-ARdcj8zDGbqdpjeaSoQgsY-Byqc/sendMessage",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"chat_id\": {{ $('Processar Start').item.json.chat_id }},\n  \"text\": \"🤖 <b>Bem-vindo ao CryptoMind IA!</b>\\n\\n✅ Você foi cadastrado com sucesso!\\n\\n📊 <b>Configuração Padrão:</b>\\n• Moedas: TODAS\\n• Alertas USDT.D: ✅ Ativo\\n• Setups: TRS, DNP\\n\\n📝 <b>Comandos:</b>\\n/config - Configurar preferências\\n/status - Ver configuração atual\\n\\n⚠️ Você receberá alertas de acordo com suas preferências.\",\n  \"parse_mode\": \"HTML\"\n}",
+        "options": {}
+      },
+      "id": "enviar-boas-vindas",
+      "name": "Enviar Boas-vindas",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [880, -200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.telegram.org/bot8437212177:AAEsm0d-ARdcj8zDGbqdpjeaSoQgsY-Byqc/sendMessage",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"chat_id\": {{ $json.message.chat.id }},\n  \"text\": \"⚙️ <b>Configurar Preferências</b>\\n\\nEscolha o que deseja configurar:\",\n  \"parse_mode\": \"HTML\",\n  \"reply_markup\": {\n    \"inline_keyboard\": [\n      [\n        {\"text\": \"💰 Filtro de Moedas\", \"callback_data\": \"menu_moedas\"}\n      ],\n      [\n        {\"text\": \"📊 Alertas USDT.D\", \"callback_data\": \"menu_usdt\"}\n      ]\n    ]\n  }\n}",
+        "options": {}
+      },
+      "id": "enviar-menu-config",
+      "name": "Enviar Menu Config",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [440, 0]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.airtable.com/v0/BASE_ID/Preferencias?filterByFormula={chat_id}={{ $json.message.chat.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "buscar-usuario-status",
+      "name": "Buscar Usuário Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [440, 200],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURAR",
+          "name": "Airtable API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const records = $input.first().json.records || [];\nconst chat_id = $('Telegram Trigger').first().json.message.chat.id;\n\nif (records.length === 0) {\n  return {\n    chat_id: chat_id,\n    message: \"❌ <b>Usuário não encontrado!</b>\\n\\nEnvie /start para se cadastrar.\"\n  };\n}\n\nconst user = records[0].fields;\nconst filtro = user.filtro_moedas || 'TODOS';\nconst usdt_d = user.filtro_usdt_d ? '✅ Ativo' : '❌ Desativado';\nconst ativo = user.ativo ? '✅ Ativo' : '❌ Inativo';\n\nlet filtroEmoji = '📊';\nif (filtro === 'BTC') filtroEmoji = '₿';\nif (filtro === 'ALTS') filtroEmoji = '🪙';\n\nconst message = `📊 <b>Suas Configurações</b>\\n\\n${filtroEmoji} <b>Filtro de Moedas:</b> ${filtro}\\n📈 <b>Alertas USDT.D:</b> ${usdt_d}\\n📡 <b>Status:</b> ${ativo}\\n\\n📝 Use /config para alterar suas preferências.`;\n\nreturn {\n  chat_id: chat_id,\n  message: message\n};"
+      },
+      "id": "formatar-status",
+      "name": "Formatar Status",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [660, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.telegram.org/bot8437212177:AAEsm0d-ARdcj8zDGbqdpjeaSoQgsY-Byqc/sendMessage",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"chat_id\": {{ $json.chat_id }},\n  \"text\": \"{{ $json.message }}\",\n  \"parse_mode\": \"HTML\"\n}",
+        "options": {}
+      },
+      "id": "enviar-status",
+      "name": "Enviar Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [880, 200]
+    },
+    {
+      "parameters": {
+        "jsCode": "const callback = $input.first().json.callback_query;\nconst chat_id = callback.message.chat.id;\nconst data = callback.data;\nconst callback_id = callback.id;\n\nreturn {\n  chat_id: chat_id,\n  data: data,\n  callback_id: callback_id\n};"
+      },
+      "id": "processar-callback",
+      "name": "Processar Callback",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [440, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "menu_moedas",
+              "leftValue": "={{ $json.data }}",
+              "rightValue": "menu_moedas",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "menu_usdt",
+              "leftValue": "={{ $json.data }}",
+              "rightValue": "menu_usdt",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "filtro_moeda",
+              "leftValue": "={{ $json.data }}",
+              "rightValue": "filtro_",
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
+              }
+            },
+            {
+              "id": "usdt_toggle",
+              "leftValue": "={{ $json.data }}",
+              "rightValue": "usdt_",
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
+              }
+            }
+          ],
+          "combinator": "or"
+        }
+      },
+      "id": "switch-callback",
+      "name": "Switch Callback",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [660, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.telegram.org/bot8437212177:AAEsm0d-ARdcj8zDGbqdpjeaSoQgsY-Byqc/sendMessage",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"chat_id\": {{ $('Processar Callback').item.json.chat_id }},\n  \"text\": \"💰 <b>Filtro de Moedas</b>\\n\\nEscolha quais moedas deseja receber alertas:\",\n  \"parse_mode\": \"HTML\",\n  \"reply_markup\": {\n    \"inline_keyboard\": [\n      [\n        {\"text\": \"₿ Apenas BTC\", \"callback_data\": \"filtro_BTC\"},\n        {\"text\": \"🪙 Apenas ALTS\", \"callback_data\": \"filtro_ALTS\"}\n      ],\n      [\n        {\"text\": \"📊 TODAS as Moedas\", \"callback_data\": \"filtro_TODOS\"}\n      ],\n      [\n        {\"text\": \"⬅️ Voltar\", \"callback_data\": \"menu_voltar\"}\n      ]\n    ]\n  }\n}",
+        "options": {}
+      },
+      "id": "mostrar-menu-moedas",
+      "name": "Mostrar Menu Moedas",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [880, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.telegram.org/bot8437212177:AAEsm0d-ARdcj8zDGbqdpjeaSoQgsY-Byqc/sendMessage",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"chat_id\": {{ $('Processar Callback').item.json.chat_id }},\n  \"text\": \"📊 <b>Alertas USDT.D</b>\\n\\nReceber alertas quando USDT.D se aproximar de suportes/resistências?\\n\\n<i>Esses alertas ajudam a identificar movimentos macro do mercado.</i>\",\n  \"parse_mode\": \"HTML\",\n  \"reply_markup\": {\n    \"inline_keyboard\": [\n      [\n        {\"text\": \"✅ Ativar\", \"callback_data\": \"usdt_on\"},\n        {\"text\": \"❌ Desativar\", \"callback_data\": \"usdt_off\"}\n      ],\n      [\n        {\"text\": \"⬅️ Voltar\", \"callback_data\": \"menu_voltar\"}\n      ]\n    ]\n  }\n}",
+        "options": {}
+      },
+      "id": "mostrar-menu-usdt",
+      "name": "Mostrar Menu USDT",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [880, 450]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.airtable.com/v0/BASE_ID/Preferencias?filterByFormula={chat_id}={{ $('Processar Callback').item.json.chat_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "buscar-usuario-callback",
+      "name": "Buscar Usuário Callback",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [880, 600],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURAR",
+          "name": "Airtable API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const records = $input.first().json.records || [];\nconst data = $('Processar Callback').first().json.data;\nconst chat_id = $('Processar Callback').first().json.chat_id;\nconst callback_id = $('Processar Callback').first().json.callback_id;\n\nif (records.length === 0) {\n  return {\n    chat_id: chat_id,\n    callback_id: callback_id,\n    record_id: null,\n    erro: true\n  };\n}\n\n// Determinar tipo de atualização\nlet updateField = '';\nlet updateValue = '';\nlet confirmMessage = '';\n\nif (data.startsWith('filtro_')) {\n  updateField = 'filtro_moedas';\n  updateValue = data.replace('filtro_', '');\n  confirmMessage = `✅ <b>Preferência Atualizada!</b>\\n\\n💰 Filtro de Moedas: <b>${updateValue}</b>`;\n} else if (data.startsWith('usdt_')) {\n  updateField = 'filtro_usdt_d';\n  updateValue = data === 'usdt_on' ? true : false;\n  const statusText = updateValue ? '✅ Ativo' : '❌ Desativado';\n  confirmMessage = `✅ <b>Preferência Atualizada!</b>\\n\\n📊 Alertas USDT.D: <b>${statusText}</b>`;\n}\n\nreturn {\n  chat_id: chat_id,\n  callback_id: callback_id,\n  record_id: records[0].id,\n  updateField: updateField,\n  updateValue: updateValue,\n  confirmMessage: confirmMessage,\n  erro: false\n};"
+      },
+      "id": "preparar-update",
+      "name": "Preparar Update",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1100, 600]
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "=https://api.airtable.com/v0/BASE_ID/Preferencias/{{ $json.record_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"fields\": {\n    \"{{ $json.updateField }}\": {{ typeof $json.updateValue === 'boolean' ? $json.updateValue : '\"' + $json.updateValue + '\"' }}\n  }\n}",
+        "options": {}
+      },
+      "id": "atualizar-preferencia",
+      "name": "Atualizar Preferência",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1320, 600],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURAR",
+          "name": "Airtable API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.telegram.org/bot8437212177:AAEsm0d-ARdcj8zDGbqdpjeaSoQgsY-Byqc/answerCallbackQuery",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"callback_query_id\": \"{{ $('Preparar Update').item.json.callback_id }}\",\n  \"text\": \"✅ Preferência atualizada!\",\n  \"show_alert\": false\n}",
+        "options": {}
+      },
+      "id": "responder-callback",
+      "name": "Responder Callback",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1540, 600]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.telegram.org/bot8437212177:AAEsm0d-ARdcj8zDGbqdpjeaSoQgsY-Byqc/sendMessage",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"chat_id\": {{ $('Preparar Update').item.json.chat_id }},\n  \"text\": \"{{ $('Preparar Update').item.json.confirmMessage }}\",\n  \"parse_mode\": \"HTML\"\n}",
+        "options": {}
+      },
+      "id": "confirmar-atualizacao",
+      "name": "Confirmar Atualização",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1760, 600]
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch Comando",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch Comando": {
+      "main": [
+        [
+          {
+            "node": "Processar Start",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Enviar Menu Config",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Buscar Usuário Status",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Processar Callback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Processar Start": {
+      "main": [
+        [
+          {
+            "node": "Criar Usuário Airtable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Criar Usuário Airtable": {
+      "main": [
+        [
+          {
+            "node": "Enviar Boas-vindas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Usuário Status": {
+      "main": [
+        [
+          {
+            "node": "Formatar Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatar Status": {
+      "main": [
+        [
+          {
+            "node": "Enviar Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Processar Callback": {
+      "main": [
+        [
+          {
+            "node": "Switch Callback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch Callback": {
+      "main": [
+        [
+          {
+            "node": "Mostrar Menu Moedas",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mostrar Menu USDT",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Buscar Usuário Callback",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Buscar Usuário Callback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Usuário Callback": {
+      "main": [
+        [
+          {
+            "node": "Preparar Update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Update": {
+      "main": [
+        [
+          {
+            "node": "Atualizar Preferência",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Atualizar Preferência": {
+      "main": [
+        [
+          {
+            "node": "Responder Callback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Responder Callback": {
+      "main": [
+        [
+          {
+            "node": "Confirmar Atualização",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2026-01-10T16:00:00.000Z",
+  "versionId": "2"
+}
