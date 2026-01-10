@@ -1,0 +1,130 @@
+{
+  "menu_config_atualizado": {
+    "descricao": "Cole este JSON no nó 'Enviar Menu Config' (aba JSON, campo 'body')",
+    "json": {
+      "chat_id": "={{ $json.message.from.id }}",
+      "text": "⚙️ Configurações\n\nEscolha o que deseja configurar:",
+      "reply_markup": {
+        "inline_keyboard": [
+          [
+            {
+              "text": "💰 Moedas",
+              "callback_data": "config_moedas"
+            },
+            {
+              "text": "💵 USDT",
+              "callback_data": "config_usdt"
+            }
+          ],
+          [
+            {
+              "text": "🕒 Timeframe",
+              "callback_data": "config_timeframe"
+            }
+          ]
+        ]
+      }
+    }
+  },
+  "mostrar_menu_timeframes": {
+    "descricao": "Crie um novo nó HTTP Request com este JSON no body",
+    "configuracao": {
+      "nome": "Mostrar Menu Timeframes",
+      "tipo": "HTTP Request",
+      "method": "POST",
+      "url": "https://api.telegram.org/bot8437212177:AAEsm0d-ARdcj8zDGDqdpjeaSoQgsY-Byqc/sendMessage",
+      "authentication": "None",
+      "bodyContentType": "JSON"
+    },
+    "json": {
+      "chat_id": "={{ $json.callback_query.from.id }}",
+      "text": "🕒 Escolha o timeframe para receber alertas:",
+      "reply_markup": {
+        "inline_keyboard": [
+          [
+            {
+              "text": "⚡ 5 minutos",
+              "callback_data": "set_timeframe_5min"
+            },
+            {
+              "text": "📊 15 minutos",
+              "callback_data": "set_timeframe_15min"
+            }
+          ],
+          [
+            {
+              "text": "🕐 1 hora",
+              "callback_data": "set_timeframe_1h"
+            },
+            {
+              "text": "🕓 4 horas",
+              "callback_data": "set_timeframe_4h"
+            }
+          ]
+        ]
+      }
+    }
+  },
+  "preparar_update_codigo": {
+    "descricao": "Cole este código no nó 'Preparar Update' (tipo Code/Function)",
+    "codigo": "// Extrair dados do callback\nconst data = $json.callback_query.data;\nconst recordId = $json.records[0].id;\n\n// Processar timeframe\nif (data.startsWith('set_timeframe_')) {\n  const timeframe = data.replace('set_timeframe_', '');\n  return {\n    fields: {\n      timeframe_preferido: timeframe\n    },\n    recordId: recordId,\n    timeframe: timeframe,\n    mensagem: `✅ Timeframe atualizado para ${timeframe}`\n  };\n}\n\n// Processar moeda\nif (data.startsWith('set_moeda_')) {\n  const moeda = data.replace('set_moeda_', '');\n  return {\n    fields: {\n      moeda_preferida: moeda\n    },\n    recordId: recordId,\n    moeda: moeda,\n    mensagem: `✅ Moeda atualizada para ${moeda}`\n  };\n}\n\n// Processar USDT\nif (data.startsWith('set_usdt_')) {\n  const usdt = data.replace('set_usdt_', '');\n  return {\n    fields: {\n      usdt_preferido: usdt\n    },\n    recordId: recordId,\n    usdt: usdt,\n    mensagem: `✅ Valor USDT atualizado para ${usdt}`\n  };\n}\n\nreturn $json;"
+  },
+  "confirmar_atualizacao_json": {
+    "descricao": "Cole este JSON no nó 'Confirmar Atualização' (ou 'Responder Callback')",
+    "json": {
+      "chat_id": "={{ $json.callback_query.from.id }}",
+      "text": "={{ $json.mensagem || '✅ Configuração atualizada!' }}"
+    }
+  },
+  "formatar_status_codigo": {
+    "descricao": "Cole este código no nó 'Formatar Status'",
+    "codigo": "// Extrair dados do Airtable\nconst record = $json.records[0].fields;\n\nconst moeda = record.moeda_preferida || 'Não definida';\nconst usdt = record.usdt_preferido || 'Não definido';\nconst timeframe = record.timeframe_preferido || 'Não definido';\n\nreturn {\n  chat_id: $json.records[0].fields.chat_id,\n  text: `📊 *Suas Preferências Atuais*\\n\\n💰 *Moeda:* ${moeda}\\n💵 *USDT:* ${usdt}\\n🕒 *Timeframe:* ${timeframe}\\n\\nUse /config para alterar.`,\n  parse_mode: 'Markdown'\n};"
+  },
+  "switch_callback_regras_novas": {
+    "descricao": "Adicione estas 2 regras ao Switch Callback (total ficará 6 regras)",
+    "regra_4": {
+      "conditions": {
+        "options": {
+          "caseSensitive": false,
+          "leftValue": "",
+          "typeValidation": "loose"
+        },
+        "conditions": [
+          {
+            "id": "timeframe",
+            "leftValue": "={{ $json.callback_query.data }}",
+            "rightValue": "config_timeframe",
+            "operator": {
+              "type": "string",
+              "operation": "equals"
+            }
+          }
+        ],
+        "combinator": "and"
+      },
+      "renameOutput": false
+    },
+    "regra_5": {
+      "conditions": {
+        "options": {
+          "caseSensitive": false,
+          "leftValue": "",
+          "typeValidation": "loose"
+        },
+        "conditions": [
+          {
+            "id": "set_timeframe",
+            "leftValue": "={{ $json.callback_query.data }}",
+            "rightValue": "set_timeframe_",
+            "operator": {
+              "type": "string",
+              "operation": "startsWith"
+            }
+          }
+        ],
+        "combinator": "and"
+      },
+      "renameOutput": false
+    }
+  }
+}
