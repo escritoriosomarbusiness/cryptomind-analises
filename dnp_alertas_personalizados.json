@@ -1,0 +1,151 @@
+{
+  "name": "DNP - Alertas Personalizados",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "dnp-personalizado",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-dnp",
+      "name": "Webhook DNP",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "webhookId": "dnp-personalizado"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Receber dados do alerta\nconst body = $input.first().json.body;\n\n// Tentar parsear JSON se vier como string\nlet alertData;\ntry {\n  alertData = typeof body === 'string' ? JSON.parse(body) : body;\n} catch (e) {\n  alertData = body;\n}\n\n// Extrair informações\nconst symbol = alertData.symbol || 'N/A';\nconst action = alertData.action || 'N/A';\nconst direction = alertData.direction || 'N/A';\nconst timeframe = alertData.timeframe || 'N/A';\nconst price = alertData.price || 'N/A';\nconst adx = alertData.adx || 'N/A';\nconst remi = alertData.remi || 'N/A';\nconst triggerHigh = alertData.triggerHigh || 'N/A';\nconst triggerLow = alertData.triggerLow || 'N/A';\nconst stopLoss = alertData.stopLoss || 'N/A';\nconst tp1 = alertData.tp1 || 'N/A';\nconst tp2 = alertData.tp2 || 'N/A';\nconst leverage = alertData.leverage || 'N/A';\nconst risk = alertData.risk || 'N/A';\n\n// Determinar se é BTC ou ALT\nconst isBTC = symbol.toUpperCase().includes('BTC');\nconst moedaTipo = isBTC ? 'BTC' : 'ALTS';\n\n// Formatar mensagem\nlet emoji = direction === 'LONG' ? '🟢' : '🔴';\nlet statusEmoji = action === 'TRIGGER' ? '🔔' : '✅';\nlet statusText = action === 'TRIGGER' ? 'GATILHO ARMADO' : 'CONFIRMADO POR ROMPIMENTO';\n\nlet message = '';\n\nif (action === 'TRIGGER') {\n  const trigger = direction === 'LONG' ? triggerHigh : triggerLow;\n  message = `${statusEmoji} ${emoji} <b>${direction} ${symbol}</b>\\n`;\n  message += `━━━━━━━━━━━━━━━━━━\\n`;\n  message += `🔔 <b>${statusText}</b>\\n`;\n  message += `📊 Setup: DNP\\n`;\n  message += `⏱ Timeframe: ${timeframe}min\\n`;\n  message += `💰 Preço: $${price}\\n`;\n  message += `📈 ADX: ${adx}\\n`;\n  message += `📊 REMI: ${remi}\\n`;\n  message += `━━━━━━━━━━━━━━━━━━\\n`;\n  message += `⚠️ Aguardando confirmação por rompimento\\n`;\n  message += `🎯 Trigger: $${trigger}\\n`;\n  message += `━━━━━━━━━━━━━━━━━━\\n`;\n  message += `⚠️ <i>Não é recomendação de investimento</i>`;\n} else {\n  message = `${statusEmoji} ${emoji} <b>${direction} ${symbol}</b>\\n`;\n  message += `━━━━━━━━━━━━━━━━━━\\n`;\n  message += `✅ <b>${statusText}</b>\\n`;\n  message += `📊 Setup: DNP\\n`;\n  message += `⏱ Timeframe: ${timeframe}min\\n`;\n  message += `━━━━━━━━━━━━━━━━━━\\n`;\n  message += `🎯 Entrada: $${price}\\n`;\n  message += `🛑 Stop Loss: $${stopLoss}\\n`;\n  message += `✅ TP1: $${tp1}\\n`;\n  message += `✅ TP2: $${tp2}\\n`;\n  message += `━━━━━━━━━━━━━━━━━━\\n`;\n  message += `📈 ADX: ${adx} | REMI: ${remi}\\n`;\n  message += `⚖️ Alavancagem sugerida: ${leverage}x\\n`;\n  message += `📊 Risco: ${risk}%\\n`;\n  message += `━━━━━━━━━━━━━━━━━━\\n`;\n  message += `⚠️ <i>Não é recomendação de investimento</i>`;\n}\n\nreturn {\n  symbol: symbol,\n  moedaTipo: moedaTipo,\n  timeframe: timeframe,\n  message: message,\n  alertData: alertData\n};"
+      },
+      "id": "processar-alerta-dnp",
+      "name": "Processar Alerta DNP",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [220, 0]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.airtable.com/v0/BASE_ID/Preferencias?filterByFormula=AND({ativo}=TRUE())",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "buscar-usuarios-ativos",
+      "name": "Buscar Usuários Ativos",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [440, 0],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "CONFIGURAR",
+          "name": "Airtable API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const records = $input.first().json.records || [];\nconst alertInfo = $('Processar Alerta DNP').first().json;\nconst moedaTipo = alertInfo.moedaTipo; // BTC ou ALTS\nconst message = alertInfo.message;\n\n// Filtrar usuários que querem receber este alerta\nconst usuariosParaEnviar = [];\n\nfor (const record of records) {\n  const user = record.fields;\n  const filtro = user.filtro_moedas || 'TODOS';\n  const chat_id = user.chat_id;\n  \n  // Verificar se o usuário quer receber este tipo de moeda\n  let deveEnviar = false;\n  \n  if (filtro === 'TODOS') {\n    deveEnviar = true;\n  } else if (filtro === 'BTC' && moedaTipo === 'BTC') {\n    deveEnviar = true;\n  } else if (filtro === 'ALTS' && moedaTipo === 'ALTS') {\n    deveEnviar = true;\n  }\n  \n  if (deveEnviar && chat_id) {\n    usuariosParaEnviar.push({\n      chat_id: chat_id,\n      message: message\n    });\n  }\n}\n\nreturn usuariosParaEnviar;"
+      },
+      "id": "filtrar-usuarios",
+      "name": "Filtrar Usuários",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [660, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.telegram.org/bot8437212177:AAEsm0d-ARdcj8zDGbqdpjeaSoQgsY-Byqc/sendMessage",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"chat_id\": {{ $json.chat_id }},\n  \"text\": \"{{ $json.message }}\",\n  \"parse_mode\": \"HTML\"\n}",
+        "options": {}
+      },
+      "id": "enviar-telegram",
+      "name": "Enviar Telegram",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [880, 0]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "OK",
+        "options": {}
+      },
+      "id": "responder-webhook",
+      "name": "Responder Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1100, 0]
+    }
+  ],
+  "connections": {
+    "Webhook DNP": {
+      "main": [
+        [
+          {
+            "node": "Processar Alerta DNP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Processar Alerta DNP": {
+      "main": [
+        [
+          {
+            "node": "Buscar Usuários Ativos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Usuários Ativos": {
+      "main": [
+        [
+          {
+            "node": "Filtrar Usuários",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrar Usuários": {
+      "main": [
+        [
+          {
+            "node": "Enviar Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar Telegram": {
+      "main": [
+        [
+          {
+            "node": "Responder Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2026-01-10T15:30:00.000Z",
+  "versionId": "1"
+}
