@@ -1,0 +1,160 @@
+name: Verificação de Saúde do Ecossistema
+
+on:
+  schedule:
+    # Executa 3 vezes ao dia para garantir cobertura
+    # 13:00 UTC (10:00 BRT) - Após análise de abertura
+    - cron: '0 13 * * 1-5'
+    # 02:00 UTC (23:00 BRT dia anterior) - Após análise de fechamento
+    - cron: '0 2 * * 2-6'
+    # 18:00 UTC (15:00 BRT) - Verificação adicional
+    - cron: '0 18 * * 1-5'
+  
+  workflow_dispatch:  # Permite execução manual
+
+jobs:
+  health-check:
+    name: Verificar Saúde do Sistema
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repositório
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 10  # Busca últimos 10 commits para verificação
+      
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Instalar dependências
+        run: |
+          pip install requests pytz
+      
+      - name: Executar verificação de saúde
+        id: health_check
+        run: |
+          cd scripts
+          python3 health_check.py
+        continue-on-error: true
+      
+      - name: Criar issue se houver falha
+        if: steps.health_check.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const now = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+            
+            // Verifica se já existe uma issue aberta
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'health-check,automated'
+            });
+            
+            if (issues.data.length === 0) {
+              // Cria nova issue se não existir
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: '🚨 Falha na Verificação de Saúde do Ecossistema',
+                body: `## ⚠️ Problema Detectado
+                
+**Data/Hora:** ${now}
+
+A verificação automática de saúde do ecossistema detectou problemas.
+
+### 🔍 Detalhes
+
+Verifique os logs da execução do workflow para mais informações:
+${context.payload.repository.html_url}/actions/runs/${context.runId}
+
+### 📋 Checklist de Verificação
+
+- [ ] Verificar se a análise de abertura foi gerada
+- [ ] Verificar se a análise de fechamento foi gerada
+- [ ] Verificar se os commits foram feitos no GitHub
+- [ ] Verificar se o site está acessível e atualizado
+
+### 🔧 Ações Recomendadas
+
+1. Revisar os logs do workflow
+2. Verificar manualmente os arquivos gerados
+3. Testar os scripts localmente se necessário
+4. Verificar se as credenciais estão corretas
+
+---
+*Esta issue foi criada automaticamente pelo sistema de monitoramento.*`,
+                labels: ['health-check', 'automated', 'bug']
+              });
+            }
+      
+      - name: Comentar em issue existente se houver falha
+        if: steps.health_check.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const now = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+            
+            // Busca issue aberta
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'health-check,automated'
+            });
+            
+            if (issues.data.length > 0) {
+              // Adiciona comentário na issue existente
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issues.data[0].number,
+                body: `### 🔄 Nova Falha Detectada
+
+**Data/Hora:** ${now}
+
+O problema persiste. Verifique os logs:
+${context.payload.repository.html_url}/actions/runs/${context.runId}`
+              });
+            }
+      
+      - name: Fechar issue se verificação passou
+        if: steps.health_check.outcome == 'success'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const now = new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+            
+            // Busca issue aberta
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'health-check,automated'
+            });
+            
+            if (issues.data.length > 0) {
+              // Fecha a issue e adiciona comentário
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issues.data[0].number,
+                body: `### ✅ Problema Resolvido
+
+**Data/Hora:** ${now}
+
+A verificação de saúde passou com sucesso. O ecossistema está funcionando normalmente.
+
+Fechando automaticamente esta issue.`
+              });
+              
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issues.data[0].number,
+                state: 'closed'
+              });
+            }
