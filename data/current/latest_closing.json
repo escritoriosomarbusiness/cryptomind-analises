@@ -1,24 +1,246 @@
 {
-  "timestamp": "2026-01-09T22:26:45.654637-03:00",
-  "date": "09 de Janeiro de 2026",
-  "time": "22:26",
-  "results": {},
+  "timestamp": "2026-01-10T21:16:11.146588-03:00",
+  "date": "10 de Janeiro de 2026",
+  "time": "21:16",
+  "results": {
+    "BTC": {
+      "symbol": "BTC",
+      "open_price": 90652.82,
+      "close_price": 0,
+      "price_change": -100.0,
+      "bias_morning": "BULLISH",
+      "bias_result": {
+        "correct": false,
+        "result": "❌ ERRO",
+        "description": "Viés bullish, mas mercado caiu -100.00%"
+      },
+      "long_setup": {
+        "type": "LONG",
+        "style": "Conservador",
+        "entry_low": 90203.98,
+        "entry_high": 90564.44,
+        "stop_loss": 89212.73,
+        "target1": 91690.86,
+        "target2": 92682.12,
+        "rr1": "1.5:1",
+        "rr2": "2.5:1",
+        "trigger": "Rejeição com volume no suporte",
+        "score": 7,
+        "reasons": [
+          "Estrutura HH + HL confirmada",
+          "Preço próximo ao suporte $90,114",
+          "Preço acima da EMA 200",
+          "Funding Rate baixo/negativo"
+        ]
+      },
+      "long_result": {
+        "status": "not_evaluated",
+        "result": null
+      },
+      "short_setup": null,
+      "short_result": null
+    },
+    "ETH": {
+      "symbol": "ETH",
+      "open_price": 3094.52,
+      "close_price": 0,
+      "price_change": -100.0,
+      "bias_morning": "BULLISH",
+      "bias_result": {
+        "correct": false,
+        "result": "❌ ERRO",
+        "description": "Viés bullish, mas mercado caiu -100.00%"
+      },
+      "long_setup": {
+        "type": "LONG",
+        "style": "Moderado",
+        "entry_low": 3068.3,
+        "entry_high": 3080.56,
+        "stop_loss": 3034.58,
+        "target1": 3118.87,
+        "target2": 3152.59,
+        "rr1": "1.5:1",
+        "rr2": "2.5:1",
+        "trigger": "Rejeição com volume no suporte",
+        "score": 5,
+        "reasons": [
+          "Consolidação - aguardar confirmação",
+          "Preço próximo ao suporte $3,065",
+          "Preço acima da EMA 200",
+          "RSI sobrevendido (39.06)"
+        ]
+      },
+      "long_result": {
+        "status": "not_evaluated",
+        "result": null
+      },
+      "short_setup": null,
+      "short_result": null
+    },
+    "SOL": {
+      "symbol": "SOL",
+      "open_price": 136.26,
+      "close_price": 0,
+      "price_change": -100.0,
+      "bias_morning": "BULLISH",
+      "bias_result": {
+        "correct": false,
+        "result": "❌ ERRO",
+        "description": "Viés bullish, mas mercado caiu -100.00%"
+      },
+      "long_setup": {
+        "type": "LONG",
+        "style": "Conservador",
+        "entry_low": 135.11,
+        "entry_high": 135.65,
+        "stop_loss": 133.63,
+        "target1": 137.34,
+        "target2": 138.83,
+        "rr1": "1.5:1",
+        "rr2": "2.5:1",
+        "trigger": "Rejeição com volume no suporte",
+        "score": 7,
+        "reasons": [
+          "Estrutura HH + HL confirmada",
+          "Preço próximo ao suporte $135",
+          "Preço acima da EMA 200",
+          "Funding Rate baixo/negativo"
+        ]
+      },
+      "long_result": {
+        "status": "not_evaluated",
+        "result": null
+      },
+      "short_setup": null,
+      "short_result": null
+    },
+    "BNB": {
+      "symbol": "BNB",
+      "open_price": 902.24,
+      "close_price": 0,
+      "price_change": -100.0,
+      "bias_morning": "BULLISH",
+      "bias_result": {
+        "correct": false,
+        "result": "❌ ERRO",
+        "description": "Viés bullish, mas mercado caiu -100.00%"
+      },
+      "long_setup": {
+        "type": "LONG",
+        "style": "Conservador",
+        "entry_low": 900.9,
+        "entry_high": 904.5,
+        "stop_loss": 891.0,
+        "target1": 915.75,
+        "target2": 925.65,
+        "rr1": "1.5:1",
+        "rr2": "2.5:1",
+        "trigger": "Rejeição com volume no suporte",
+        "score": 7,
+        "reasons": [
+          "Estrutura HH + HL confirmada",
+          "Preço próximo ao suporte $900",
+          "Preço acima da EMA 200",
+          "EMA 9 > EMA 21 (momentum bullish)"
+        ]
+      },
+      "long_result": {
+        "status": "not_evaluated",
+        "result": null
+      },
+      "short_setup": null,
+      "short_result": null
+    },
+    "XRP": {
+      "symbol": "XRP",
+      "open_price": 2.0914,
+      "close_price": 0,
+      "price_change": -100.0,
+      "bias_morning": "BULLISH",
+      "bias_result": {
+        "correct": false,
+        "result": "❌ ERRO",
+        "description": "Viés bullish, mas mercado caiu -100.00%"
+      },
+      "long_setup": {
+        "type": "LONG",
+        "style": "Moderado",
+        "entry_low": 2.08,
+        "entry_high": 2.09,
+        "stop_loss": 2.06,
+        "target1": 2.12,
+        "target2": 2.14,
+        "rr1": "1.5:1",
+        "rr2": "2.5:1",
+        "trigger": "Rejeição com volume no suporte",
+        "score": 5.5,
+        "reasons": [
+          "Consolidação - aguardar confirmação",
+          "Preço próximo ao suporte $2",
+          "Preço acima da EMA 200",
+          "Funding Rate baixo/negativo"
+        ]
+      },
+      "long_result": {
+        "status": "not_evaluated",
+        "result": null
+      },
+      "short_setup": {
+        "type": "SHORT",
+        "style": "Agressivo",
+        "entry_low": 2.09,
+        "entry_high": 2.1,
+        "stop_loss": 2.12,
+        "target1": 2.06,
+        "target2": 2.04,
+        "rr1": "1.5:1",
+        "rr2": "2.5:1",
+        "trigger": "Rejeição com volume na resistência",
+        "score": 4,
+        "reasons": [
+          "Consolidação - aguardar confirmação",
+          "Preço próximo à resistência $2",
+          "EMA 9 < EMA 21 (momentum bearish)"
+        ]
+      },
+      "short_result": {
+        "status": "not_evaluated",
+        "result": null
+      }
+    },
+    "ADA": {
+      "symbol": "ADA",
+      "open_price": 0.3902,
+      "close_price": 0,
+      "price_change": -100.0,
+      "bias_morning": "BULLISH",
+      "bias_result": {
+        "correct": false,
+        "result": "❌ ERRO",
+        "description": "Viés bullish, mas mercado caiu -100.00%"
+      },
+      "long_setup": null,
+      "long_result": null,
+      "short_setup": null,
+      "short_result": null
+    }
+  },
   "day_stats": {
-    "total_setups": 0,
+    "total_setups": 6,
     "winning": 0,
     "losing": 0,
     "ongoing": 0,
-    "not_activated": 0,
+    "not_activated": 6,
     "total_pnl": 0,
     "bias_correct": 0,
-    "bias_total": 0
+    "bias_total": 6
   },
   "cumulative_stats": {
-    "total_setups": 41,
+    "total_setups": 53,
     "winning_setups": 20,
     "losing_setups": 5,
     "ongoing_setups": 0,
     "win_rate": 80.0,
-    "bias_accuracy": 69.4
+    "bias_accuracy": 52.1
   }
 }

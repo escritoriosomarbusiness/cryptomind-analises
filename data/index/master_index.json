@@ -1,23 +1,21 @@
 {
-  "generated_at": "2026-01-09T22:26:46.048146-03:00",
+  "generated_at": "2026-01-10T21:16:21.491861-03:00",
   "statistics": {
-    "total_days": 7,
+    "total_days": 8,
     "total_weeks": 1,
     "total_months": 1,
-    "total_analyses": 19
+    "total_analyses": 20
   },
   "latest": {
     "daily": {
-      "type": "opening",
-      "filename": "opening_09-33.json",
-      "path": "data/archive/2026/01/daily/09/opening_09-33.json",
-      "timestamp": "2026-01-09T09:33:44.636689-03:00",
-      "time": "09:33",
+      "type": "closing",
+      "filename": "closing_21-16.json",
+      "path": "data/archive/2026/01/daily/10/closing_21-16.json",
+      "timestamp": "2026-01-10T21:16:11.146588-03:00",
+      "time": "21:16",
       "summary": {
-        "assets": [],
-        "setups_count": 0,
-        "fear_greed": 27,
-        "usdt_d_impact": "BULLISH"
+        "summary": "",
+        "performance": {}
       }
     },
     "weekly": {

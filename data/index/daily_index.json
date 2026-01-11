@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-01-09T22:26:46.046708-03:00",
-  "total_days": 7,
+  "generated_at": "2026-01-10T21:16:21.489514-03:00",
+  "total_days": 8,
   "days": [
     {
       "date": "2026-01-02",
@@ -320,6 +320,25 @@
             "setups_count": 0,
             "fear_greed": 27,
             "usdt_d_impact": "BULLISH"
+          }
+        }
+      ]
+    },
+    {
+      "date": "2026-01-10",
+      "year": "2026",
+      "month": "01",
+      "day": "10",
+      "analyses": [
+        {
+          "type": "closing",
+          "filename": "closing_21-16.json",
+          "path": "data/archive/2026/01/daily/10/closing_21-16.json",
+          "timestamp": "2026-01-10T21:16:11.146588-03:00",
+          "time": "21:16",
+          "summary": {
+            "summary": "",
+            "performance": {}
           }
         }
       ]
