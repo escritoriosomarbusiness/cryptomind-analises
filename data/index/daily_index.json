@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-01-10T21:16:21.489514-03:00",
-  "total_days": 8,
+  "generated_at": "2026-01-11T21:20:43.556426-03:00",
+  "total_days": 9,
   "days": [
     {
       "date": "2026-01-02",
@@ -336,6 +336,25 @@
           "path": "data/archive/2026/01/daily/10/closing_21-16.json",
           "timestamp": "2026-01-10T21:16:11.146588-03:00",
           "time": "21:16",
+          "summary": {
+            "summary": "",
+            "performance": {}
+          }
+        }
+      ]
+    },
+    {
+      "date": "2026-01-11",
+      "year": "2026",
+      "month": "01",
+      "day": "11",
+      "analyses": [
+        {
+          "type": "closing",
+          "filename": "closing_21-20.json",
+          "path": "data/archive/2026/01/daily/11/closing_21-20.json",
+          "timestamp": "2026-01-11T21:20:30.158848-03:00",
+          "time": "21:20",
           "summary": {
             "summary": "",
             "performance": {}
