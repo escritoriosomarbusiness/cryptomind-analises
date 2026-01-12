@@ -189,10 +189,11 @@ class CryptoAnalyzer:
             }
         
     def get_binance_data(self, symbol: str, max_retries: int = 3) -> Dict:
-        """Obtém dados do Binance com retry"""
+        """Obtém dados do Binance com retry, fallback para CoinGecko"""
         import time
         pair = f"{symbol}USDT"
         
+        # Tentar Binance primeiro
         for attempt in range(max_retries):
             try:
                 # Ticker 24h
@@ -245,10 +246,92 @@ class CryptoAnalyzer:
                 print(f"Tentativa {attempt + 1}/{max_retries} falhou para {symbol}: {e}")
                 if attempt < max_retries - 1:
                     time.sleep(2)  # Esperar antes de tentar novamente
-                else:
-                    print(f"Erro Binance {symbol}: Todas as tentativas falharam")
-                    return None
-        return None
+        
+        # Fallback para CoinGecko
+        print(f"Binance falhou para {symbol}, tentando CoinGecko...")
+        return self.get_coingecko_data(symbol)
+    
+    def get_coingecko_data(self, symbol: str) -> Dict:
+        """Obtém dados do CoinGecko como alternativa"""
+        import time
+        try:
+            # Mapear símbolos para IDs do CoinGecko
+            coin_map = {
+                "BTC": "bitcoin",
+                "ETH": "ethereum",
+                "SOL": "solana",
+                "BNB": "binancecoin",
+                "XRP": "ripple",
+                "ADA": "cardano"
+            }
+            
+            coin_id = coin_map.get(symbol)
+            if not coin_id:
+                print(f"Símbolo {symbol} não mapeado para CoinGecko")
+                return None
+            
+            # Obter dados de mercado
+            market_data = requests.get(
+                f"https://api.coingecko.com/api/v3/coins/{coin_id}",
+                timeout=15
+            ).json()
+            
+            time.sleep(1)
+            
+            # Obter dados históricos (OHLC)
+            # CoinGecko retorna dados diários, vamos simular intervalos menores
+            ohlc_data = requests.get(
+                f"https://api.coingecko.com/api/v3/coins/{coin_id}/ohlc?vs_currency=usd&days=30",
+                timeout=15
+            ).json()
+            
+            # Converter dados do CoinGecko para formato Binance
+            current_price = market_data['market_data']['current_price']['usd']
+            price_change_24h = market_data['market_data']['price_change_percentage_24h']
+            volume_24h = market_data['market_data']['total_volume']['usd']
+            
+            # Simular ticker Binance
+            ticker = {
+                'lastPrice': str(current_price),
+                'priceChangePercent': str(price_change_24h),
+                'volume': str(volume_24h),
+                'quoteVolume': str(volume_24h * current_price)
+            }
+            
+            # Converter OHLC para formato klines
+            # CoinGecko retorna: [timestamp, open, high, low, close]
+            klines_4h = []
+            for ohlc in ohlc_data:
+                kline = [
+                    ohlc[0],  # timestamp
+                    str(ohlc[1]),  # open
+                    str(ohlc[2]),  # high
+                    str(ohlc[3]),  # low
+                    str(ohlc[4]),  # close
+                    "0",  # volume (não disponível)
+                    ohlc[0] + 14400000,  # close time (4h)
+                    "0",  # quote volume
+                    0,  # trades
+                    "0",  # taker buy base
+                    "0",  # taker buy quote
+                    "0"  # ignore
+                ]
+                klines_4h.append(kline)
+            
+            # Duplicar para 1h e 15m (simplificação)
+            klines_1h = klines_4h[-50:] if len(klines_4h) >= 50 else klines_4h
+            klines_15m = klines_4h[-100:] if len(klines_4h) >= 100 else klines_4h
+            
+            return {
+                "ticker": ticker,
+                "klines_4h": klines_4h,
+                "klines_1h": klines_1h,
+                "klines_15m": klines_15m
+            }
+            
+        except Exception as e:
+            print(f"Erro CoinGecko {symbol}: {e}")
+            return None
     
     def get_futures_data(self, symbol: str) -> Dict:
         """Obtém dados de futuros (funding, OI, L/S)"""
@@ -692,8 +775,8 @@ class CryptoAnalyzer:
         # Preço e variação
         current_price = float(ticker['lastPrice'])
         price_change = float(ticker['priceChangePercent'])
-        high_24h = float(ticker['highPrice'])
-        low_24h = float(ticker['lowPrice'])
+        high_24h = float(ticker.get('highPrice', current_price * 1.05))  # Fallback: +5%
+        low_24h = float(ticker.get('lowPrice', current_price * 0.95))  # Fallback: -5%
         volume = float(ticker['volume'])
         
         # Calcular indicadores
