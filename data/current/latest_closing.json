@@ -1,18 +1,18 @@
 {
-  "timestamp": "2026-01-12T21:18:04.272993-03:00",
+  "timestamp": "2026-01-12T22:25:50.261217-03:00",
   "date": "12 de Janeiro de 2026",
-  "time": "21:18",
+  "time": "22:25",
   "results": {
     "BTC": {
       "symbol": "BTC",
-      "open_price": 91258.66,
-      "close_price": 91372.68,
-      "price_change": 0.12,
+      "open_price": 90510.0,
+      "close_price": 0,
+      "price_change": -100.0,
       "bias_morning": "BULLISH",
       "bias_result": {
-        "correct": true,
-        "result": "🟡 PARCIAL",
-        "description": "Viés bullish, mercado lateral (0.12%)"
+        "correct": false,
+        "result": "❌ ERRO",
+        "description": "Viés bullish, mas mercado caiu -100.00%"
       },
       "long_setup": {
         "type": "LONG",
@@ -34,10 +34,8 @@
         ]
       },
       "long_result": {
-        "status": "target1",
-        "result": "✅ ALVO 1 ATINGIDO",
-        "description": "Alvo 1 atingido em $91,824.29",
-        "pnl": 1.59
+        "status": "not_evaluated",
+        "result": null
       },
       "short_setup": {
         "type": "SHORT",
@@ -58,29 +56,27 @@
         ]
       },
       "short_result": {
-        "status": "stop_loss",
-        "result": "❌ STOP LOSS",
-        "description": "Stop acionado em $91,910.00",
-        "pnl": -0.12
+        "status": "not_evaluated",
+        "result": null
       }
     }
   },
   "day_stats": {
     "total_setups": 2,
-    "winning": 1,
-    "losing": 1,
+    "winning": 0,
+    "losing": 0,
     "ongoing": 0,
-    "not_activated": 0,
-    "total_pnl": 1.4700000000000002,
-    "bias_correct": 1,
+    "not_activated": 2,
+    "total_pnl": 0,
+    "bias_correct": 0,
     "bias_total": 1
   },
   "cumulative_stats": {
-    "total_setups": 77,
+    "total_setups": 79,
     "winning_setups": 22,
     "losing_setups": 7,
     "ongoing_setups": 0,
     "win_rate": 75.9,
-    "bias_accuracy": 43.5
+    "bias_accuracy": 42.9
   }
 }
