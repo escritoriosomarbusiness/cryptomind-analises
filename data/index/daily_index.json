@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-01-14T21:20:18.335222-03:00",
+  "generated_at": "2026-01-14T22:27:45.952196-03:00",
   "total_days": 12,
   "days": [
     {
@@ -462,6 +462,17 @@
           "path": "data/archive/2026/01/daily/14/closing_21-20.json",
           "timestamp": "2026-01-14T21:20:07.157887-03:00",
           "time": "21:20",
+          "summary": {
+            "summary": "",
+            "performance": {}
+          }
+        },
+        {
+          "type": "closing",
+          "filename": "closing_22-27.json",
+          "path": "data/archive/2026/01/daily/14/closing_22-27.json",
+          "timestamp": "2026-01-14T22:27:45.160096-03:00",
+          "time": "22:27",
           "summary": {
             "summary": "",
             "performance": {}

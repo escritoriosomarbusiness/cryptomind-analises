@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-01-14T21:20:07.157887-03:00",
+  "timestamp": "2026-01-14T22:27:45.160096-03:00",
   "date": "14 de Janeiro de 2026",
-  "time": "21:20",
+  "time": "22:27",
   "results": {
     "BTC": {
       "symbol": "BTC",
@@ -236,11 +236,11 @@
     "bias_total": 6
   },
   "cumulative_stats": {
-    "total_setups": 97,
+    "total_setups": 103,
     "winning_setups": 22,
     "losing_setups": 7,
     "ongoing_setups": 0,
     "win_rate": 75.9,
-    "bias_accuracy": 34.6
+    "bias_accuracy": 32.1
   }
 }
