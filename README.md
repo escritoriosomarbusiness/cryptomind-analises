@@ -4,7 +4,7 @@
 
 [![Status](https://img.shields.io/badge/Status-Operacional-success)](https://github.com/escritoriosomarbusiness/cryptomind-analises)
 [![Versão](https://img.shields.io/badge/Versão-2.0-blue)](https://github.com/escritoriosomarbusiness/cryptomind-analises)
-[![Última Atualização](https://img.shields.io/badge/Atualização-10%2F01%2F2026-orange)](https://github.com/escritoriosomarbusiness/cryptomind-analises)
+[![Última Atualização](https://img.shields.io/badge/Atualização-16%2F01%2F2026-orange)](https://github.com/escritoriosomarbusiness/cryptomind-analises)
 
 ---
 
@@ -20,9 +20,10 @@
 
 O **CryptoMind IA** é um ecossistema completo de trading automatizado que combina:
 
-1. **Setup TRS v6.1** - Sinais de reversão de tendência com validação tripla
-2. **Monitor USDT.D v2.0** - Análise macro de mercado em tempo real
-3. **Análises Agendadas** - Relatórios diários de abertura e fechamento
+1. **DNP v2.0** - Indicador completo de entrada com validação macro (MTF)
+2. **TRS v6.1** - Sinais de reversão de tendência com validação tripla
+3. **USDT.D v2.0** - Análise macro de mercado em tempo real
+4. **Análises Agendadas** - Relatórios diários de abertura e fechamento
 
 **Filosofia:** 100% automatizado, sem intervenção manual, custo zero.
 
@@ -57,7 +58,33 @@ O **CryptoMind IA** é um ecossistema completo de trading automatizado que combi
 
 ## 🚀 SISTEMAS
 
-### 1. Setup TRS v6.1 (Trend Reversal Setup)
+### **📊 INDICADORES DE TRADING**
+
+**Documentação Completa:** [`indicators/README.md`](indicators/README.md)
+
+O sistema possui **3 indicadores principais** integrados:
+
+---
+
+### 1. DNP v2.0 (Dedo No Pavio)
+
+**Status:** ✅ Operacional com MTF  
+**Última Atualização:** 16/01/2026
+
+Indicador **mais completo** do sistema, combinando múltiplos sinais com análise macro (MTF).
+
+**Características:**
+- ✅ Dedo no Pavio (rejeição de preço)
+- ✅ REMI + Pivots
+- ✅ **Análise MTF:** Classificação PREMIUM/CAUTELA/CONTRA
+- ✅ Gestão completa de risco
+
+**Documentação:** [`indicators/dnp/README.md`](indicators/dnp/README.md)  
+**Pine Script:** [`indicators/dnp/pinescript/dnp_v2.0_mtf.pine`](indicators/dnp/pinescript/dnp_v2.0_mtf.pine)
+
+---
+
+### 2. TRS v6.1 (Trend Reversal Setup)
 
 **Status:** ✅ Operacional  
 **Última Atualização:** 10/01/2026
@@ -71,12 +98,12 @@ Sistema de detecção de reversões de tendência baseado em EMA 9 com validaç�
 - ✅ Gestão de Risco Automática: Alavancagem sugerida
 - ✅ Cálculo Automático: Entry, SL, T1, T2, Trailing Stop
 
-**Documentação:** [`SETUP_TRS_V6.1.md`](SETUP_TRS_V6.1.md)  
-**Pine Script:** [`pinescript_setup_trs_v6.1.pine`](pinescript_setup_trs_v6.1.pine)
+**Documentação:** [`indicators/trs/README.md`](indicators/trs/README.md)  
+**Pine Script:** [`indicators/trs/pinescript/trs_v6.1_mtf.pine`](indicators/trs/pinescript/trs_v6.1_mtf.pine)
 
 ---
 
-### 2. Monitor USDT.D v2.0
+### 3. USDT.D v2.0 (Monitor de Dominância)
 
 **Status:** ✅ Operacional (Atualizado em 10/01/2026)  
 **Última Atualização:** 10/01/2026
@@ -89,12 +116,14 @@ Monitor de dominância do USDT.D para análise macro de mercado.
 - ✅ Posição das EMAs: EMA 9, 21, 200 com status
 - ✅ Interpretação: BULLISH/BEARISH para cripto
 
-**Documentação:** [`MONITOR_USDT_D_V2.md`](MONITOR_USDT_D_V2.md)  
-**Pine Script:** [`pinescript_usdt_d_monitor.pine`](pinescript_usdt_d_monitor.pine)
+**Documentação:** [`indicators/usdt-d/README.md`](indicators/usdt-d/README.md)  
+**Pine Script:** [`indicators/usdt-d/pinescript/usdt_d_v2.0.pine`](indicators/usdt-d/pinescript/usdt_d_v2.0.pine)
 
 ---
 
-### 3. Análises Agendadas
+---
+
+### 4. Análises Agendadas
 
 **Status:** ✅ Operacional  
 **Última Execução:** 09/01/2026
@@ -152,7 +181,8 @@ Sistema de análises automáticas de abertura e fechamento do mercado.
 ## 🔗 INTEGRAÇÕES
 
 ### **Webhooks:**
-- Setup TRS: `https://cryptomindia.app.n8n.cloud/webhook/cryptomind-alert`
+- DNP: `https://cryptomindia.app.n8n.cloud/webhook/dnp-alert`
+- TRS: `https://cryptomindia.app.n8n.cloud/webhook/cryptomind-alert`
 - USDT.D: `https://cryptomindia.app.n8n.cloud/webhook/usdt-d-alert`
 
 ### **n8n:**

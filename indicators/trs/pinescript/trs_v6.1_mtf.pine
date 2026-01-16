@@ -1,0 +1,485 @@
+// This Pine Script™ code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © CryptoMind IA - Setup 9.1 Larry Williams v6.1
+
+//@version=6
+indicator("CryptoMind - Setup 9.1 v6.1", overlay=true, max_labels_count=50)
+
+// ============================================
+// CONFIGURAÇÕES GERAIS
+// ============================================
+emaLength = input.int(9, "Período EMA", minval=1)
+minCandlesBelowAbove = input.int(5, "Mín. candles do mesmo lado da EMA", minval=3, maxval=20)
+cooldownCandles = input.int(5, "Cooldown entre sinais", minval=5, maxval=30)
+showLabels = input.bool(true, "Mostrar Labels")
+showEMA = input.bool(true, "Mostrar EMA 9")
+
+// ============================================
+// CONFIGURAÇÕES DE CONFIRMAÇÃO
+// ============================================
+requireConfirmation = input.bool(true, "Exigir Confirmação por Rompimento", tooltip="Se ativado, o sinal só é confirmado quando o preço rompe o gatilho")
+maxBarsToKeepSignal = input.int(10, "Máx. bars para manter sinal armado", minval=10, maxval=200)
+
+// ============================================
+// MÉTODO DE VALIDAÇÃO
+// ============================================
+validationMethod = input.string("Hybrid (Pivots ou RSI ou Fibonacci)", "Método de Validação", options=["Pivots (SR)", "RSI (Sobrecompra/Sobrevenda)", "Fibonacci (Golden Zone)", "Hybrid (Pivots ou RSI ou Fibonacci)"])
+
+// ============================================
+// CONFIGURAÇÕES - PIVOTS MULTI-TIMEFRAME
+// ============================================
+useMultiTimeframePivots = input.bool(true, "Usar Pivots Multi-Timeframe", tooltip="Busca pivots de timeframes maiores automaticamente")
+pivotLookback = input.int(10, "Lookback para Pivots (SR)", minval=5, maxval=50)
+pivotTolerance = input.float(0.1, "Tolerância zona SR (%)", minval=0.1, maxval=2.0, step=0.1)
+showPivots = input.bool(false, "Mostrar Pivots (SR)")
+
+// ============================================
+// CONFIGURAÇÕES - RSI
+// ============================================
+rsiPeriod = input.int(14, "Período RSI", minval=8, maxval=21)
+rsiLookback = input.int(5, "Lookback candles para RSI", minval=1, maxval=21)
+rsiOversold = input.int(30, "Nível Sobrevenda (LONG)", minval=20, maxval=40)
+rsiOverbought = input.int(70, "Nível Sobrecompra (SHORT)", minval=60, maxval=80)
+
+// ============================================
+// CONFIGURAÇÕES - FIBONACCI
+// ============================================
+fibLookback = input.int(3, "Lookback para Pivots Fibonacci", minval=1, maxval=8, tooltip="Quantos pivots para trás buscar para traçar a Fibonacci")
+
+// ============================================
+// DETECÇÃO AUTOMÁTICA DE TIMEFRAME ESTRUTURAL
+// ============================================
+getStructuralTimeframe() =>
+    currentTF = timeframe.period
+    
+    // Mapeamento: TF Operacional -> TF Estrutural
+    structuralTF = switch currentTF
+        "1"   => "15"      // 1 min -> 15 min
+        "5"   => "60"      // 5 min -> 1 hora
+        "15"  => "240"     // 15 min -> 4 horas
+        "60"  => "D"       // 1 hora -> Diário
+        "240" => "W"       // 4 horas -> Semanal
+        "D"   => "M"       // Diário -> Mensal
+        => "60"            // Default: 1 hora
+    
+    structuralTF
+
+structuralTimeframe = getStructuralTimeframe()
+
+// ============================================
+// CÁLCULOS BASE
+// ============================================
+ema9 = ta.ema(close, emaLength)
+plot(showEMA ? ema9 : na, "EMA 9", color=color.orange, linewidth=2)
+
+rsi = ta.rsi(close, rsiPeriod)
+
+// ============================================
+// DETECÇÃO DE PIVOTS (MULTI-TIMEFRAME)
+// ============================================
+// Buscar pivots do timeframe estrutural se ativado
+pivotHighSource = useMultiTimeframePivots ? request.security(syminfo.tickerid, structuralTimeframe, ta.pivothigh(high, pivotLookback, pivotLookback), lookahead=barmerge.lookahead_on) : ta.pivothigh(high, pivotLookback, pivotLookback)
+pivotLowSource = useMultiTimeframePivots ? request.security(syminfo.tickerid, structuralTimeframe, ta.pivotlow(low, pivotLookback, pivotLookback), lookahead=barmerge.lookahead_on) : ta.pivotlow(low, pivotLookback, pivotLookback)
+
+var float lastPivotHigh = na
+var float lastPivotLow = na
+
+if not na(pivotHighSource)
+    lastPivotHigh := pivotHighSource
+
+if not na(pivotLowSource)
+    lastPivotLow := pivotLowSource
+
+plot(showPivots and validationMethod != "RSI (Sobrecompra/Sobrevenda)" and validationMethod != "Fibonacci (Golden Zone)" and not na(lastPivotHigh) ? lastPivotHigh : na, "Resistência", color=color.red, style=plot.style_circles, linewidth=2)
+plot(showPivots and validationMethod != "RSI (Sobrecompra/Sobrevenda)" and validationMethod != "Fibonacci (Golden Zone)" and not na(lastPivotLow) ? lastPivotLow : na, "Suporte", color=color.green, style=plot.style_circles, linewidth=2)
+
+// ============================================
+// DETECÇÃO DE PIVOTS PARA FIBONACCI (MTF)
+// ============================================
+var array<float> pivotHighs = array.new<float>()
+var array<int> pivotHighBars = array.new<int>()
+var array<float> pivotLows = array.new<float>()
+var array<int> pivotLowBars = array.new<int>()
+
+if not na(pivotHighSource)
+    array.unshift(pivotHighs, pivotHighSource)
+    array.unshift(pivotHighBars, bar_index - pivotLookback)
+    if array.size(pivotHighs) > fibLookback
+        array.pop(pivotHighs)
+        array.pop(pivotHighBars)
+
+if not na(pivotLowSource)
+    array.unshift(pivotLows, pivotLowSource)
+    array.unshift(pivotLowBars, bar_index - pivotLookback)
+    if array.size(pivotLows) > fibLookback
+        array.pop(pivotLows)
+        array.pop(pivotLowBars)
+
+// ============================================
+// CÁLCULO DA GOLDEN ZONE (FIBONACCI)
+// ============================================
+var float fibHigh = na
+var float fibLow = na
+var float goldenZoneTop = na
+var float goldenZoneBottom = na
+
+// Para LONG: buscar último fundo (low) e último topo (high) ascendentes
+if array.size(pivotLows) >= 1 and array.size(pivotHighs) >= 1
+    fibLow := array.get(pivotLows, 0)
+    fibHigh := array.get(pivotHighs, 0)
+    
+    if fibHigh > fibLow
+        fibRange = fibHigh - fibLow
+        goldenZoneTop := fibLow + (fibRange * 0.618)
+        goldenZoneBottom := fibLow + (fibRange * 0.5)
+
+// Para SHORT: mesmos pivots, mas interpretação invertida
+var float goldenZoneTopShort = na
+var float goldenZoneBottomShort = na
+
+if array.size(pivotHighs) >= 1 and array.size(pivotLows) >= 1
+    fibHighShort = array.get(pivotHighs, 0)
+    fibLowShort = array.get(pivotLows, 0)
+    
+    if fibHighShort > fibLowShort
+        fibRangeShort = fibHighShort - fibLowShort
+        goldenZoneTopShort := fibHighShort - (fibRangeShort * 0.5)
+        goldenZoneBottomShort := fibHighShort - (fibRangeShort * 0.618)
+
+// ============================================
+// CONTAGEM DE CANDLES
+// ============================================
+var int candlesBelowEMA = 0
+var int candlesAboveEMA = 0
+
+if close < ema9
+    candlesBelowEMA := candlesBelowEMA + 1
+    candlesAboveEMA := 0
+else if close > ema9
+    candlesAboveEMA := candlesAboveEMA + 1
+    candlesBelowEMA := 0
+else
+    candlesBelowEMA := 0
+    candlesAboveEMA := 0
+
+// ============================================
+// VALIDAÇÃO PIVOTS (SR) - CORRIGIDA
+// ============================================
+toleranceValue = close * (pivotTolerance / 100)
+
+touchedSupport = false
+for i = 0 to 5
+    if not na(lastPivotLow)
+        if low[i] <= lastPivotLow + toleranceValue and low[i] >= lastPivotLow - toleranceValue
+            // Verificar se o fechamento respeitou o suporte (fechou ACIMA)
+            if close[i] > lastPivotLow
+                touchedSupport := true
+                break
+
+touchedResistance = false
+for i = 0 to 5
+    if not na(lastPivotHigh)
+        if high[i] >= lastPivotHigh - toleranceValue and high[i] <= lastPivotHigh + toleranceValue
+            // Verificar se o fechamento respeitou a resistência (fechou ABAIXO)
+            if close[i] < lastPivotHigh
+                touchedResistance := true
+                break
+
+// ============================================
+// VALIDAÇÃO RSI
+// ============================================
+hadOversold = false
+for i = 0 to rsiLookback
+    if rsi[i] < rsiOversold
+        hadOversold := true
+        break
+
+hadOverbought = false
+for i = 0 to rsiLookback
+    if rsi[i] > rsiOverbought
+        hadOverbought := true
+        break
+
+// ============================================
+// VALIDAÇÃO FIBONACCI (GOLDEN ZONE) - CORRIGIDA
+// ============================================
+touchedGoldenZoneLong = false
+for i = 0 to 5
+    if not na(goldenZoneTop) and not na(goldenZoneBottom)
+        if low[i] <= goldenZoneTop and low[i] >= goldenZoneBottom
+            // Verificar se o fechamento ficou acima da zona (rejeição, fechou ACIMA do 0.618)
+            if close[i] > goldenZoneTop
+                touchedGoldenZoneLong := true
+                break
+
+touchedGoldenZoneShort = false
+for i = 0 to 5
+    if not na(goldenZoneTopShort) and not na(goldenZoneBottomShort)
+        if high[i] >= goldenZoneBottomShort and high[i] <= goldenZoneTopShort
+            // Verificar se o fechamento ficou abaixo da zona (rejeição, fechou ABAIXO do 0.618)
+            if close[i] < goldenZoneBottomShort
+                touchedGoldenZoneShort := true
+                break
+
+// ============================================
+// COOLDOWN
+// ============================================
+var int lastSignalBar = 0
+cooldownActive = bar_index - lastSignalBar < cooldownCandles
+
+// ============================================
+// DETECÇÃO DO GATILHO
+// ============================================
+crossAboveEMA = close[1] < ema9[1] and close > ema9
+candleRange = high - low
+upperThird = low + (candleRange * 0.66)
+strongBullCandle = close >= upperThird and close > open
+hadPeriodBelowEMA = candlesBelowEMA[1] >= minCandlesBelowAbove
+
+validationLong = validationMethod == "Pivots (SR)" ? touchedSupport : validationMethod == "RSI (Sobrecompra/Sobrevenda)" ? hadOversold : validationMethod == "Fibonacci (Golden Zone)" ? touchedGoldenZoneLong : touchedSupport or hadOversold or touchedGoldenZoneLong
+
+triggerLong = crossAboveEMA and strongBullCandle and hadPeriodBelowEMA and validationLong and not cooldownActive
+
+crossBelowEMA = close[1] > ema9[1] and close < ema9
+lowerThird = high - (candleRange * 0.66)
+strongBearCandle = close <= lowerThird and close < open
+hadPeriodAboveEMA = candlesAboveEMA[1] >= minCandlesBelowAbove
+
+validationShort = validationMethod == "Pivots (SR)" ? touchedResistance : validationMethod == "RSI (Sobrecompra/Sobrevenda)" ? hadOverbought : validationMethod == "Fibonacci (Golden Zone)" ? touchedGoldenZoneShort : touchedResistance or hadOverbought or touchedGoldenZoneShort
+
+triggerShort = crossBelowEMA and strongBearCandle and hadPeriodAboveEMA and validationShort and not cooldownActive
+
+// ============================================
+// SISTEMA DE CONFIRMAÇÃO
+// ============================================
+var bool signalArmedLong = false
+var bool signalArmedShort = false
+var float triggerHighLong = na
+var float triggerLowLong = na
+var float triggerLowShort = na
+var float triggerHighShort = na
+var int triggerBarLong = na
+var int triggerBarShort = na
+
+if triggerLong
+    signalArmedLong := true
+    triggerHighLong := high
+    triggerLowLong := low
+    triggerBarLong := bar_index
+    lastSignalBar := bar_index
+
+if triggerShort
+    signalArmedShort := true
+    triggerLowShort := low
+    triggerHighShort := high
+    triggerBarShort := bar_index
+    lastSignalBar := bar_index
+
+// Verificar confirmação LONG
+confirmedLong = false
+if signalArmedLong
+    if bar_index - triggerBarLong > maxBarsToKeepSignal
+        signalArmedLong := false
+        triggerHighLong := na
+        triggerBarLong := na
+    else if high > triggerHighLong
+        confirmedLong := true
+        signalArmedLong := false
+    else if close < ema9
+        signalArmedLong := false
+        triggerHighLong := na
+        triggerBarLong := na
+
+// Verificar confirmação SHORT
+confirmedShort = false
+if signalArmedShort
+    if bar_index - triggerBarShort > maxBarsToKeepSignal
+        signalArmedShort := false
+        triggerLowShort := na
+        triggerBarShort := na
+    else if low < triggerLowShort
+        confirmedShort := true
+        signalArmedShort := false
+    else if close > ema9
+        signalArmedShort := false
+        triggerLowShort := na
+        triggerBarShort := na
+
+// ============================================
+// DETECÇÃO DE CONFLUÊNCIAS
+// ============================================
+// Para LONG
+validatorsLong = 0
+validationTextLong = ""
+
+if touchedSupport
+    validatorsLong := validatorsLong + 1
+    validationTextLong := validationTextLong + "SR"
+
+if hadOversold
+    validatorsLong := validatorsLong + 1
+    validationTextLong := validationTextLong + (validationTextLong != "" ? "+RSI" : "RSI")
+
+if touchedGoldenZoneLong
+    validatorsLong := validatorsLong + 1
+    validationTextLong := validationTextLong + (validationTextLong != "" ? "+FIB" : "FIB")
+
+// Para SHORT
+validatorsShort = 0
+validationTextShort = ""
+
+if touchedResistance
+    validatorsShort := validatorsShort + 1
+    validationTextShort := validationTextShort + "SR"
+
+if hadOverbought
+    validatorsShort := validatorsShort + 1
+    validationTextShort := validationTextShort + (validationTextShort != "" ? "+RSI" : "RSI")
+
+if touchedGoldenZoneShort
+    validatorsShort := validatorsShort + 1
+    validationTextShort := validationTextShort + (validationTextShort != "" ? "+FIB" : "FIB")
+
+// ============================================
+// VISUALIZAÇÃO MINIMALISTA
+// ============================================
+if triggerLong and showLabels
+    isTripleValidation = validatorsLong >= 3
+    isDoubleValidation = validatorsLong == 2
+    
+    labelText = isTripleValidation ? "9.1 LONG 🌟🌟\n✓ " + validationTextLong : isDoubleValidation ? "9.1 LONG ⭐\n✓ " + validationTextLong : "9.1 LONG\n✓ " + validationTextLong
+    
+    labelColor = isTripleValidation ? color.new(color.lime, 0) : isDoubleValidation ? color.new(color.green, 30) : color.green
+    labelSize = isTripleValidation ? size.normal : isDoubleValidation ? size.normal : size.small
+    
+    label.new(bar_index, low, labelText, 
+              style=label.style_label_up, 
+              color=labelColor, 
+              textcolor=color.white,
+              size=labelSize)
+
+if triggerShort and showLabels
+    isTripleValidation = validatorsShort >= 3
+    isDoubleValidation = validatorsShort == 2
+    
+    labelText = isTripleValidation ? "9.1 SHORT 🌟🌟\n✓ " + validationTextShort : isDoubleValidation ? "9.1 SHORT ⭐\n✓ " + validationTextShort : "9.1 SHORT\n✓ " + validationTextShort
+    
+    labelColor = isTripleValidation ? color.new(color.orange, 0) : isDoubleValidation ? color.new(color.red, 30) : color.red
+    labelSize = isTripleValidation ? size.normal : isDoubleValidation ? size.normal : size.small
+    
+    label.new(bar_index, high, labelText, 
+              style=label.style_label_down, 
+              color=labelColor, 
+              textcolor=color.white,
+              size=labelSize)
+
+// Marcador discreto de confirmação
+if confirmedLong and showLabels
+    label.new(bar_index, low, "✓", 
+              style=label.style_label_up, 
+              color=color.new(color.lime, 0), 
+              textcolor=color.white,
+              size=size.tiny)
+
+if confirmedShort and showLabels
+    label.new(bar_index, high, "✓", 
+              style=label.style_label_down, 
+              color=color.new(color.orange, 0), 
+              textcolor=color.white,
+              size=size.tiny)
+
+// ============================================
+// ALERTAS COM JSON DINÂMICO
+// ============================================
+// Alerta de GATILHO
+if triggerLong
+    directionAlert = "LONG"
+    validationAlert = validationTextLong
+    alert('{"symbol":"' + syminfo.ticker + '","action":"TRIGGER","direction":"' + directionAlert + '","setup":"9.1","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close) + '","validation":"' + validationAlert + '"}', alert.freq_once_per_bar)
+
+if triggerShort
+    directionAlert = "SHORT"
+    validationAlert = validationTextShort
+    alert('{"symbol":"' + syminfo.ticker + '","action":"TRIGGER","direction":"' + directionAlert + '","setup":"9.1","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close) + '","validation":"' + validationAlert + '"}', alert.freq_once_per_bar)
+
+// Alerta de CONFIRMAÇÃO
+if confirmedLong
+    directionAlert = "LONG"
+    validationAlert = validationTextLong
+    
+    // Calcular entry, SL, alvos e trailing
+    tickSize = syminfo.mintick
+    entryPrice = triggerHighLong
+    stopLossPrice = triggerLowLong - tickSize
+    riskValue = entryPrice - stopLossPrice
+    riskPercent = (riskValue / entryPrice) * 100
+    
+    target1 = entryPrice + riskValue
+    target2 = entryPrice + (riskValue * 2)
+    trailingDistance = riskValue * 0.5
+    
+    alert('{"symbol":"' + syminfo.ticker + '","action":"CONFIRMED","direction":"' + directionAlert + '","setup":"TRS","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close, '#.########') + '","validation":"' + validationAlert + '","triggerHigh":"' + str.tostring(triggerHighLong, '#.########') + '","triggerLow":"' + str.tostring(triggerLowLong, '#.########') + '","entry":"' + str.tostring(entryPrice, '#.########') + '","stopLoss":"' + str.tostring(stopLossPrice, '#.########') + '","risk":"' + str.tostring(riskValue, '#.########') + '","riskPercent":"' + str.tostring(riskPercent, '#.##') + '","target1":"' + str.tostring(target1, '#.########') + '","target2":"' + str.tostring(target2, '#.########') + '","trailingDistance":"' + str.tostring(trailingDistance, '#.########') + '"}', alert.freq_once_per_bar)
+
+if confirmedShort
+    directionAlert = "SHORT"
+    validationAlert = validationTextShort
+    
+    // Calcular entry, SL, alvos e trailing
+    tickSize = syminfo.mintick
+    entryPrice = triggerLowShort
+    stopLossPrice = triggerHighShort + tickSize
+    riskValue = stopLossPrice - entryPrice
+    riskPercent = (riskValue / entryPrice) * 100
+    
+    target1 = entryPrice - riskValue
+    target2 = entryPrice - (riskValue * 2)
+    trailingDistance = riskValue * 0.5
+    
+    alert('{"symbol":"' + syminfo.ticker + '","action":"CONFIRMED","direction":"' + directionAlert + '","setup":"TRS","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close, '#.########') + '","validation":"' + validationAlert + '","triggerHigh":"' + str.tostring(triggerHighShort, '#.########') + '","triggerLow":"' + str.tostring(triggerLowShort, '#.########') + '","entry":"' + str.tostring(entryPrice, '#.########') + '","stopLoss":"' + str.tostring(stopLossPrice, '#.########') + '","risk":"' + str.tostring(riskValue, '#.########') + '","riskPercent":"' + str.tostring(riskPercent, '#.##') + '","target1":"' + str.tostring(target1, '#.########') + '","target2":"' + str.tostring(target2, '#.########') + '","trailingDistance":"' + str.tostring(trailingDistance, '#.########') + '"}', alert.freq_once_per_bar)
+
+// ============================================
+// PAINEL DE INFORMAÇÕES
+// ============================================
+var table infoTable = table.new(position.top_right, 2, 12, bgcolor=color.new(color.black, 80))
+
+if barstate.islast
+    table.cell(infoTable, 0, 0, "CryptoMind IA", text_color=color.orange, text_size=size.small)
+    table.cell(infoTable, 1, 0, "Setup 9.1 v6.1", text_color=color.white, text_size=size.small)
+    
+    table.cell(infoTable, 0, 1, "Validação:", text_color=color.gray, text_size=size.tiny)
+    validationDisplay = validationMethod == "Pivots (SR)" ? "PIVOTS" : validationMethod == "RSI (Sobrecompra/Sobrevenda)" ? "RSI" : validationMethod == "Fibonacci (Golden Zone)" ? "FIBONACCI" : "HYBRID"
+    table.cell(infoTable, 1, 1, validationDisplay, text_color=color.yellow, text_size=size.tiny)
+    
+    table.cell(infoTable, 0, 2, "Pivots MTF:", text_color=color.gray, text_size=size.tiny)
+    table.cell(infoTable, 1, 2, useMultiTimeframePivots ? "ATIVO (" + structuralTimeframe + ")" : "DESATIVADO", text_color=useMultiTimeframePivots ? color.lime : color.gray, text_size=size.tiny)
+    
+    table.cell(infoTable, 0, 3, "Confirmação:", text_color=color.gray, text_size=size.tiny)
+    table.cell(infoTable, 1, 3, requireConfirmation ? "ATIVA" : "DESATIVADA", text_color=requireConfirmation ? color.lime : color.gray, text_size=size.tiny)
+    
+    table.cell(infoTable, 0, 4, "EMA 9:", text_color=color.gray, text_size=size.tiny)
+    table.cell(infoTable, 1, 4, str.tostring(ema9, "#.####"), text_color=color.orange, text_size=size.tiny)
+    
+    table.cell(infoTable, 0, 5, "Preço:", text_color=color.gray, text_size=size.tiny)
+    table.cell(infoTable, 1, 5, str.tostring(close, "#.####"), text_color=close > ema9 ? color.green : color.red, text_size=size.tiny)
+    
+    table.cell(infoTable, 0, 6, "Lado EMA:", text_color=color.gray, text_size=size.tiny)
+    table.cell(infoTable, 1, 6, close > ema9 ? "ACIMA (" + str.tostring(candlesAboveEMA) + ")" : "ABAIXO (" + str.tostring(candlesBelowEMA) + ")", text_color=close > ema9 ? color.green : color.red, text_size=size.tiny)
+    
+    if validationMethod == "Pivots (SR)" or validationMethod == "Hybrid (Pivots ou RSI ou Fibonacci)"
+        table.cell(infoTable, 0, 7, "Suporte:", text_color=color.gray, text_size=size.tiny)
+        table.cell(infoTable, 1, 7, not na(lastPivotLow) ? str.tostring(lastPivotLow, "#.####") : "N/A", text_color=color.green, text_size=size.tiny)
+        table.cell(infoTable, 0, 8, "Resistência:", text_color=color.gray, text_size=size.tiny)
+        table.cell(infoTable, 1, 8, not na(lastPivotHigh) ? str.tostring(lastPivotHigh, "#.####") : "N/A", text_color=color.red, text_size=size.tiny)
+    
+    if validationMethod == "RSI (Sobrecompra/Sobrevenda)" or validationMethod == "Hybrid (Pivots ou RSI ou Fibonacci)"
+        table.cell(infoTable, 0, 9, "RSI Atual:", text_color=color.gray, text_size=size.tiny)
+        table.cell(infoTable, 1, 9, str.tostring(rsi, "#.##"), text_color=rsi < rsiOversold ? color.green : rsi > rsiOverbought ? color.red : color.white, text_size=size.tiny)
+    
+    if validationMethod == "Fibonacci (Golden Zone)" or validationMethod == "Hybrid (Pivots ou RSI ou Fibonacci)"
+        table.cell(infoTable, 0, 10, "Golden Zone:", text_color=color.gray, text_size=size.tiny)
+        goldenStatus = not na(goldenZoneTop) and not na(goldenZoneBottom) ? "ATIVA" : "N/A"
+        table.cell(infoTable, 1, 10, goldenStatus, text_color=color.yellow, text_size=size.tiny)
+    
+    table.cell(infoTable, 0, 11, "Status:", text_color=color.gray, text_size=size.tiny)
+    statusText = signalArmedLong ? "LONG ARMADO 🔔" : signalArmedShort ? "SHORT ARMADO 🔔" : "AGUARDANDO"
+    statusColor = signalArmedLong or signalArmedShort ? color.yellow : color.gray
+    table.cell(infoTable, 1, 11, statusText, text_color=statusColor, text_size=size.tiny)
