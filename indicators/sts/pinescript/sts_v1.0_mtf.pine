@@ -36,7 +36,7 @@ showPivots = input.bool(false, "Mostrar Pivots (SR)", group="Pivots MTF")
 // CONFIGURAÇÕES - FIBONACCI (GOLDEN ZONE)
 // ============================================
 useFibonacci = input.bool(true, "Usar Golden Zone (Fibo 0.5-0.618)", group="Fibonacci", tooltip="Busca retração de Fibonacci do HTF")
-fibLookback = input.int(3, "Lookback para Pivots Fibonacci", minval=1, maxval=8, group="Fibonacci")
+fibLookback = input.int(10, "Lookback para Pivots Fibonacci", minval=5, maxval=20, group="Fibonacci")
 
 // ============================================
 // DETECÇÃO AUTOMÁTICA DE TIMEFRAME ESTRUTURAL
@@ -436,8 +436,11 @@ if (trapLong or trapShort) and cooldownOk and not signalArmed and setupQuality !
     
     // Label de GATILHO
     if showLabels
+        labelText = "🔔 " + signalDirection + "\n" + signalSetupQuality + "\n" + signalConfluence + "\n" + signalRejectionZones
+        if signalEmasCount > 1
+            labelText := labelText + "\n" + signalEmasRejected
         label.new(bar_index, trapLong ? low : high, 
-            "🔔 " + signalDirection + "\n" + signalSetupQuality + "\n" + signalConfluence, 
+            labelText, 
             color=trapLong ? color.new(color.green, 80) : color.new(color.red, 80), 
             style=trapLong ? label.style_label_up : label.style_label_down, 
             textcolor=trapLong ? color.green : color.red, 
@@ -459,8 +462,11 @@ if signalArmed
             
             // Label de CONFIRMAÇÃO
             if showLabels
+                labelText = "✅ " + signalDirection + "\n" + signalSetupQuality + "\n" + signalConfluence + "\n" + signalRejectionZones
+                if signalEmasCount > 1
+                    labelText := labelText + "\n" + signalEmasRejected
                 label.new(bar_index, low, 
-                    "✅ " + signalDirection + "\n" + signalSetupQuality + "\n" + signalConfluence, 
+                    labelText, 
                     color=color.new(color.green, 0), 
                     style=label.style_label_up, 
                     textcolor=color.white, 
@@ -477,8 +483,11 @@ if signalArmed
             
             // Label de CONFIRMAÇÃO
             if showLabels
+                labelText = "✅ " + signalDirection + "\n" + signalSetupQuality + "\n" + signalConfluence + "\n" + signalRejectionZones
+                if signalEmasCount > 1
+                    labelText := labelText + "\n" + signalEmasRejected
                 label.new(bar_index, high, 
-                    "✅ " + signalDirection + "\n" + signalSetupQuality + "\n" + signalConfluence, 
+                    labelText, 
                     color=color.new(color.red, 0), 
                     style=label.style_label_down, 
                     textcolor=color.white, 
@@ -495,4 +504,4 @@ if signalArmed
 // ============================================
 // PLOTAR TRIGGER PRICE (quando sinal armado)
 // ============================================
-plot(signalArmed ? triggerPrice : na, "Trigger Price", color=color.yellow, style=plot.style_cross, linewidth=2)
+// plot(signalArmed ? triggerPrice : na, "Trigger Price", color=color.yellow, style=plot.style_cross, linewidth=2) // REMOVIDO: linha fixa
