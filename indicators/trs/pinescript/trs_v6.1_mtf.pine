@@ -66,6 +66,39 @@ getStructuralTimeframe() =>
 structuralTimeframe = getStructuralTimeframe()
 
 // ============================================
+// FILTRO DE TENDÊNCIA MULTI-TIMEFRAME (MTF)
+// ============================================
+
+// Buscar dados do timeframe superior para análise macro
+var float htf_ema55 = na
+var float htf_ema233 = na
+var float htf_close = na
+var float htf_ema55_prev = na
+var bool htf_trendUp = false
+var bool htf_trendDown = false
+var bool htf_trendNeutral = true
+var string htf_trendText = "NEUTRO"
+
+if structuralTimeframe != ""
+    // Buscar EMAs do timeframe superior
+    htf_ema55 := request.security(syminfo.tickerid, structuralTimeframe, ta.ema(close, 55), lookahead=barmerge.lookahead_off)
+    htf_ema233 := request.security(syminfo.tickerid, structuralTimeframe, ta.ema(close, 233), lookahead=barmerge.lookahead_off)
+    htf_close := request.security(syminfo.tickerid, structuralTimeframe, close, lookahead=barmerge.lookahead_off)
+    htf_ema55_prev := request.security(syminfo.tickerid, structuralTimeframe, ta.ema(close, 55)[1], lookahead=barmerge.lookahead_off)
+    
+    // Determinar tendência do fractal superior
+    if na(htf_ema55) or na(htf_ema233) or na(htf_ema55_prev)
+        htf_trendUp := false
+        htf_trendDown := false
+        htf_trendNeutral := true
+        htf_trendText := "NEUTRO"
+    else
+        htf_trendUp := htf_ema55 > htf_ema233 and htf_ema55 > htf_ema55_prev and htf_close > htf_ema55
+        htf_trendDown := htf_ema55 < htf_ema233 and htf_ema55 < htf_ema55_prev and htf_close < htf_ema55
+        htf_trendNeutral := not htf_trendUp and not htf_trendDown
+        htf_trendText := htf_trendUp ? "ALTA" : htf_trendDown ? "BAIXA" : "NEUTRO"
+
+// ============================================
 // CÁLCULOS BASE
 // ============================================
 ema9 = ta.ema(close, emaLength)
@@ -388,18 +421,30 @@ if confirmedShort and showLabels
               size=size.tiny)
 
 // ============================================
+// CLASSIFICAÇÃO MTF (MACRO)
+// ============================================
+var string setupQualityLong = "CAUTELA"
+var string setupQualityShort = "CAUTELA"
+
+if triggerLong
+    setupQualityLong := htf_trendUp ? "PREMIUM" : htf_trendDown ? "CONTRA" : "CAUTELA"
+
+if triggerShort
+    setupQualityShort := htf_trendDown ? "PREMIUM" : htf_trendUp ? "CONTRA" : "CAUTELA"
+
+// ============================================
 // ALERTAS COM JSON DINÂMICO
 // ============================================
 // Alerta de GATILHO
 if triggerLong
     directionAlert = "LONG"
     validationAlert = validationTextLong
-    alert('{"symbol":"' + syminfo.ticker + '","action":"TRIGGER","direction":"' + directionAlert + '","setup":"9.1","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close) + '","validation":"' + validationAlert + '"}', alert.freq_once_per_bar)
+    alert('{"symbol":"' + syminfo.ticker + '","action":"TRIGGER","direction":"' + directionAlert + '","setup":"TRS","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close) + '","validation":"' + validationAlert + '","setupQuality":"' + setupQualityLong + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + structuralTimeframe + '"}', alert.freq_once_per_bar)
 
 if triggerShort
     directionAlert = "SHORT"
     validationAlert = validationTextShort
-    alert('{"symbol":"' + syminfo.ticker + '","action":"TRIGGER","direction":"' + directionAlert + '","setup":"9.1","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close) + '","validation":"' + validationAlert + '"}', alert.freq_once_per_bar)
+    alert('{"symbol":"' + syminfo.ticker + '","action":"TRIGGER","direction":"' + directionAlert + '","setup":"TRS","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close) + '","validation":"' + validationAlert + '","setupQuality":"' + setupQualityShort + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + structuralTimeframe + '"}', alert.freq_once_per_bar)
 
 // Alerta de CONFIRMAÇÃO
 if confirmedLong
@@ -417,7 +462,7 @@ if confirmedLong
     target2 = entryPrice + (riskValue * 2)
     trailingDistance = riskValue * 0.5
     
-    alert('{"symbol":"' + syminfo.ticker + '","action":"CONFIRMED","direction":"' + directionAlert + '","setup":"TRS","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close, '#.########') + '","validation":"' + validationAlert + '","triggerHigh":"' + str.tostring(triggerHighLong, '#.########') + '","triggerLow":"' + str.tostring(triggerLowLong, '#.########') + '","entry":"' + str.tostring(entryPrice, '#.########') + '","stopLoss":"' + str.tostring(stopLossPrice, '#.########') + '","risk":"' + str.tostring(riskValue, '#.########') + '","riskPercent":"' + str.tostring(riskPercent, '#.##') + '","target1":"' + str.tostring(target1, '#.########') + '","target2":"' + str.tostring(target2, '#.########') + '","trailingDistance":"' + str.tostring(trailingDistance, '#.########') + '"}', alert.freq_once_per_bar)
+    alert('{"symbol":"' + syminfo.ticker + '","action":"CONFIRMED","direction":"' + directionAlert + '","setup":"TRS","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close, '#.########') + '","validation":"' + validationAlert + '","setupQuality":"' + setupQualityLong + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + structuralTimeframe + '","triggerHigh":"' + str.tostring(triggerHighLong, '#.########') + '","triggerLow":"' + str.tostring(triggerLowLong, '#.########') + '","entry":"' + str.tostring(entryPrice, '#.########') + '","stopLoss":"' + str.tostring(stopLossPrice, '#.########') + '","risk":"' + str.tostring(riskValue, '#.########') + '","riskPercent":"' + str.tostring(riskPercent, '#.##') + '","target1":"' + str.tostring(target1, '#.########') + '","target2":"' + str.tostring(target2, '#.########') + '","trailingDistance":"' + str.tostring(trailingDistance, '#.########') + '"}', alert.freq_once_per_bar)
 
 if confirmedShort
     directionAlert = "SHORT"
@@ -434,7 +479,7 @@ if confirmedShort
     target2 = entryPrice - (riskValue * 2)
     trailingDistance = riskValue * 0.5
     
-    alert('{"symbol":"' + syminfo.ticker + '","action":"CONFIRMED","direction":"' + directionAlert + '","setup":"TRS","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close, '#.########') + '","validation":"' + validationAlert + '","triggerHigh":"' + str.tostring(triggerHighShort, '#.########') + '","triggerLow":"' + str.tostring(triggerLowShort, '#.########') + '","entry":"' + str.tostring(entryPrice, '#.########') + '","stopLoss":"' + str.tostring(stopLossPrice, '#.########') + '","risk":"' + str.tostring(riskValue, '#.########') + '","riskPercent":"' + str.tostring(riskPercent, '#.##') + '","target1":"' + str.tostring(target1, '#.########') + '","target2":"' + str.tostring(target2, '#.########') + '","trailingDistance":"' + str.tostring(trailingDistance, '#.########') + '"}', alert.freq_once_per_bar)
+    alert('{"symbol":"' + syminfo.ticker + '","action":"CONFIRMED","direction":"' + directionAlert + '","setup":"TRS","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close, '#.########') + '","validation":"' + validationAlert + '","setupQuality":"' + setupQualityShort + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + structuralTimeframe + '","triggerHigh":"' + str.tostring(triggerHighShort, '#.########') + '","triggerLow":"' + str.tostring(triggerLowShort, '#.########') + '","entry":"' + str.tostring(entryPrice, '#.########') + '","stopLoss":"' + str.tostring(stopLossPrice, '#.########') + '","risk":"' + str.tostring(riskValue, '#.########') + '","riskPercent":"' + str.tostring(riskPercent, '#.##') + '","target1":"' + str.tostring(target1, '#.########') + '","target2":"' + str.tostring(target2, '#.########') + '","trailingDistance":"' + str.tostring(trailingDistance, '#.########') + '"}', alert.freq_once_per_bar)
 
 // ============================================
 // PAINEL DE INFORMAÇÕES

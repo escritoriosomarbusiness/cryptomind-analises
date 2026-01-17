@@ -188,6 +188,111 @@ htf_trendDown = (htf_ema55 < htf_ema233) and
 
 ---
 
+### **ENTENDENDO O MTF NO DNP - DOMINÂNCIA MACRO**
+
+**Princípio Fundamental:** A tendência do fractal superior **domina** a tendência do fractal inferior.
+
+#### **EXEMPLO PRÁTICO - DNP LONG PREMIUM:**
+
+**Cenário:**
+
+1. **H4 (macro):** Tendência de ALTA estabelecida
+   - EMA 55 > EMA 233
+   - EMA 55 crescente
+   - Preço acima da EMA 55
+
+2. **15min (micro):** Ignição de tendência de ALTA
+   - Didi Index cruza próximo ao eixo
+   - ADX crescente
+   - REMI entre 1.5-3.0
+   - Pivot rompido
+   - Todas as 7 validações satisfeitas
+   - **DNP LONG ativado no 15min**
+
+3. **Classificação:** **PREMIUM** ⭐⭐⭐
+
+**Por quê é PREMIUM?**
+
+✅ O DNP LONG no 15min está capturando a **IGNIÇÃO** alinhada com o H4  
+✅ O H4 está em ALTA, então a ignição de alta no 15min está **alinhada**  
+✅ O DNP está pegando o **início de uma onda** na direção da tendência macro  
+✅ **Alta probabilidade:** O 15min continuará subindo acompanhando o H4  
+
+**Analogia:**
+- H4 é o rio (fluxo principal)
+- 15min é a onda (movimento temporário)
+- DNP PREMIUM pega a onda começando na direção do rio
+
+---
+
+#### **EXEMPLO PRÁTICO - DNP SHORT PREMIUM:**
+
+**Cenário:**
+
+1. **H4 (macro):** Tendência de BAIXA estabelecida
+2. **15min (micro):** Ignição de tendência de BAIXA
+3. **15min:** Todas as 7 validações satisfeitas
+4. **DNP SHORT ativado no 15min**
+5. **Classificação:** **PREMIUM** ⭐⭐⭐
+
+**Por quê é PREMIUM?**
+
+✅ Ignição de baixa alinhada com a baixa do H4  
+✅ Alta probabilidade de sucesso  
+✅ Movimento na direção da tendência macro  
+
+---
+
+#### **EXEMPLO - DNP CONTRA (ALTO RISCO):**
+
+**Cenário DNP LONG CONTRA:**
+
+1. **H4 (macro):** Tendência de BAIXA estabelecida
+2. **15min (micro):** Ignição de tendência de ALTA
+3. **15min:** Todas as 7 validações satisfeitas
+4. **DNP LONG ativado no 15min**
+5. **Classificação:** **CONTRA** 🛑
+
+**Por quê é CONTRA?**
+
+⛔ O DNP LONG está tentando **iniciar tendência contra o fluxo macro**  
+⛔ O H4 está em BAIXA, então a ignição de alta no 15min é **contra o fluxo**  
+⛔ **Baixa probabilidade:** O H4 pode continuar caindo e anular o LONG  
+⛔ **Alto risco:** Operação contra a dominância macro  
+
+---
+
+#### **RESUMO DA LÓGICA MTF:**
+
+| Setup | HTF | LTF | Classificação | Interpretação |
+|-------|-----|-----|-----------------|-------------------|
+| DNP LONG | ALTA | Ignição alta | **PREMIUM** ⭐⭐⭐ | Início de onda alinhada com macro |
+| DNP SHORT | BAIXA | Ignição baixa | **PREMIUM** ⭐⭐⭐ | Início de onda alinhada com macro |
+| DNP LONG | BAIXA | Ignição alta | **CONTRA** 🛑 | Tentando iniciar contra macro (arriscado) |
+| DNP SHORT | ALTA | Ignição baixa | **CONTRA** 🛑 | Tentando iniciar contra macro (arriscado) |
+| DNP LONG/SHORT | NEUTRO | Qualquer | **CAUTELA** ⚠️ | Sem tendência macro definida |
+
+**Conclusão:**
+- **PREMIUM:** DNP pega a ignição alinhada com a tendência macro (ideal)
+- **CONTRA:** DNP tenta iniciar contra a tendência macro (arriscado)
+- **CAUTELA:** Sem tendência macro clara (risco médio)
+
+---
+
+### **DIFERENÇA DNP vs TRS (MTF):**
+
+**DNP (Ignição):**
+- PREMIUM: Ignição **alinhada** com HTF
+- Pega o **início** do movimento
+
+**TRS (Reversão):**
+- PREMIUM: Reversão do **fim da retração** de volta para HTF
+- Pega o **fim da correção**
+
+**Ambos são PREMIUM quando alinhados com a tendência macro!**
+
+---
+
 ## 🔄 FLUXO DE OPERAÇÃO
 
 ### **Fase 1: TRIGGER (Gatilho Armado)**
