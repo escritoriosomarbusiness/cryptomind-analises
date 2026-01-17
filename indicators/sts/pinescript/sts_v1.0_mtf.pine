@@ -141,10 +141,10 @@ srRejectionLong = not na(htf_lastSupport) and low <= htf_lastSupport * (1 + tole
 srRejectionShort = not na(htf_lastResistance) and high >= htf_lastResistance * (1 - tolerance) and close < htf_lastResistance
 
 // Fibonacci Validation
-goldenZoneTopLong = na(float)
-goldenZoneBottomLong = na(float)
-goldenZoneTopShort = na(float)
-goldenZoneBottomShort = na(float)
+goldenZoneTopLong = float(na)
+goldenZoneBottomLong = float(na)
+goldenZoneTopShort = float(na)
+goldenZoneBottomShort = float(na)
 
 if array.size(fibHighs) > 0 and array.size(fibLows) > 0
     lastHigh = array.get(fibHighs, array.size(fibHighs) - 1)
@@ -372,3 +372,46 @@ if signalArmed
     else if barsElapsed > 1
         // EXPIRADO (passou do candle seguinte)
         signalArmed := false
+
+// ============================================
+// ALERTAS COM JSON DINÂMICO
+// ============================================
+// Alerta de GATILHO (TRIGGER)
+if trapLong or trapShort
+    if barstate.isconfirmed
+        alertJson = '{"symbol":"' + syminfo.ticker + '","action":"TRIGGER","direction":"' + signalDirection + '","setup":"STS","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close, '#.########') + '","rejectionZones":"' + signalRejectionZones + '","emasRejected":"' + signalEmasRejected + '","emasCount":"' + str.tostring(signalEmasCount) + '","confluence":"' + str.tostring(signalConfluence) + '","setupQuality":"' + signalSetupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + higherTimeframe + '","triggerPrice":"' + str.tostring(triggerPrice, '#.########') + '"}'
+        alert(alertJson, alert.freq_once_per_bar)
+
+// Alerta de CONFIRMAÇÃO LONG
+if signalArmed and signalDirection == "LONG" and bar_index - signalArmedBar == 1 and close > triggerPrice
+    if barstate.isconfirmed
+        // Calcular entry, SL, alvos e trailing
+        tickSize = syminfo.mintick
+        entryPrice = triggerPrice
+        stopLossPrice = (trapLong ? signalTriggerLow : signalTriggerHigh) - tickSize
+        riskValue = entryPrice - stopLossPrice
+        riskPercent = (riskValue / entryPrice) * 100
+        
+        target1 = entryPrice + riskValue
+        target2 = entryPrice + (riskValue * 2)
+        trailingDistance = riskValue * 0.5
+        
+        alertJson = '{"symbol":"' + syminfo.ticker + '","action":"CONFIRMED","direction":"LONG","setup":"STS","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close, '#.########') + '","rejectionZones":"' + signalRejectionZones + '","emasRejected":"' + signalEmasRejected + '","emasCount":"' + str.tostring(signalEmasCount) + '","confluence":"' + str.tostring(signalConfluence) + '","setupQuality":"' + signalSetupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + higherTimeframe + '","entry":"' + str.tostring(entryPrice, '#.########') + '","stopLoss":"' + str.tostring(stopLossPrice, '#.########') + '","risk":"' + str.tostring(riskValue, '#.########') + '","riskPercent":"' + str.tostring(riskPercent, '#.##') + '","target1":"' + str.tostring(target1, '#.########') + '","target2":"' + str.tostring(target2, '#.########') + '","trailingDistance":"' + str.tostring(trailingDistance, '#.########') + '"}'
+        alert(alertJson, alert.freq_once_per_bar)
+
+// Alerta de CONFIRMAÇÃO SHORT
+if signalArmed and signalDirection == "SHORT" and bar_index - signalArmedBar == 1 and close < triggerPrice
+    if barstate.isconfirmed
+        // Calcular entry, SL, alvos e trailing
+        tickSize = syminfo.mintick
+        entryPrice = triggerPrice
+        stopLossPrice = (trapLong ? signalTriggerLow : signalTriggerHigh) + tickSize
+        riskValue = stopLossPrice - entryPrice
+        riskPercent = (riskValue / entryPrice) * 100
+        
+        target1 = entryPrice - riskValue
+        target2 = entryPrice - (riskValue * 2)
+        trailingDistance = riskValue * 0.5
+        
+        alertJson = '{"symbol":"' + syminfo.ticker + '","action":"CONFIRMED","direction":"SHORT","setup":"STS","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close, '#.########') + '","rejectionZones":"' + signalRejectionZones + '","emasRejected":"' + signalEmasRejected + '","emasCount":"' + str.tostring(signalEmasCount) + '","confluence":"' + str.tostring(signalConfluence) + '","setupQuality":"' + signalSetupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + higherTimeframe + '","entry":"' + str.tostring(entryPrice, '#.########') + '","stopLoss":"' + str.tostring(stopLossPrice, '#.########') + '","risk":"' + str.tostring(riskValue, '#.########') + '","riskPercent":"' + str.tostring(riskPercent, '#.##') + '","target1":"' + str.tostring(target1, '#.########') + '","target2":"' + str.tostring(target2, '#.########') + '","trailingDistance":"' + str.tostring(trailingDistance, '#.########') + '"}'
+        alert(alertJson, alert.freq_once_per_bar)
