@@ -430,24 +430,7 @@ if (trapLong or trapShort) and cooldownOk and not signalArmed and setupQuality !
     lastSignalBar := bar_index
     
     // Alerta de GATILHO
-    gatilhoJson = '{"status":"TRIGGER",' +
-        '"symbol":"' + syminfo.ticker + '",' +
-        '"direction":"' + signalDirection + '",' +
-        '"timeframe":"' + timeframe.period + '",' +
-        '"price":' + str.tostring(close) + ',' +
-        '"trigger":' + str.tostring(triggerPrice) + ',' +
-        '"sl":' + str.tostring(signalSlPrice) + ',' +
-        '"tp1":' + str.tostring(signalTp1Price) + ',' +
-        '"tp2":' + str.tostring(signalTp2Price) + ',' +
-        '"setupQuality":"' + signalSetupQuality + '",' +
-        '"htfTrend":"' + htf_trendText + '",' +
-        '"htfTimeframe":"' + structuralTimeframe + '",' +
-        '"fishingType":"' + signalFishingType + '",' +
-        '"confluence":"' + signalConfluence + '",' +
-        '"rejectionZones":"' + signalRejectionZones + '",' +
-        '"emasRejected":"' + signalEmasRejected + '",' +
-        '"emasCount":' + str.tostring(signalEmasCount) + ',' +
-        '"wickToBodyRatio":' + str.tostring(signalWickRatio, "#.##") + '}'
+    gatilhoJson = '{"status":"TRIGGER","symbol":"' + syminfo.ticker + '","direction":"' + signalDirection + '","timeframe":"' + timeframe.period + '","price":' + str.tostring(close) + ',"trigger":' + str.tostring(triggerPrice) + ',"sl":' + str.tostring(signalSlPrice) + ',"tp1":' + str.tostring(signalTp1Price) + ',"tp2":' + str.tostring(signalTp2Price) + ',"setupQuality":"' + signalSetupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + structuralTimeframe + '","fishingType":"' + signalFishingType + '","confluence":"' + signalConfluence + '","rejectionZones":"' + signalRejectionZones + '","emasRejected":"' + signalEmasRejected + '","emasCount":' + str.tostring(signalEmasCount) + ',"wickToBodyRatio":' + str.tostring(signalWickRatio, "#.##") + '}'
     
     alert(gatilhoJson, alert.freq_once_per_bar_close)
     
@@ -470,23 +453,7 @@ if signalArmed
             signalArmed := false
             
             // Alerta de CONFIRMAÇÃO
-            confirmadoJson = '{"status":"CONFIRMED",' +
-                '"symbol":"' + syminfo.ticker + '",' +
-                '"direction":"' + signalDirection + '",' +
-                '"timeframe":"' + timeframe.period + '",' +
-                '"entry":' + str.tostring(close) + ',' +
-                '"sl":' + str.tostring(signalSlPrice) + ',' +
-                '"tp1":' + str.tostring(signalTp1Price) + ',' +
-                '"tp2":' + str.tostring(signalTp2Price) + ',' +
-                '"setupQuality":"' + signalSetupQuality + '",' +
-                '"htfTrend":"' + htf_trendText + '",' +
-                '"htfTimeframe":"' + structuralTimeframe + '",' +
-                '"fishingType":"' + signalFishingType + '",' +
-                '"confluence":"' + signalConfluence + '",' +
-                '"rejectionZones":"' + signalRejectionZones + '",' +
-                '"emasRejected":"' + signalEmasRejected + '",' +
-                '"emasCount":' + str.tostring(signalEmasCount) + ',' +
-                '"wickToBodyRatio":' + str.tostring(signalWickRatio, "#.##") + '}'
+            confirmadoJson = '{"status":"CONFIRMED","symbol":"' + syminfo.ticker + '","direction":"' + signalDirection + '","timeframe":"' + timeframe.period + '","entry":' + str.tostring(close) + ',"sl":' + str.tostring(signalSlPrice) + ',"tp1":' + str.tostring(signalTp1Price) + ',"tp2":' + str.tostring(signalTp2Price) + ',"setupQuality":"' + signalSetupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + structuralTimeframe + '","fishingType":"' + signalFishingType + '","confluence":"' + signalConfluence + '","rejectionZones":"' + signalRejectionZones + '","emasRejected":"' + signalEmasRejected + '","emasCount":' + str.tostring(signalEmasCount) + ',"wickToBodyRatio":' + str.tostring(signalWickRatio, "#.##") + '}'
             
             alert(confirmadoJson, alert.freq_once_per_bar_close)
             
@@ -504,23 +471,7 @@ if signalArmed
             signalArmed := false
             
             // Alerta de CONFIRMAÇÃO
-            confirmadoJson = '{"status":"CONFIRMED",' +
-                '"symbol":"' + syminfo.ticker + '",' +
-                '"direction":"' + signalDirection + '",' +
-                '"timeframe":"' + timeframe.period + '",' +
-                '"entry":' + str.tostring(close) + ',' +
-                '"sl":' + str.tostring(signalSlPrice) + ',' +
-                '"tp1":' + str.tostring(signalTp1Price) + ',' +
-                '"tp2":' + str.tostring(signalTp2Price) + ',' +
-                '"setupQuality":"' + signalSetupQuality + '",' +
-                '"htfTrend":"' + htf_trendText + '",' +
-                '"htfTimeframe":"' + structuralTimeframe + '",' +
-                '"fishingType":"' + signalFishingType + '",' +
-                '"confluence":"' + signalConfluence + '",' +
-                '"rejectionZones":"' + signalRejectionZones + '",' +
-                '"emasRejected":"' + signalEmasRejected + '",' +
-                '"emasCount":' + str.tostring(signalEmasCount) + ',' +
-                '"wickToBodyRatio":' + str.tostring(signalWickRatio, "#.##") + '}'
+            confirmadoJson = '{"status":"CONFIRMED","symbol":"' + syminfo.ticker + '","direction":"' + signalDirection + '","timeframe":"' + timeframe.period + '","entry":' + str.tostring(close) + ',"sl":' + str.tostring(signalSlPrice) + ',"tp1":' + str.tostring(signalTp1Price) + ',"tp2":' + str.tostring(signalTp2Price) + ',"setupQuality":"' + signalSetupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + structuralTimeframe + '","fishingType":"' + signalFishingType + '","confluence":"' + signalConfluence + '","rejectionZones":"' + signalRejectionZones + '","emasRejected":"' + signalEmasRejected + '","emasCount":' + str.tostring(signalEmasCount) + ',"wickToBodyRatio":' + str.tostring(signalWickRatio, "#.##") + '}'
             
             alert(confirmadoJson, alert.freq_once_per_bar_close)
             
