@@ -424,7 +424,7 @@ if (trapLong or trapShort) and cooldownOk and not signalArmed and setupQuality !
     
     // Calcular SL, TP1, TP2
     signalSlPrice := trapLong ? low - syminfo.mintick : high + syminfo.mintick
-    riskDistance = math.abs(triggerPrice - signalSlPrice)
+    float riskDistance = math.abs(triggerPrice - signalSlPrice)
     signalTp1Price := trapLong ? triggerPrice + riskDistance : triggerPrice - riskDistance
     signalTp2Price := trapLong ? triggerPrice + (riskDistance * 2) : triggerPrice - (riskDistance * 2)
     
@@ -432,8 +432,8 @@ if (trapLong or trapShort) and cooldownOk and not signalArmed and setupQuality !
     lastSignalBar := bar_index
     
     // Alerta de GATILHO
-    triggerField = trapLong ? '"triggerHigh":' : '"triggerLow":'
-    gatilhoJson = '{"action":"TRIGGER",' +
+    string triggerField = trapLong ? '"triggerHigh":' : '"triggerLow":'
+    string gatilhoJson = '{"action":"TRIGGER",' +
         '"setup":"STS",' +
         '"symbol":"' + syminfo.ticker + '",' +
         '"direction":"' + signalDirection + '",' +
@@ -471,11 +471,11 @@ if signalArmed
             signalArmed := false
             
             // Alerta de CONFIRMAÇÃO
-            riskValue = math.abs(triggerPrice - signalSlPrice)
-            riskPercent = (riskValue / close) * 100
-            trailingDistance = riskValue * 0.5
-            triggerFieldConfirmed = signalDirection == "LONG" ? '"triggerHigh":' : '"triggerLow":'
-            confirmadoJson = '{"action":"CONFIRMED",' +
+            float riskValue = math.abs(triggerPrice - signalSlPrice)
+            float riskPercent = (riskValue / close) * 100
+            float trailingDistance = riskValue * 0.5
+            string triggerFieldConfirmed = signalDirection == "LONG" ? '"triggerHigh":' : '"triggerLow":'
+            string confirmadoJson = '{"action":"CONFIRMED",' +
                 '"setup":"STS",' +
                 '"symbol":"' + syminfo.ticker + '",' +
                 '"direction":"' + signalDirection + '",' +
@@ -515,11 +515,11 @@ if signalArmed
             signalArmed := false
             
             // Alerta de CONFIRMAÇÃO
-            riskValue = math.abs(triggerPrice - signalSlPrice)
-            riskPercent = (riskValue / close) * 100
-            trailingDistance = riskValue * 0.5
-            triggerFieldConfirmed = signalDirection == "LONG" ? '"triggerHigh":' : '"triggerLow":'
-            confirmadoJson = '{"action":"CONFIRMED",' +
+            float riskValue = math.abs(triggerPrice - signalSlPrice)
+            float riskPercent = (riskValue / close) * 100
+            float trailingDistance = riskValue * 0.5
+            string triggerFieldConfirmed = signalDirection == "LONG" ? '"triggerHigh":' : '"triggerLow":'
+            string confirmadoJson = '{"action":"CONFIRMED",' +
                 '"setup":"STS",' +
                 '"symbol":"' + syminfo.ticker + '",' +
                 '"direction":"' + signalDirection + '",' +
