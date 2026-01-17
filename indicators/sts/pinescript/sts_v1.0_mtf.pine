@@ -348,6 +348,20 @@ confluenceText := zonesRejected == 1 ? "Simples" :
                   zonesRejected == 2 ? "Dupla ⭐" : 
                   zonesRejected == 3 ? "Tripla 🌟🌟" : "Nenhuma"
 
+// Criar texto de validação no formato TRS (ex: "SR+FIBO+EMA89")
+var string validationText = ""
+validationText := ""
+
+if isHammerLong or isHammerShort
+    if (isHammerLong and srRejectedLong) or (isHammerShort and srRejectedShort)
+        validationText += "SR"
+    
+    if (isHammerLong and fiboRejectedLong) or (isHammerShort and fiboRejectedShort)
+        validationText += (validationText != "" ? "+FIBO" : "FIBO")
+    
+    if emaRejected and emasRejectedList != ""
+        validationText += (validationText != "" ? "+EMA" + emasRejectedList : "EMA" + emasRejectedList)
+
 // ============================================
 // VALIDAÇÃO COMPLETA DA TRAP
 // ============================================
@@ -448,22 +462,30 @@ if (trapLong or trapShort) and not signalArmed and setupQuality != "CAUTELA"
 if trapLong and setupQuality != "CAUTELA" and showLabels
     if not na(triggerLabel)
         label.delete(triggerLabel)
+    
+    labelText = setupQuality == "PREMIUM" ? "STS LONG 🌟\n✓ " + validationText : setupQuality == "CONTRA" ? "STS LONG ⚠️\n✓ " + validationText : "STS LONG\n✓ " + validationText
+    labelColor = setupQuality == "PREMIUM" ? color.new(color.lime, 0) : setupQuality == "CONTRA" ? color.new(color.green, 30) : color.green
+    
     triggerLabel := label.new(bar_index, low, 
-        "🔔 LONG\n" + setupQuality + "\n" + confluenceText, 
-        color=color.new(color.green, 80), 
+        labelText, 
+        color=labelColor, 
         style=label.style_label_up, 
-        textcolor=color.green, 
+        textcolor=color.white, 
         size=size.small)
     lastSignalBar := bar_index
 
 if trapShort and setupQuality != "CAUTELA" and showLabels
     if not na(triggerLabel)
         label.delete(triggerLabel)
+    
+    labelText = setupQuality == "PREMIUM" ? "STS SHORT 🌟\n✓ " + validationText : setupQuality == "CONTRA" ? "STS SHORT ⚠️\n✓ " + validationText : "STS SHORT\n✓ " + validationText
+    labelColor = setupQuality == "PREMIUM" ? color.new(color.orange, 0) : setupQuality == "CONTRA" ? color.new(color.red, 30) : color.red
+    
     triggerLabel := label.new(bar_index, high, 
-        "🔔 SHORT\n" + setupQuality + "\n" + confluenceText, 
-        color=color.new(color.red, 80), 
+        labelText, 
+        color=labelColor, 
         style=label.style_label_down, 
-        textcolor=color.red, 
+        textcolor=color.white, 
         size=size.small)
     lastSignalBar := bar_index
 
