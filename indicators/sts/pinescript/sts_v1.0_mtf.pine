@@ -297,9 +297,7 @@ fiboRejectedLong = useFibonacci and not na(goldenZoneTop) and not na(goldenZoneB
                    close > goldenZoneTop
 
 // SHORT: Pavio toca Golden Zone + fecha abaixo de 0.618
-fiboRejectedShort = useFibonacci and not na(goldenZoneTopShort) and not na(goldenZoneBottomShort) and 
-                    high >= goldenZoneBottomShort and high <= goldenZoneTopShort and 
-                    close < goldenZoneBottomShort
+fiboRejectedShort = useFibonacci and not na(goldenZoneTopShort) and not na(goldenZoneBottomShort) and high >= goldenZoneBottomShort and high <= goldenZoneTopShort and close < goldenZoneBottomShort
 
 // ============================================
 // SISTEMA DE CONFLUÊNCIAS
