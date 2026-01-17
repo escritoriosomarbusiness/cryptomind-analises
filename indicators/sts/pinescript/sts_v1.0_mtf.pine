@@ -1,4 +1,4 @@
-// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// STS by CryptoMind v1.0 - Stormer Trap Setup
 // © CryptoMind IA - STS (Stormer Trap Setup) v1.0
 
 //@version=6
@@ -12,17 +12,16 @@ cooldownCandles = input.int(5, "Cooldown entre sinais", minval=5, maxval=30, gro
 showLabels = input.bool(true, "Mostrar Labels", group="Visual")
 
 // ============================================
-// CONFIGURAÇÕES - MÚLTIPLAS EMAs
+// CONFIGURAÇÕES - MÚLTIPLAS EMAs (HTF)
 // ============================================
-useEMA13 = input.bool(false, "EMA 13", group="EMAs")
-useEMA21 = input.bool(false, "EMA 21", group="EMAs")
-useEMA34 = input.bool(false, "EMA 34", group="EMAs")
-useEMA55 = input.bool(false, "EMA 55", group="EMAs")
-useEMA89 = input.bool(true, "EMA 89", group="EMAs")
-useEMA144 = input.bool(false, "EMA 144", group="EMAs")
-useEMA233 = input.bool(false, "EMA 233", group="EMAs")
-showEMAs = input.bool(true, "Mostrar EMAs Selecionadas", group="EMAs")
-emaTolerance = input.float(0.2, "Tolerância Toque EMA (%)", minval=0.1, maxval=1.0, step=0.1, group="EMAs")
+useEMA13 = input.bool(false, "EMA 13 (HTF)", group="EMAs do Fractal Superior")
+useEMA21 = input.bool(false, "EMA 21 (HTF)", group="EMAs do Fractal Superior")
+useEMA34 = input.bool(false, "EMA 34 (HTF)", group="EMAs do Fractal Superior")
+useEMA55 = input.bool(false, "EMA 55 (HTF)", group="EMAs do Fractal Superior")
+useEMA89 = input.bool(true, "EMA 89 (HTF)", group="EMAs do Fractal Superior")
+useEMA144 = input.bool(false, "EMA 144 (HTF)", group="EMAs do Fractal Superior")
+useEMA233 = input.bool(false, "EMA 233 (HTF)", group="EMAs do Fractal Superior")
+emaTolerance = input.float(0.2, "Tolerância Toque EMA (%)", minval=0.1, maxval=1.0, step=0.1, group="EMAs do Fractal Superior")
 
 // ============================================
 // CONFIGURAÇÕES - PIVOTS MULTI-TIMEFRAME
@@ -30,7 +29,6 @@ emaTolerance = input.float(0.2, "Tolerância Toque EMA (%)", minval=0.1, maxval=
 usePivots = input.bool(true, "Usar Pivots (SR) do HTF", group="Pivots MTF", tooltip="Busca suporte/resistência do timeframe superior")
 pivotLookback = input.int(10, "Lookback para Pivots", minval=5, maxval=50, group="Pivots MTF")
 pivotTolerance = input.float(0.1, "Tolerância zona SR (%)", minval=0.1, maxval=2.0, step=0.1, group="Pivots MTF")
-showPivots = input.bool(false, "Mostrar Pivots (SR)", group="Pivots MTF")
 
 // ============================================
 // CONFIGURAÇÕES - FIBONACCI (GOLDEN ZONE)
@@ -59,12 +57,28 @@ getStructuralTimeframe() =>
 structuralTimeframe = getStructuralTimeframe()
 
 // ============================================
+// BUSCAR EMAs DO TIMEFRAME SUPERIOR (HTF)
+// ============================================
+var float htf_ema13 = na
+var float htf_ema21 = na
+var float htf_ema34 = na
+var float htf_ema55 = na
+var float htf_ema89 = na
+var float htf_ema144 = na
+var float htf_ema233 = na
+
+if structuralTimeframe != ""
+    htf_ema13 := request.security(syminfo.tickerid, structuralTimeframe, ta.ema(close, 13), lookahead=barmerge.lookahead_off)
+    htf_ema21 := request.security(syminfo.tickerid, structuralTimeframe, ta.ema(close, 21), lookahead=barmerge.lookahead_off)
+    htf_ema34 := request.security(syminfo.tickerid, structuralTimeframe, ta.ema(close, 34), lookahead=barmerge.lookahead_off)
+    htf_ema55 := request.security(syminfo.tickerid, structuralTimeframe, ta.ema(close, 55), lookahead=barmerge.lookahead_off)
+    htf_ema89 := request.security(syminfo.tickerid, structuralTimeframe, ta.ema(close, 89), lookahead=barmerge.lookahead_off)
+    htf_ema144 := request.security(syminfo.tickerid, structuralTimeframe, ta.ema(close, 144), lookahead=barmerge.lookahead_off)
+    htf_ema233 := request.security(syminfo.tickerid, structuralTimeframe, ta.ema(close, 233), lookahead=barmerge.lookahead_off)
+
+// ============================================
 // FILTRO DE TENDÊNCIA MULTI-TIMEFRAME (MTF)
 // ============================================
-
-// Buscar dados do timeframe superior para análise macro
-var float htf_ema55 = na
-var float htf_ema233 = na
 var float htf_close = na
 var float htf_ema55_prev = na
 var bool htf_trendUp = false
@@ -73,9 +87,6 @@ var bool htf_trendNeutral = true
 var string htf_trendText = "NEUTRO"
 
 if structuralTimeframe != ""
-    // Buscar EMAs do timeframe superior
-    htf_ema55 := request.security(syminfo.tickerid, structuralTimeframe, ta.ema(close, 55), lookahead=barmerge.lookahead_off)
-    htf_ema233 := request.security(syminfo.tickerid, structuralTimeframe, ta.ema(close, 233), lookahead=barmerge.lookahead_off)
     htf_close := request.security(syminfo.tickerid, structuralTimeframe, close, lookahead=barmerge.lookahead_off)
     htf_ema55_prev := request.security(syminfo.tickerid, structuralTimeframe, ta.ema(close, 55)[1], lookahead=barmerge.lookahead_off)
     
@@ -92,301 +103,246 @@ if structuralTimeframe != ""
         htf_trendText := htf_trendUp ? "ALTA" : htf_trendDown ? "BAIXA" : "NEUTRO"
 
 // ============================================
-// CÁLCULO DAS EMAs
+// PIVOTS MULTI-TIMEFRAME (SR)
 // ============================================
-ema13 = ta.ema(close, 13)
-ema21 = ta.ema(close, 21)
-ema34 = ta.ema(close, 34)
-ema55 = ta.ema(close, 55)
-ema89 = ta.ema(close, 89)
-ema144 = ta.ema(close, 144)
-ema233 = ta.ema(close, 233)
+var float htf_lastSupport = na
+var float htf_lastResistance = na
 
-// Plotar EMAs selecionadas
-plot(showEMAs and useEMA13 ? ema13 : na, "EMA 13", color=color.new(color.purple, 0), linewidth=1)
-plot(showEMAs and useEMA21 ? ema21 : na, "EMA 21", color=color.new(color.blue, 0), linewidth=1)
-plot(showEMAs and useEMA34 ? ema34 : na, "EMA 34", color=color.new(color.teal, 0), linewidth=1)
-plot(showEMAs and useEMA55 ? ema55 : na, "EMA 55", color=color.new(color.green, 0), linewidth=2)
-plot(showEMAs and useEMA89 ? ema89 : na, "EMA 89", color=color.new(color.orange, 0), linewidth=2)
-plot(showEMAs and useEMA144 ? ema144 : na, "EMA 144", color=color.new(color.red, 0), linewidth=2)
-plot(showEMAs and useEMA233 ? ema233 : na, "EMA 233", color=color.new(color.maroon, 0), linewidth=2)
-
-// ============================================
-// DETECÇÃO DE PIVOTS (MULTI-TIMEFRAME)
-// ============================================
-// Buscar pivots do timeframe estrutural
-pivotHighSource = usePivots ? request.security(syminfo.tickerid, structuralTimeframe, ta.pivothigh(high, pivotLookback, pivotLookback), lookahead=barmerge.lookahead_on) : na
-pivotLowSource = usePivots ? request.security(syminfo.tickerid, structuralTimeframe, ta.pivotlow(low, pivotLookback, pivotLookback), lookahead=barmerge.lookahead_on) : na
-
-var float lastPivotHigh = na
-var float lastPivotLow = na
-
-if not na(pivotHighSource)
-    lastPivotHigh := pivotHighSource
-
-if not na(pivotLowSource)
-    lastPivotLow := pivotLowSource
-
-plot(showPivots and usePivots and not na(lastPivotHigh) ? lastPivotHigh : na, "Resistência HTF", color=color.red, style=plot.style_circles, linewidth=2)
-plot(showPivots and usePivots and not na(lastPivotLow) ? lastPivotLow : na, "Suporte HTF", color=color.green, style=plot.style_circles, linewidth=2)
-
-// ============================================
-// DETECÇÃO DE PIVOTS PARA FIBONACCI (MTF)
-// ============================================
-var array<float> pivotHighs = array.new<float>()
-var array<int> pivotHighBars = array.new<int>()
-var array<float> pivotLows = array.new<float>()
-var array<int> pivotLowBars = array.new<int>()
-
-if useFibonacci and not na(pivotHighSource)
-    array.unshift(pivotHighs, pivotHighSource)
-    array.unshift(pivotHighBars, bar_index - pivotLookback)
-    if array.size(pivotHighs) > fibLookback
-        array.pop(pivotHighs)
-        array.pop(pivotHighBars)
-
-if useFibonacci and not na(pivotLowSource)
-    array.unshift(pivotLows, pivotLowSource)
-    array.unshift(pivotLowBars, bar_index - pivotLookback)
-    if array.size(pivotLows) > fibLookback
-        array.pop(pivotLows)
-        array.pop(pivotLowBars)
-
-// ============================================
-// CÁLCULO DA GOLDEN ZONE (FIBONACCI)
-// ============================================
-var float fibHigh = na
-var float fibLow = na
-var float goldenZoneTop = na
-var float goldenZoneBottom = na
-
-// Para LONG: buscar último fundo (low) e último topo (high)
-if useFibonacci and array.size(pivotLows) >= 1 and array.size(pivotHighs) >= 1
-    fibLow := array.get(pivotLows, 0)
-    fibHigh := array.get(pivotHighs, 0)
+if usePivots and structuralTimeframe != ""
+    htf_pivotHigh = request.security(syminfo.tickerid, structuralTimeframe, ta.pivothigh(high, pivotLookback, pivotLookback), lookahead=barmerge.lookahead_off)
+    htf_pivotLow = request.security(syminfo.tickerid, structuralTimeframe, ta.pivotlow(low, pivotLookback, pivotLookback), lookahead=barmerge.lookahead_off)
     
-    if fibHigh > fibLow
-        fibRange = fibHigh - fibLow
-        goldenZoneTop := fibLow + (fibRange * 0.618)
-        goldenZoneBottom := fibLow + (fibRange * 0.5)
+    if not na(htf_pivotHigh)
+        htf_lastResistance := htf_pivotHigh
+    if not na(htf_pivotLow)
+        htf_lastSupport := htf_pivotLow
 
-// Para SHORT: mesmos pivots, interpretação invertida
-var float goldenZoneTopShort = na
-var float goldenZoneBottomShort = na
+// ============================================
+// FIBONACCI (GOLDEN ZONE) DO HTF
+// ============================================
+var array<float> fibHighs = array.new_float(0)
+var array<float> fibLows = array.new_float(0)
 
-if useFibonacci and array.size(pivotHighs) >= 1 and array.size(pivotLows) >= 1
-    fibHighShort = array.get(pivotHighs, 0)
-    fibLowShort = array.get(pivotLows, 0)
+if useFibonacci and structuralTimeframe != ""
+    htf_fibPivotHigh = request.security(syminfo.tickerid, structuralTimeframe, ta.pivothigh(high, fibLookback, fibLookback), lookahead=barmerge.lookahead_off)
+    htf_fibPivotLow = request.security(syminfo.tickerid, structuralTimeframe, ta.pivotlow(low, fibLookback, fibLookback), lookahead=barmerge.lookahead_off)
     
-    if fibHighShort > fibLowShort
-        fibRangeShort = fibHighShort - fibLowShort
-        goldenZoneTopShort := fibHighShort - (fibRangeShort * 0.5)
-        goldenZoneBottomShort := fibHighShort - (fibRangeShort * 0.618)
+    if not na(htf_fibPivotHigh)
+        array.push(fibHighs, htf_fibPivotHigh)
+        if array.size(fibHighs) > 10
+            array.shift(fibHighs)
+    
+    if not na(htf_fibPivotLow)
+        array.push(fibLows, htf_fibPivotLow)
+        if array.size(fibLows) > 10
+            array.shift(fibLows)
 
 // ============================================
 // DETECÇÃO DE CANDLE MARTELO
 // ============================================
 body = math.abs(close - open)
-upperWick = high - math.max(open, close)
-lowerWick = math.min(open, close) - low
+upperWick = high - math.max(close, open)
+lowerWick = math.min(close, open) - low
 
-// Validar martelo LONG (pavio inferior grande + candle de alta)
-isHammerLong = body > 0 and lowerWick >= (body * wickToBodyRatio) and close > open
+// LONG: Pavio inferior >= X * corpo
+hammerLong = lowerWick >= (wickToBodyRatio * body) and body > 0
 
-// Validar martelo SHORT (pavio superior grande + candle de baixa)
-isHammerShort = body > 0 and upperWick >= (body * wickToBodyRatio) and close < open
-
-// Calcular proporção real
-wickToBodyRatioActual = body > 0 ? (isHammerLong ? lowerWick / body : isHammerShort ? upperWick / body : 0) : 0
+// SHORT: Pavio superior >= X * corpo
+hammerShort = upperWick >= (wickToBodyRatio * body) and body > 0
 
 // ============================================
-// DETECÇÃO DE REJEIÇÃO EM MÚLTIPLAS EMAs
+// VALIDAÇÃO DE TRAP NAS EMAs DO HTF
 // ============================================
-emaToleranceValue = close * (emaTolerance / 100)
+emaRejectionLong = false
+emaRejectionShort = false
+emasRejectedList = ""
+emasRejectedCount = 0
 
-var int emasRejectedCount = 0
-var string emasRejectedList = ""
+tolerance = emaTolerance / 100
 
-emasRejectedCount := 0
-emasRejectedList := ""
+// Verificar rejeição em cada EMA do HTF
+if useEMA13 and not na(htf_ema13)
+    if low <= htf_ema13 * (1 + tolerance) and close > htf_ema13
+        emaRejectionLong := true
+        emasRejectedList := emasRejectedList + (emasRejectedList == "" ? "" : "/") + "13"
+        emasRejectedCount += 1
+    if high >= htf_ema13 * (1 - tolerance) and close < htf_ema13
+        emaRejectionShort := true
+        emasRejectedList := emasRejectedList + (emasRejectedList == "" ? "" : "/") + "13"
+        emasRejectedCount += 1
 
-// LONG: Pavio toca EMA + fecha acima
-if isHammerLong
-    if useEMA13 and low <= (ema13 + emaToleranceValue) and close > ema13
+if useEMA21 and not na(htf_ema21)
+    if low <= htf_ema21 * (1 + tolerance) and close > htf_ema21
+        emaRejectionLong := true
+        emasRejectedList := emasRejectedList + (emasRejectedList == "" ? "" : "/") + "21"
         emasRejectedCount += 1
-        emasRejectedList += "13,"
-    
-    if useEMA21 and low <= (ema21 + emaToleranceValue) and close > ema21
+    if high >= htf_ema21 * (1 - tolerance) and close < htf_ema21
+        emaRejectionShort := true
+        emasRejectedList := emasRejectedList + (emasRejectedList == "" ? "" : "/") + "21"
         emasRejectedCount += 1
-        emasRejectedList += "21,"
-    
-    if useEMA34 and low <= (ema34 + emaToleranceValue) and close > ema34
-        emasRejectedCount += 1
-        emasRejectedList += "34,"
-    
-    if useEMA55 and low <= (ema55 + emaToleranceValue) and close > ema55
-        emasRejectedCount += 1
-        emasRejectedList += "55,"
-    
-    if useEMA89 and low <= (ema89 + emaToleranceValue) and close > ema89
-        emasRejectedCount += 1
-        emasRejectedList += "89,"
-    
-    if useEMA144 and low <= (ema144 + emaToleranceValue) and close > ema144
-        emasRejectedCount += 1
-        emasRejectedList += "144,"
-    
-    if useEMA233 and low <= (ema233 + emaToleranceValue) and close > ema233
-        emasRejectedCount += 1
-        emasRejectedList += "233,"
 
-// SHORT: Pavio toca EMA + fecha abaixo
-if isHammerShort
-    if useEMA13 and high >= (ema13 - emaToleranceValue) and close < ema13
+if useEMA34 and not na(htf_ema34)
+    if low <= htf_ema34 * (1 + tolerance) and close > htf_ema34
+        emaRejectionLong := true
+        emasRejectedList := emasRejectedList + (emasRejectedList == "" ? "" : "/") + "34"
         emasRejectedCount += 1
-        emasRejectedList += "13,"
-    
-    if useEMA21 and high >= (ema21 - emaToleranceValue) and close < ema21
+    if high >= htf_ema34 * (1 - tolerance) and close < htf_ema34
+        emaRejectionShort := true
+        emasRejectedList := emasRejectedList + (emasRejectedList == "" ? "" : "/") + "34"
         emasRejectedCount += 1
-        emasRejectedList += "21,"
-    
-    if useEMA34 and high >= (ema34 - emaToleranceValue) and close < ema34
-        emasRejectedCount += 1
-        emasRejectedList += "34,"
-    
-    if useEMA55 and high >= (ema55 - emaToleranceValue) and close < ema55
-        emasRejectedCount += 1
-        emasRejectedList += "55,"
-    
-    if useEMA89 and high >= (ema89 - emaToleranceValue) and close < ema89
-        emasRejectedCount += 1
-        emasRejectedList += "89,"
-    
-    if useEMA144 and high >= (ema144 - emaToleranceValue) and close < ema144
-        emasRejectedCount += 1
-        emasRejectedList += "144,"
-    
-    if useEMA233 and high >= (ema233 - emaToleranceValue) and close < ema233
-        emasRejectedCount += 1
-        emasRejectedList += "233,"
 
-// Remover última vírgula
-if str.length(emasRejectedList) > 0
-    emasRejectedList := str.substring(emasRejectedList, 0, str.length(emasRejectedList) - 1)
+if useEMA55 and not na(htf_ema55)
+    if low <= htf_ema55 * (1 + tolerance) and close > htf_ema55
+        emaRejectionLong := true
+        emasRejectedList := emasRejectedList + (emasRejectedList == "" ? "" : "/") + "55"
+        emasRejectedCount += 1
+    if high >= htf_ema55 * (1 - tolerance) and close < htf_ema55
+        emaRejectionShort := true
+        emasRejectedList := emasRejectedList + (emasRejectedList == "" ? "" : "/") + "55"
+        emasRejectedCount += 1
 
-emaRejected = emasRejectedCount > 0
+if useEMA89 and not na(htf_ema89)
+    if low <= htf_ema89 * (1 + tolerance) and close > htf_ema89
+        emaRejectionLong := true
+        emasRejectedList := emasRejectedList + (emasRejectedList == "" ? "" : "/") + "89"
+        emasRejectedCount += 1
+    if high >= htf_ema89 * (1 - tolerance) and close < htf_ema89
+        emaRejectionShort := true
+        emasRejectedList := emasRejectedList + (emasRejectedList == "" ? "" : "/") + "89"
+        emasRejectedCount += 1
 
-// ============================================
-// VALIDAÇÃO PIVOTS (SR)
-// ============================================
-pivotToleranceValue = close * (pivotTolerance / 100)
+if useEMA144 and not na(htf_ema144)
+    if low <= htf_ema144 * (1 + tolerance) and close > htf_ema144
+        emaRejectionLong := true
+        emasRejectedList := emasRejectedList + (emasRejectedList == "" ? "" : "/") + "144"
+        emasRejectedCount += 1
+    if high >= htf_ema144 * (1 - tolerance) and close < htf_ema144
+        emaRejectionShort := true
+        emasRejectedList := emasRejectedList + (emasRejectedList == "" ? "" : "/") + "144"
+        emasRejectedCount += 1
 
-// LONG: Pavio toca suporte + fecha acima
-srRejectedLong = usePivots and not na(lastPivotLow) and low <= (lastPivotLow + pivotToleranceValue) and close > lastPivotLow
-
-// SHORT: Pavio toca resistência + fecha abaixo
-srRejectedShort = usePivots and not na(lastPivotHigh) and high >= (lastPivotHigh - pivotToleranceValue) and close < lastPivotHigh
+if useEMA233 and not na(htf_ema233)
+    if low <= htf_ema233 * (1 + tolerance) and close > htf_ema233
+        emaRejectionLong := true
+        emasRejectedList := emasRejectedList + (emasRejectedList == "" ? "" : "/") + "233"
+        emasRejectedCount += 1
+    if high >= htf_ema233 * (1 - tolerance) and close < htf_ema233
+        emaRejectionShort := true
+        emasRejectedList := emasRejectedList + (emasRejectedList == "" ? "" : "/") + "233"
+        emasRejectedCount += 1
 
 // ============================================
-// VALIDAÇÃO FIBONACCI (GOLDEN ZONE)
+// VALIDAÇÃO DE TRAP EM PIVOTS (SR)
 // ============================================
+pivotRejectionLong = false
+pivotRejectionShort = false
 
-// LONG: Pavio toca Golden Zone + fecha acima de 0.618
-fiboRejectedLong = useFibonacci and not na(goldenZoneTop) and not na(goldenZoneBottom) and low <= goldenZoneTop and low >= goldenZoneBottom and close > goldenZoneTop
+if usePivots
+    srTolerance = pivotTolerance / 100
+    
+    // LONG: Preço toca suporte e fecha acima
+    if not na(htf_lastSupport)
+        if low <= htf_lastSupport * (1 + srTolerance) and close > htf_lastSupport
+            pivotRejectionLong := true
+    
+    // SHORT: Preço toca resistência e fecha abaixo
+    if not na(htf_lastResistance)
+        if high >= htf_lastResistance * (1 - srTolerance) and close < htf_lastResistance
+            pivotRejectionShort := true
 
-// SHORT: Pavio toca Golden Zone + fecha abaixo de 0.618
-fiboRejectedShort = useFibonacci and not na(goldenZoneTopShort) and not na(goldenZoneBottomShort) and high >= goldenZoneBottomShort and high <= goldenZoneTopShort and close < goldenZoneBottomShort
+// ============================================
+// VALIDAÇÃO DE TRAP EM FIBONACCI (GOLDEN ZONE)
+// ============================================
+fibRejectionLong = false
+fibRejectionShort = false
+
+if useFibonacci
+    if array.size(fibHighs) > 0 and array.size(fibLows) > 0
+        lastHigh = array.get(fibHighs, array.size(fibHighs) - 1)
+        lastLow = array.get(fibLows, array.size(fibLows) - 1)
+        
+        fibRange = lastHigh - lastLow
+        fib50 = lastLow + (fibRange * 0.5)
+        fib618 = lastLow + (fibRange * 0.618)
+        
+        goldenZoneTop = math.max(fib50, fib618)
+        goldenZoneBottom = math.min(fib50, fib618)
+        
+        // LONG: Preço entra na Golden Zone e fecha acima
+        if low <= goldenZoneTop and low >= goldenZoneBottom and close > goldenZoneTop
+            fibRejectionLong := true
+        
+        // SHORT: Preço entra na Golden Zone e fecha abaixo
+        if high >= goldenZoneBottom and high <= goldenZoneTop and close < goldenZoneBottom
+            fibRejectionShort := true
 
 // ============================================
 // SISTEMA DE CONFLUÊNCIAS
 // ============================================
-var int zonesRejected = 0
-var string confluenceText = ""
-var string rejectionZones = ""
+confluenceLong = 0
+confluenceShort = 0
 
-zonesRejected := 0
-rejectionZones := ""
+if pivotRejectionLong
+    confluenceLong += 1
+if fibRejectionLong
+    confluenceLong += 1
+if emaRejectionLong
+    confluenceLong += 1
 
-// Contar zonas rejeitadas para LONG
-if isHammerLong
-    if srRejectedLong
-        zonesRejected += 1
-        rejectionZones += "SR,"
-    
-    if fiboRejectedLong
-        zonesRejected += 1
-        rejectionZones += "Fibo,"
-    
-    if emaRejected
-        zonesRejected += 1
-        rejectionZones += "EMA,"
-
-// Contar zonas rejeitadas para SHORT
-if isHammerShort
-    if srRejectedShort
-        zonesRejected += 1
-        rejectionZones += "SR,"
-    
-    if fiboRejectedShort
-        zonesRejected += 1
-        rejectionZones += "Fibo,"
-    
-    if emaRejected
-        zonesRejected += 1
-        rejectionZones += "EMA,"
-
-// Remover última vírgula
-if str.length(rejectionZones) > 0
-    rejectionZones := str.substring(rejectionZones, 0, str.length(rejectionZones) - 1)
-
-// Classificar confluência
-confluenceText := zonesRejected == 1 ? "Simples" : 
-                  zonesRejected == 2 ? "Dupla ⭐" : 
-                  zonesRejected == 3 ? "Tripla 🌟🌟" : "Nenhuma"
+if pivotRejectionShort
+    confluenceShort += 1
+if fibRejectionShort
+    confluenceShort += 1
+if emaRejectionShort
+    confluenceShort += 1
 
 // ============================================
-// VALIDAÇÃO COMPLETA DA TRAP
+// DETECÇÃO DE TRAP (GATILHO)
 // ============================================
-
-// TRAP LONG: Martelo + Rejeição de zona + Pelo menos 1 confluência
-trapLong = isHammerLong and zonesRejected >= 1
-
-// TRAP SHORT: Martelo invertido + Rejeição de zona + Pelo menos 1 confluência
-trapShort = isHammerShort and zonesRejected >= 1
+trapLong = hammerLong and confluenceLong >= 1
+trapShort = hammerShort and confluenceShort >= 1
 
 // ============================================
-// CLASSIFICAÇÃO MTF E FISHING TYPE
+// CLASSIFICAÇÃO MTF
 // ============================================
-var string setupQuality = "CAUTELA"
-var string fishingType = "NONE"
+setupQuality = ""
+fishingType = ""
 
 if trapLong
     if htf_trendUp
         setupQuality := "PREMIUM"
-        fishingType := "NONE"
+        fishingType := "Continuação"
     else if htf_trendDown
         setupQuality := "CONTRA"
-        fishingType := "BOTTOM"
+        fishingType := "Bottom Fishing"
     else
         setupQuality := "CAUTELA"
-        fishingType := "NONE"
+        fishingType := "Neutro"
 
 if trapShort
     if htf_trendDown
         setupQuality := "PREMIUM"
-        fishingType := "NONE"
+        fishingType := "Continuação"
     else if htf_trendUp
         setupQuality := "CONTRA"
-        fishingType := "TOP"
+        fishingType := "Top Fishing"
     else
         setupQuality := "CAUTELA"
-        fishingType := "NONE"
+        fishingType := "Neutro"
+
+// ============================================
+// FILTRO MTF ATUANTE (BLOQUEAR CAUTELA)
+// ============================================
+signalBlocked = setupQuality == "CAUTELA"
 
 // ============================================
 // COOLDOWN
 // ============================================
 var int lastSignalBar = na
-cooldownOk = na(lastSignalBar) or (bar_index - lastSignalBar) >= cooldownCandles
+
+if not signalBlocked and (trapLong or trapShort)
+    if na(lastSignalBar) or (bar_index - lastSignalBar) >= cooldownCandles
+        lastSignalBar := bar_index
 
 // ============================================
 // SISTEMA DE CONFIRMAÇÃO POR ROMPIMENTO
@@ -395,56 +351,61 @@ var bool signalArmed = false
 var float triggerPrice = na
 var string signalDirection = ""
 var int signalArmedBar = na
-var float signalSlPrice = na
-var float signalTp1Price = na
-var float signalTp2Price = na
 var string signalSetupQuality = ""
 var string signalFishingType = ""
-var string signalConfluence = ""
+var int signalConfluence = 0
 var string signalRejectionZones = ""
 var string signalEmasRejected = ""
 var int signalEmasCount = 0
 var float signalWickRatio = 0.0
 
-// GATILHO: Armar sinal (apenas se não for CAUTELA)
-if (trapLong or trapShort) and cooldownOk and not signalArmed and setupQuality != "CAUTELA"
-    signalArmed := true
-    signalDirection := trapLong ? "LONG" : "SHORT"
-    triggerPrice := trapLong ? high : low
-    signalArmedBar := bar_index
-    signalSetupQuality := setupQuality
-    signalFishingType := fishingType
-    signalConfluence := confluenceText
-    signalRejectionZones := rejectionZones
-    signalEmasRejected := emasRejectedList
-    signalEmasCount := emasRejectedCount
-    signalWickRatio := wickToBodyRatioActual
-    
-    // Calcular SL, TP1, TP2
-    signalSlPrice := trapLong ? low - syminfo.mintick : high + syminfo.mintick
-    riskDistance = math.abs(triggerPrice - signalSlPrice)
-    signalTp1Price := trapLong ? triggerPrice + riskDistance : triggerPrice - riskDistance
-    signalTp2Price := trapLong ? triggerPrice + (riskDistance * 2) : triggerPrice - (riskDistance * 2)
-    
-    // Atualizar último sinal
-    lastSignalBar := bar_index
-    
-    // Alerta de GATILHO
-    gatilhoJson = '{"status":"TRIGGER","symbol":"' + syminfo.ticker + '","direction":"' + signalDirection + '","timeframe":"' + timeframe.period + '","price":' + str.tostring(close) + ',"trigger":' + str.tostring(triggerPrice) + ',"sl":' + str.tostring(signalSlPrice) + ',"tp1":' + str.tostring(signalTp1Price) + ',"tp2":' + str.tostring(signalTp2Price) + ',"setupQuality":"' + signalSetupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + structuralTimeframe + '","fishingType":"' + signalFishingType + '","confluence":"' + signalConfluence + '","rejectionZones":"' + signalRejectionZones + '","emasRejected":"' + signalEmasRejected + '","emasCount":' + str.tostring(signalEmasCount) + ',"wickToBodyRatio":' + str.tostring(signalWickRatio, "#.##") + '}'
-    
-    alert(gatilhoJson, alert.freq_once_per_bar_close)
-    
-    // Label de GATILHO
-    if showLabels
-        labelText = "🔔 " + signalDirection + "\n" + signalSetupQuality + "\n" + signalConfluence + "\n" + signalRejectionZones
-        if signalEmasCount > 1
-            labelText := labelText + "\n" + signalEmasRejected
-        label.new(bar_index, trapLong ? low : high, 
-            labelText, 
-            color=trapLong ? color.new(color.green, 80) : color.new(color.red, 80), 
-            style=trapLong ? label.style_label_up : label.style_label_down, 
-            textcolor=trapLong ? color.green : color.red, 
-            size=size.small)
+// GATILHO: Armar sinal
+if not signalBlocked and (trapLong or trapShort) and not signalArmed
+    if na(lastSignalBar) or bar_index == lastSignalBar
+        signalArmed := true
+        signalDirection := trapLong ? "LONG" : "SHORT"
+        triggerPrice := trapLong ? high : low
+        signalArmedBar := bar_index
+        signalSetupQuality := setupQuality
+        signalFishingType := fishingType
+        signalConfluence := trapLong ? confluenceLong : confluenceShort
+        signalEmasCount := emasRejectedCount
+        signalEmasRejected := emasRejectedCount > 0 ? ("EMA " + emasRejectedList) : ""
+        signalWickRatio := trapLong ? (lowerWick / body) : (upperWick / body)
+        
+        // Montar string de zonas rejeitadas
+        zonesArray = array.new_string(0)
+        if trapLong
+            if pivotRejectionLong
+                array.push(zonesArray, "SR")
+            if fibRejectionLong
+                array.push(zonesArray, "Fibo 0.5-0.618")
+            if emaRejectionLong
+                array.push(zonesArray, "EMA")
+        else
+            if pivotRejectionShort
+                array.push(zonesArray, "SR")
+            if fibRejectionShort
+                array.push(zonesArray, "Fibo 0.5-0.618")
+            if emaRejectionShort
+                array.push(zonesArray, "EMA")
+        
+        signalRejectionZones := array.size(zonesArray) > 0 ? array.join(zonesArray, " + ") : "N/A"
+        
+        // Classificação de confluência
+        confluenceText = signalConfluence == 1 ? "Simples" : signalConfluence == 2 ? "Dupla ⭐" : "Tripla 🌟🌟"
+        
+        // Alerta de GATILHO
+        gatilhoJson = '{"status":"TRIGGER","symbol":"' + syminfo.ticker + '","direction":"' + signalDirection + '","timeframe":"' + timeframe.period + '","price":' + str.tostring(close) + ',"triggerPrice":' + str.tostring(triggerPrice) + ',"setupQuality":"' + signalSetupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + structuralTimeframe + '","fishingType":"' + signalFishingType + '","confluence":"' + confluenceText + '","rejectionZones":"' + signalRejectionZones + '","emasRejected":"' + signalEmasRejected + '","emasCount":' + str.tostring(signalEmasCount) + ',"wickToBodyRatio":' + str.tostring(signalWickRatio, "#.##") + '}'
+        
+        alert(gatilhoJson, alert.freq_once_per_bar_close)
+        
+        // Label de GATILHO
+        if showLabels
+            labelText = "🔔 " + signalDirection + "\n" + signalSetupQuality + "\n" + confluenceText + "\n" + signalRejectionZones
+            if signalEmasCount > 1
+                labelText := labelText + "\n" + signalEmasRejected
+            label.new(bar_index, trapLong ? low : high, labelText, xloc=xloc.bar_index, yloc=yloc.price, color=trapLong ? color.new(color.green, 80) : color.new(color.red, 80), style=trapLong ? label.style_label_up : label.style_label_down, textcolor=trapLong ? color.green : color.red, size=size.small)
 
 // CONFIRMAÇÃO: Verificar rompimento no candle seguinte (apenas 1 candle)
 if signalArmed
@@ -455,53 +416,51 @@ if signalArmed
             // CONFIRMADO LONG
             signalArmed := false
             
-            // Alerta de CONFIRMAÇÃO
-            confirmadoJson = '{"status":"CONFIRMED","symbol":"' + syminfo.ticker + '","direction":"' + signalDirection + '","timeframe":"' + timeframe.period + '","entry":' + str.tostring(close) + ',"sl":' + str.tostring(signalSlPrice) + ',"tp1":' + str.tostring(signalTp1Price) + ',"tp2":' + str.tostring(signalTp2Price) + ',"setupQuality":"' + signalSetupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + structuralTimeframe + '","fishingType":"' + signalFishingType + '","confluence":"' + signalConfluence + '","rejectionZones":"' + signalRejectionZones + '","emasRejected":"' + signalEmasRejected + '","emasCount":' + str.tostring(signalEmasCount) + ',"wickToBodyRatio":' + str.tostring(signalWickRatio, "#.##") + '}'
+            // Gestão de Risco
+            riskDistance = triggerPrice - low
+            slPrice = low - (syminfo.mintick)
+            tp1Price = triggerPrice + riskDistance
+            tp2Price = triggerPrice + (riskDistance * 2)
+            
+            confluenceText = signalConfluence == 1 ? "Simples" : signalConfluence == 2 ? "Dupla ⭐" : "Tripla 🌟🌟"
+            
+            confirmadoJson = '{"status":"CONFIRMED","symbol":"' + syminfo.ticker + '","direction":"' + signalDirection + '","timeframe":"' + timeframe.period + '","entry":' + str.tostring(close) + ',"sl":' + str.tostring(slPrice) + ',"tp1":' + str.tostring(tp1Price) + ',"tp2":' + str.tostring(tp2Price) + ',"setupQuality":"' + signalSetupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + structuralTimeframe + '","fishingType":"' + signalFishingType + '","confluence":"' + confluenceText + '","rejectionZones":"' + signalRejectionZones + '","emasRejected":"' + signalEmasRejected + '","emasCount":' + str.tostring(signalEmasCount) + ',"wickToBodyRatio":' + str.tostring(signalWickRatio, "#.##") + '}'
             
             alert(confirmadoJson, alert.freq_once_per_bar_close)
             
             // Label de CONFIRMAÇÃO
             if showLabels
-                labelText = "✅ " + signalDirection + "\n" + signalSetupQuality + "\n" + signalConfluence + "\n" + signalRejectionZones
+                labelText = "✅ " + signalDirection + "\n" + signalSetupQuality + "\n" + confluenceText + "\n" + signalRejectionZones
                 if signalEmasCount > 1
                     labelText := labelText + "\n" + signalEmasRejected
-                label.new(bar_index, low, 
-                    labelText, 
-                    color=color.new(color.green, 0), 
-                    style=label.style_label_up, 
-                    textcolor=color.white, 
-                    size=size.normal)
+                label.new(bar_index, low, labelText, xloc=xloc.bar_index, yloc=yloc.price, color=color.new(color.green, 0), style=label.style_label_up, textcolor=color.white, size=size.normal)
         
         else if signalDirection == "SHORT" and close < triggerPrice
             // CONFIRMADO SHORT
             signalArmed := false
             
-            // Alerta de CONFIRMAÇÃO
-            confirmadoJson = '{"status":"CONFIRMED","symbol":"' + syminfo.ticker + '","direction":"' + signalDirection + '","timeframe":"' + timeframe.period + '","entry":' + str.tostring(close) + ',"sl":' + str.tostring(signalSlPrice) + ',"tp1":' + str.tostring(signalTp1Price) + ',"tp2":' + str.tostring(signalTp2Price) + ',"setupQuality":"' + signalSetupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + structuralTimeframe + '","fishingType":"' + signalFishingType + '","confluence":"' + signalConfluence + '","rejectionZones":"' + signalRejectionZones + '","emasRejected":"' + signalEmasRejected + '","emasCount":' + str.tostring(signalEmasCount) + ',"wickToBodyRatio":' + str.tostring(signalWickRatio, "#.##") + '}'
+            // Gestão de Risco
+            riskDistance = high - triggerPrice
+            slPrice = high + (syminfo.mintick)
+            tp1Price = triggerPrice - riskDistance
+            tp2Price = triggerPrice - (riskDistance * 2)
+            
+            confluenceText = signalConfluence == 1 ? "Simples" : signalConfluence == 2 ? "Dupla ⭐" : "Tripla 🌟🌟"
+            
+            confirmadoJson = '{"status":"CONFIRMED","symbol":"' + syminfo.ticker + '","direction":"' + signalDirection + '","timeframe":"' + timeframe.period + '","entry":' + str.tostring(close) + ',"sl":' + str.tostring(slPrice) + ',"tp1":' + str.tostring(tp1Price) + ',"tp2":' + str.tostring(tp2Price) + ',"setupQuality":"' + signalSetupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + structuralTimeframe + '","fishingType":"' + signalFishingType + '","confluence":"' + confluenceText + '","rejectionZones":"' + signalRejectionZones + '","emasRejected":"' + signalEmasRejected + '","emasCount":' + str.tostring(signalEmasCount) + ',"wickToBodyRatio":' + str.tostring(signalWickRatio, "#.##") + '}'
             
             alert(confirmadoJson, alert.freq_once_per_bar_close)
             
             // Label de CONFIRMAÇÃO
             if showLabels
-                labelText = "✅ " + signalDirection + "\n" + signalSetupQuality + "\n" + signalConfluence + "\n" + signalRejectionZones
+                labelText = "✅ " + signalDirection + "\n" + signalSetupQuality + "\n" + confluenceText + "\n" + signalRejectionZones
                 if signalEmasCount > 1
                     labelText := labelText + "\n" + signalEmasRejected
-                label.new(bar_index, high, 
-                    labelText, 
-                    color=color.new(color.red, 0), 
-                    style=label.style_label_down, 
-                    textcolor=color.white, 
-                    size=size.normal)
+                label.new(bar_index, high, labelText, xloc=xloc.bar_index, yloc=yloc.price, color=color.new(color.red, 0), style=label.style_label_down, textcolor=color.white, size=size.normal)
         
         else
             // EXPIRADO (não rompeu no candle seguinte)
             signalArmed := false
-    
     else if barsElapsed > 1
         // EXPIRADO (passou do candle seguinte)
         signalArmed := false
-
-// ============================================
-// PLOTAR TRIGGER PRICE (quando sinal armado)
-// ============================================
-// plot(signalArmed ? triggerPrice : na, "Trigger Price", color=color.yellow, style=plot.style_cross, linewidth=2) // REMOVIDO: linha fixa
