@@ -63,7 +63,12 @@ structuralTimeframe = getStructuralTimeframe()
 // ============================================
 
 // Buscar dados do timeframe superior para análise macro
+var float htf_ema13 = na
+var float htf_ema21 = na
+var float htf_ema34 = na
 var float htf_ema55 = na
+var float htf_ema89 = na
+var float htf_ema144 = na
 var float htf_ema233 = na
 var float htf_close = na
 var float htf_ema55_prev = na
@@ -73,8 +78,13 @@ var bool htf_trendNeutral = true
 var string htf_trendText = "NEUTRO"
 
 if structuralTimeframe != ""
-    // Buscar EMAs do timeframe superior
+    // Buscar TODAS as EMAs do timeframe superior para detecção de trap
+    htf_ema13 := request.security(syminfo.tickerid, structuralTimeframe, ta.ema(close, 13), lookahead=barmerge.lookahead_off)
+    htf_ema21 := request.security(syminfo.tickerid, structuralTimeframe, ta.ema(close, 21), lookahead=barmerge.lookahead_off)
+    htf_ema34 := request.security(syminfo.tickerid, structuralTimeframe, ta.ema(close, 34), lookahead=barmerge.lookahead_off)
     htf_ema55 := request.security(syminfo.tickerid, structuralTimeframe, ta.ema(close, 55), lookahead=barmerge.lookahead_off)
+    htf_ema89 := request.security(syminfo.tickerid, structuralTimeframe, ta.ema(close, 89), lookahead=barmerge.lookahead_off)
+    htf_ema144 := request.security(syminfo.tickerid, structuralTimeframe, ta.ema(close, 144), lookahead=barmerge.lookahead_off)
     htf_ema233 := request.security(syminfo.tickerid, structuralTimeframe, ta.ema(close, 233), lookahead=barmerge.lookahead_off)
     htf_close := request.security(syminfo.tickerid, structuralTimeframe, close, lookahead=barmerge.lookahead_off)
     htf_ema55_prev := request.security(syminfo.tickerid, structuralTimeframe, ta.ema(close, 55)[1], lookahead=barmerge.lookahead_off)
@@ -92,24 +102,16 @@ if structuralTimeframe != ""
         htf_trendText := htf_trendUp ? "ALTA" : htf_trendDown ? "BAIXA" : "NEUTRO"
 
 // ============================================
-// CÁLCULO DAS EMAs
+// PLOTAR EMAs DO HTF (FRACTAL MACRO)
 // ============================================
-ema13 = ta.ema(close, 13)
-ema21 = ta.ema(close, 21)
-ema34 = ta.ema(close, 34)
-ema55 = ta.ema(close, 55)
-ema89 = ta.ema(close, 89)
-ema144 = ta.ema(close, 144)
-ema233 = ta.ema(close, 233)
-
-// Plotar EMAs selecionadas
-plot(showEMAs and useEMA13 ? ema13 : na, "EMA 13", color=color.new(color.purple, 0), linewidth=1)
-plot(showEMAs and useEMA21 ? ema21 : na, "EMA 21", color=color.new(color.blue, 0), linewidth=1)
-plot(showEMAs and useEMA34 ? ema34 : na, "EMA 34", color=color.new(color.teal, 0), linewidth=1)
-plot(showEMAs and useEMA55 ? ema55 : na, "EMA 55", color=color.new(color.green, 0), linewidth=2)
-plot(showEMAs and useEMA89 ? ema89 : na, "EMA 89", color=color.new(color.orange, 0), linewidth=2)
-plot(showEMAs and useEMA144 ? ema144 : na, "EMA 144", color=color.new(color.red, 0), linewidth=2)
-plot(showEMAs and useEMA233 ? ema233 : na, "EMA 233", color=color.new(color.maroon, 0), linewidth=2)
+// Plotar EMAs do timeframe superior (não do timeframe atual)
+plot(showEMAs and useEMA13 ? htf_ema13 : na, "HTF EMA 13", color=color.new(color.purple, 0), linewidth=1)
+plot(showEMAs and useEMA21 ? htf_ema21 : na, "HTF EMA 21", color=color.new(color.blue, 0), linewidth=1)
+plot(showEMAs and useEMA34 ? htf_ema34 : na, "HTF EMA 34", color=color.new(color.teal, 0), linewidth=1)
+plot(showEMAs and useEMA55 ? htf_ema55 : na, "HTF EMA 55", color=color.new(color.green, 0), linewidth=2)
+plot(showEMAs and useEMA89 ? htf_ema89 : na, "HTF EMA 89", color=color.new(color.orange, 0), linewidth=2)
+plot(showEMAs and useEMA144 ? htf_ema144 : na, "HTF EMA 144", color=color.new(color.red, 0), linewidth=2)
+plot(showEMAs and useEMA233 ? htf_ema233 : na, "HTF EMA 233", color=color.new(color.maroon, 0), linewidth=2)
 
 // ============================================
 // DETECÇÃO DE PIVOTS (MULTI-TIMEFRAME)
@@ -210,63 +212,63 @@ var string emasRejectedList = ""
 emasRejectedCount := 0
 emasRejectedList := ""
 
-// LONG: Pavio toca EMA + fecha acima
+// LONG: Pavio toca EMA HTF + fecha acima
 if isHammerLong
-    if useEMA13 and low <= (ema13 + emaToleranceValue) and close > ema13
+    if useEMA13 and not na(htf_ema13) and low <= (htf_ema13 + emaToleranceValue) and close > htf_ema13
         emasRejectedCount += 1
         emasRejectedList += "13,"
     
-    if useEMA21 and low <= (ema21 + emaToleranceValue) and close > ema21
+    if useEMA21 and not na(htf_ema21) and low <= (htf_ema21 + emaToleranceValue) and close > htf_ema21
         emasRejectedCount += 1
         emasRejectedList += "21,"
     
-    if useEMA34 and low <= (ema34 + emaToleranceValue) and close > ema34
+    if useEMA34 and not na(htf_ema34) and low <= (htf_ema34 + emaToleranceValue) and close > htf_ema34
         emasRejectedCount += 1
         emasRejectedList += "34,"
     
-    if useEMA55 and low <= (ema55 + emaToleranceValue) and close > ema55
+    if useEMA55 and not na(htf_ema55) and low <= (htf_ema55 + emaToleranceValue) and close > htf_ema55
         emasRejectedCount += 1
         emasRejectedList += "55,"
     
-    if useEMA89 and low <= (ema89 + emaToleranceValue) and close > ema89
+    if useEMA89 and not na(htf_ema89) and low <= (htf_ema89 + emaToleranceValue) and close > htf_ema89
         emasRejectedCount += 1
         emasRejectedList += "89,"
     
-    if useEMA144 and low <= (ema144 + emaToleranceValue) and close > ema144
+    if useEMA144 and not na(htf_ema144) and low <= (htf_ema144 + emaToleranceValue) and close > htf_ema144
         emasRejectedCount += 1
         emasRejectedList += "144,"
     
-    if useEMA233 and low <= (ema233 + emaToleranceValue) and close > ema233
+    if useEMA233 and not na(htf_ema233) and low <= (htf_ema233 + emaToleranceValue) and close > htf_ema233
         emasRejectedCount += 1
         emasRejectedList += "233,"
 
-// SHORT: Pavio toca EMA + fecha abaixo
+// SHORT: Pavio toca EMA HTF + fecha abaixo
 if isHammerShort
-    if useEMA13 and high >= (ema13 - emaToleranceValue) and close < ema13
+    if useEMA13 and not na(htf_ema13) and high >= (htf_ema13 - emaToleranceValue) and close < htf_ema13
         emasRejectedCount += 1
         emasRejectedList += "13,"
     
-    if useEMA21 and high >= (ema21 - emaToleranceValue) and close < ema21
+    if useEMA21 and not na(htf_ema21) and high >= (htf_ema21 - emaToleranceValue) and close < htf_ema21
         emasRejectedCount += 1
         emasRejectedList += "21,"
     
-    if useEMA34 and high >= (ema34 - emaToleranceValue) and close < ema34
+    if useEMA34 and not na(htf_ema34) and high >= (htf_ema34 - emaToleranceValue) and close < htf_ema34
         emasRejectedCount += 1
         emasRejectedList += "34,"
     
-    if useEMA55 and high >= (ema55 - emaToleranceValue) and close < ema55
+    if useEMA55 and not na(htf_ema55) and high >= (htf_ema55 - emaToleranceValue) and close < htf_ema55
         emasRejectedCount += 1
         emasRejectedList += "55,"
     
-    if useEMA89 and high >= (ema89 - emaToleranceValue) and close < ema89
+    if useEMA89 and not na(htf_ema89) and high >= (htf_ema89 - emaToleranceValue) and close < htf_ema89
         emasRejectedCount += 1
         emasRejectedList += "89,"
     
-    if useEMA144 and high >= (ema144 - emaToleranceValue) and close < ema144
+    if useEMA144 and not na(htf_ema144) and high >= (htf_ema144 - emaToleranceValue) and close < htf_ema144
         emasRejectedCount += 1
         emasRejectedList += "144,"
     
-    if useEMA233 and high >= (ema233 - emaToleranceValue) and close < ema233
+    if useEMA233 and not na(htf_ema233) and high >= (htf_ema233 - emaToleranceValue) and close < htf_ema233
         emasRejectedCount += 1
         emasRejectedList += "233,"
 
@@ -350,11 +352,17 @@ confluenceText := zonesRejected == 1 ? "Simples" :
 // VALIDAÇÃO COMPLETA DA TRAP
 // ============================================
 
-// TRAP LONG: Martelo + Rejeição de zona + Pelo menos 1 confluência
-trapLong = isHammerLong and zonesRejected >= 1
+// ============================================
+// COOLDOWN
+// ============================================
+var int lastSignalBar = 0
+cooldownActive = bar_index - lastSignalBar < cooldownCandles
 
-// TRAP SHORT: Martelo invertido + Rejeição de zona + Pelo menos 1 confluência
-trapShort = isHammerShort and zonesRejected >= 1
+// TRAP LONG: Martelo + Rejeição de zona + Pelo menos 1 confluência + Cooldown + Fechamento confirmado
+trapLong = isHammerLong and zonesRejected >= 1 and not cooldownActive and barstate.isconfirmed
+
+// TRAP SHORT: Martelo invertido + Rejeição de zona + Pelo menos 1 confluência + Cooldown + Fechamento confirmado
+trapShort = isHammerShort and zonesRejected >= 1 and not cooldownActive and barstate.isconfirmed
 
 // ============================================
 // CLASSIFICAÇÃO MTF E FISHING TYPE
@@ -385,12 +393,6 @@ if trapShort
         fishingType := "NONE"
 
 // ============================================
-// COOLDOWN
-// ============================================
-var int lastSignalBar = na
-cooldownOk = na(lastSignalBar) or (bar_index - lastSignalBar) >= cooldownCandles
-
-// ============================================
 // SISTEMA DE CONFIRMAÇÃO POR ROMPIMENTO
 // ============================================
 var bool signalArmed = false
@@ -413,7 +415,7 @@ var float riskPercent = na
 var float trailingDistance = na
 
 // GATILHO: Armar sinal (apenas se não for CAUTELA)
-if (trapLong or trapShort) and cooldownOk and not signalArmed and setupQuality != "CAUTELA"
+if (trapLong or trapShort) and not signalArmed and setupQuality != "CAUTELA"
     signalArmed := true
     signalDirection := trapLong ? "LONG" : "SHORT"
     triggerPrice := trapLong ? high : low
@@ -432,34 +434,33 @@ if (trapLong or trapShort) and cooldownOk and not signalArmed and setupQuality !
     signalTp1Price := trapLong ? triggerPrice + riskDistance : triggerPrice - riskDistance
     signalTp2Price := trapLong ? triggerPrice + (riskDistance * 2) : triggerPrice - (riskDistance * 2)
     
-    // Atualizar último sinal
-    lastSignalBar := bar_index
-    
     // Alerta de GATILHO
-if trapLong
-    alertJson := '{"symbol":"' + syminfo.ticker + '","action":"TRIGGER","direction":"LONG","setup":"STS","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close, format.mintick) + '","triggerHigh":"' + str.tostring(triggerPrice, format.mintick) + '","setupQuality":"' + signalSetupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + structuralTimeframe + '","fishingType":"' + signalFishingType + '","confluence":"' + signalConfluence + '","rejectionZones":"' + signalRejectionZones + '","emasRejected":"' + signalEmasRejected + '","emasCount":' + str.tostring(signalEmasCount) + ',"wickToBodyRatio":' + str.tostring(signalWickRatio, '#.##') + '}'
-    alert(alertJson, alert.freq_once_per_bar_close)
-
-if trapShort
-    alertJson := '{"symbol":"' + syminfo.ticker + '","action":"TRIGGER","direction":"SHORT","setup":"STS","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close, format.mintick) + '","triggerLow":"' + str.tostring(triggerPrice, format.mintick) + '","setupQuality":"' + signalSetupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + structuralTimeframe + '","fishingType":"' + signalFishingType + '","confluence":"' + signalConfluence + '","rejectionZones":"' + signalRejectionZones + '","emasRejected":"' + signalEmasRejected + '","emasCount":' + str.tostring(signalEmasCount) + ',"wickToBodyRatio":' + str.tostring(signalWickRatio, '#.##') + '}'
-    alert(alertJson, alert.freq_once_per_bar_close)
+    if trapLong
+        alertJson := '{"symbol":"' + syminfo.ticker + '","action":"TRIGGER","direction":"LONG","setup":"STS","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close, format.mintick) + '","triggerHigh":"' + str.tostring(triggerPrice, format.mintick) + '","setupQuality":"' + signalSetupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + structuralTimeframe + '","fishingType":"' + signalFishingType + '","confluence":"' + signalConfluence + '","rejectionZones":"' + signalRejectionZones + '","emasRejected":"' + signalEmasRejected + '","emasCount":' + str.tostring(signalEmasCount) + ',"wickToBodyRatio":' + str.tostring(signalWickRatio, '#.##') + '}'
+        alert(alertJson, alert.freq_once_per_bar_close)
+    
+    if trapShort
+        alertJson := '{"symbol":"' + syminfo.ticker + '","action":"TRIGGER","direction":"SHORT","setup":"STS","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close, format.mintick) + '","triggerLow":"' + str.tostring(triggerPrice, format.mintick) + '","setupQuality":"' + signalSetupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + structuralTimeframe + '","fishingType":"' + signalFishingType + '","confluence":"' + signalConfluence + '","rejectionZones":"' + signalRejectionZones + '","emasRejected":"' + signalEmasRejected + '","emasCount":' + str.tostring(signalEmasCount) + ',"wickToBodyRatio":' + str.tostring(signalWickRatio, '#.##') + '}'
+        alert(alertJson, alert.freq_once_per_bar_close)
 
 // Label de GATILHO
-if trapLong and cooldownOk and setupQuality != "CAUTELA" and showLabels
+if trapLong and setupQuality != "CAUTELA" and showLabels
     label.new(bar_index, low, 
         "🔔 LONG\n" + setupQuality + "\n" + confluenceText, 
         color=color.new(color.green, 80), 
         style=label.style_label_up, 
         textcolor=color.green, 
         size=size.small)
+    lastSignalBar := bar_index
 
-if trapShort and cooldownOk and setupQuality != "CAUTELA" and showLabels
+if trapShort and setupQuality != "CAUTELA" and showLabels
     label.new(bar_index, high, 
         "🔔 SHORT\n" + setupQuality + "\n" + confluenceText, 
         color=color.new(color.red, 80), 
         style=label.style_label_down, 
         textcolor=color.red, 
         size=size.small)
+    lastSignalBar := bar_index
 
 // CONFIRMAÇÃO: Verificar rompimento no candle seguinte (apenas 1 candle)
 if signalArmed
