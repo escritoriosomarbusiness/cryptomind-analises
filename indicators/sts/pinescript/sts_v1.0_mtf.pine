@@ -554,7 +554,7 @@ if barstate.islast
     table.cell(infoTable, 1, 7, str.tostring(confluenceShort), text_color=confluenceShort >= 1 ? color.green : color.gray, text_size=size.tiny)
     
     table.cell(infoTable, 0, 8, "Cooldown:", text_color=color.gray, text_size=size.tiny)
-    table.cell(infoTable, 1, 8, cooldownOk ? "OK" : "ATIVO", text_color=cooldownOk ? color.green : color.orange, text_size=size.tiny)
+    table.cell(infoTable, 1, 8, not cooldownActive ? "OK" : "ATIVO", text_color=not cooldownActive ? color.green : color.orange, text_size=size.tiny)
     
     table.cell(infoTable, 0, 9, "Status:", text_color=color.gray, text_size=size.tiny)
     statusText = signalArmed ? signalDirection + " ARMADO 🔔" : "AGUARDANDO"
