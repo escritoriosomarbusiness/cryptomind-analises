@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-01-17T11:04:24.619284-03:00",
+  "timestamp": "2026-01-17T11:01:27.008620-03:00",
   "date": "17 de Janeiro de 2026",
-  "time": "11:04",
+  "time": "11:01",
   "fear_greed": {
     "value": 50,
     "classification": "Neutral",
@@ -9,12 +9,12 @@
     "week_ago": 29
   },
   "usdt_d": {
-    "dominance": 5.629,
-    "dominance_formatted": "5.629%",
-    "ema_9": 5.63,
-    "ema_21": 5.63,
+    "dominance": 5.625,
+    "dominance_formatted": "5.625%",
+    "ema_9": 5.62,
+    "ema_21": 5.62,
     "ema_200": 6.17,
-    "rsi": 53.99,
+    "rsi": 54.99,
     "atr": 0.0002,
     "macd": 0.0,
     "sr_levels": {
@@ -31,21 +31,21 @@
     "next_level": "Suporte W1: 5.86%",
     "invalidation": "USDT.D voltar acima de 6.17% (EMA 200)",
     "below_ema_200": true,
-    "below_ema_21": true,
-    "below_ema_9": true
+    "below_ema_21": false,
+    "below_ema_9": false
   },
   "analyses": {
     "BTC": {
       "symbol": "BTC",
-      "price": 95348.0,
-      "price_formatted": "$95,348.00",
-      "price_change": -0.10686,
-      "price_change_formatted": "-0.11%",
-      "high_24h": 100115.40000000001,
-      "low_24h": 90580.59999999999,
-      "volume": 27951786415.0,
+      "price": 95380.0,
+      "price_formatted": "$95,380.00",
+      "price_change": -0.07381,
+      "price_change_formatted": "-0.07%",
+      "high_24h": 100149.0,
+      "low_24h": 90611.0,
+      "volume": 27943700908.0,
       "emas": {
-        "price": 95348.0,
+        "price": 95380.0,
         "ema_9": 95282.58,
         "ema_21": 95005.28,
         "ema_200": 95268.0
