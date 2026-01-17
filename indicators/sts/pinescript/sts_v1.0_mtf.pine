@@ -445,14 +445,21 @@ if trapShort
     alert(alertJson, alert.freq_once_per_bar_close)
 
 // Label de GATILHO
-if (trapLong or trapShort) and cooldownOk and not signalArmed and setupQuality != "CAUTELA"
-    if showLabels
-        label.new(bar_index, trapLong ? low : high, 
-            "🔔 " + signalDirection + "\n" + signalSetupQuality + "\n" + signalConfluence, 
-            color=trapLong ? color.new(color.green, 80) : color.new(color.red, 80), 
-            style=trapLong ? label.style_label_up : label.style_label_down, 
-            textcolor=trapLong ? color.green : color.red, 
-            size=size.small)
+if trapLong and cooldownOk and setupQuality != "CAUTELA" and showLabels
+    label.new(bar_index, low, 
+        "🔔 LONG\n" + setupQuality + "\n" + confluenceText, 
+        color=color.new(color.green, 80), 
+        style=label.style_label_up, 
+        textcolor=color.green, 
+        size=size.small)
+
+if trapShort and cooldownOk and setupQuality != "CAUTELA" and showLabels
+    label.new(bar_index, high, 
+        "🔔 SHORT\n" + setupQuality + "\n" + confluenceText, 
+        color=color.new(color.red, 80), 
+        style=label.style_label_down, 
+        textcolor=color.red, 
+        size=size.small)
 
 // CONFIRMAÇÃO: Verificar rompimento no candle seguinte (apenas 1 candle)
 if signalArmed
@@ -473,7 +480,7 @@ if signalArmed
             // Label de CONFIRMAÇÃO
             if showLabels
                 label.new(bar_index, low, 
-                    "✅ " + signalDirection + "\n" + signalSetupQuality + "\n" + signalConfluence, 
+                    "✅ LONG\n" + signalSetupQuality + "\n" + signalConfluence, 
                     color=color.new(color.green, 0), 
                     style=label.style_label_up, 
                     textcolor=color.white, 
@@ -493,7 +500,7 @@ if signalArmed
             // Label de CONFIRMAÇÃO
             if showLabels
                 label.new(bar_index, high, 
-                    "✅ " + signalDirection + "\n" + signalSetupQuality + "\n" + signalConfluence, 
+                    "✅ SHORT\n" + signalSetupQuality + "\n" + signalConfluence, 
                     color=color.new(color.red, 0), 
                     style=label.style_label_down, 
                     textcolor=color.white, 
