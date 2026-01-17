@@ -1,4 +1,4 @@
-# 🎯 DNP v2.0 - Dedo No Pavio (COM MTF)
+# 🎯 DNP v2.0 - Didi's Needle Prick (COM MTF)
 
 **Indicador completo de entrada com validação macro (Multi-Timeframe)**
 
@@ -6,7 +6,7 @@
 
 ## 📊 VISÃO GERAL
 
-O **DNP (Dedo No Pavio)** é o indicador **mais completo** do sistema CryptoMind IA, combinando múltiplos sinais de confirmação com análise de tendência do fractal superior (MTF).
+O **DNP (Didi's Needle Prick)** é o indicador **mais completo** do sistema CryptoMind IA, combinando múltiplos sinais de confirmação com análise de tendência do fractal superior (MTF).
 
 **Status:** ✅ Operacional com MTF  
 **Versão:** 2.0  

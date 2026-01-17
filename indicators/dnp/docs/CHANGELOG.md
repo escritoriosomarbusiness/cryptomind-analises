@@ -1,6 +1,6 @@
 # 📝 DNP - Changelog
 
-**Histórico de mudanças do indicador DNP (Dedo No Pavio)**
+**Histórico de mudanças do indicador DNP (Didi's Needle Prick)**
 
 ---
 

@@ -66,7 +66,7 @@ O sistema possui **3 indicadores principais** integrados:
 
 ---
 
-### 1. DNP v2.0 (Dedo No Pavio)
+### 1. DNP v2.0 (Didi's Needle Prick)
 
 **Status:** ✅ Operacional com MTF  
 **Última Atualização:** 16/01/2026

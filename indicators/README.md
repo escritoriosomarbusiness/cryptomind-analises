@@ -8,7 +8,7 @@
 
 Este diretório contém os **3 indicadores principais** do sistema CryptoMind IA, cada um com sua função específica no ecossistema de trading:
 
-### **1. DNP v2.0 (Dedo No Pavio)** 🎯
+### **1. DNP v2.0 (Didi's Needle Prick)** 🎯
 **Função:** Indicador completo de entrada com validação macro (MTF)  
 **Status:** ✅ Operacional com MTF  
 **Última Atualização:** 16/01/2026
@@ -75,7 +75,7 @@ Monitor de dominância do USDT.D para análise macro de mercado e contexto geral
 indicators/
 ├── README.md (este arquivo)
 │
-├── dnp/                          # DNP v2.0 (Dedo No Pavio)
+├── dnp/                          # DNP v2.0 (Didi's Needle Prick)
 │   ├── README.md                 # Documentação completa
 │   ├── pinescript/
 │   │   └── dnp_v2.0_mtf.pine    # Código Pine Script v2.0
