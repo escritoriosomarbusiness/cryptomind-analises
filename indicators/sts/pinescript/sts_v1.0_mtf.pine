@@ -413,6 +413,7 @@ var string alertJson = na
 var float riskValue = na
 var float riskPercent = na
 var float trailingDistance = na
+var label triggerLabel = na
 
 // GATILHO: Armar sinal (apenas se não for CAUTELA)
 if (trapLong or trapShort) and not signalArmed and setupQuality != "CAUTELA"
@@ -445,7 +446,9 @@ if (trapLong or trapShort) and not signalArmed and setupQuality != "CAUTELA"
 
 // Label de GATILHO
 if trapLong and setupQuality != "CAUTELA" and showLabels
-    label.new(bar_index, low, 
+    if not na(triggerLabel)
+        label.delete(triggerLabel)
+    triggerLabel := label.new(bar_index, low, 
         "🔔 LONG\n" + setupQuality + "\n" + confluenceText, 
         color=color.new(color.green, 80), 
         style=label.style_label_up, 
@@ -454,7 +457,9 @@ if trapLong and setupQuality != "CAUTELA" and showLabels
     lastSignalBar := bar_index
 
 if trapShort and setupQuality != "CAUTELA" and showLabels
-    label.new(bar_index, high, 
+    if not na(triggerLabel)
+        label.delete(triggerLabel)
+    triggerLabel := label.new(bar_index, high, 
         "🔔 SHORT\n" + setupQuality + "\n" + confluenceText, 
         color=color.new(color.red, 80), 
         style=label.style_label_down, 
