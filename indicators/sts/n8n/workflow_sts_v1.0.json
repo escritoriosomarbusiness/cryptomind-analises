@@ -1,0 +1,112 @@
+{
+  "name": "STS by CryptoMind v1.0 - Telegram",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "sts-webhook",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-sts",
+      "name": "Webhook STS",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Cole aqui o código do processador_v1.0.js"
+      },
+      "id": "processador-sts",
+      "name": "Processador STS",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "chatId": "SEU_CHAT_ID_AQUI",
+        "text": "={{$json.message}}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "telegram-sts",
+      "name": "Telegram STS",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [650, 300],
+      "credentials": {
+        "telegramApi": {
+          "id": "SEU_CREDENTIAL_ID",
+          "name": "Telegram Bot STS"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "Alerta STS recebido e processado",
+        "options": {}
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [850, 300]
+    }
+  ],
+  "connections": {
+    "Webhook STS": {
+      "main": [
+        [
+          {
+            "node": "Processador STS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Processador STS": {
+      "main": [
+        [
+          {
+            "node": "Telegram STS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram STS": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "CryptoMind",
+      "id": "cryptomind-tag"
+    },
+    {
+      "name": "STS",
+      "id": "sts-tag"
+    }
+  ],
+  "triggerCount": 0,
+  "updatedAt": "2026-01-17T00:00:00.000Z",
+  "versionId": "1.0"
+}

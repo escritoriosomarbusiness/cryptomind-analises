@@ -6,7 +6,7 @@
 
 ## 🎯 VISÃO GERAL
 
-Este diretório contém os **3 indicadores principais** do sistema CryptoMind IA, cada um com sua função específica no ecossistema de trading:
+Este diretório contém os **4 indicadores principais** do sistema CryptoMind IA, cada um com sua função específica no ecossistema de trading:
 
 ### **1. DNP v2.0 (Didi's Needle Prick)** 🎯
 **Função:** Indicador completo de entrada com validação macro (MTF)  
@@ -72,6 +72,30 @@ Monitor de dominância do USDT.D para análise macro de mercado e contexto geral
 
 ---
 
+### **4. STS v1.0 (Stormer Trap Setup)** 🎣
+
+*   **Função:** Indicador de **rejeição e continuação/reversão**.
+*   **Status:** ✅ Operacional com MTF
+*   **Última Atualização:** 17/01/2026
+
+O **STS** é projetado para capturar a **rejeição** de zonas de preço importantes (SR, Fibo, EMAs), confirmada por um candle martelo e o rompimento subsequente. Ele se destaca por seu filtro MTF atuante, que foca em sinais de **continuação de tendência (PREMIUM)** e identifica operações de **reversão de alto risco (Bottom/Top Fishing)**, bloqueando sinais em mercados laterais.
+
+**Características:**
+
+*   ✅ Detecção de **Candle Martelo** com pavio configurável.
+*   ✅ Validação por **3 tipos de zonas de rejeição** (SR, Fibo, EMAs).
+*   ✅ Sistema de **Confluências** (Simples, Dupla ⭐, Tripla 🌟🌟).
+*   ✅ **Graduação de EMAs** para medir a força da barreira.
+*   ✅ **NOVO:** Filtro MTF que **bloqueia** sinais em mercado lateral.
+*   ✅ Classificação **PREMIUM** (continuação) e **CONTRA** (reversão).
+*   ✅ Identificação de **Bottom/Top Fishing**.
+*   ✅ Confirmação de rompimento em **1 candle**.
+*   ✅ Gestão completa de risco (SL, TP1, TP2, Trailing Stop).
+
+**Documentação:** [`sts/README.md`](sts/README.md)
+
+---
+
 ## 🏗️ ESTRUTURA DO DIRETÓRIO
 
 ```
@@ -79,35 +103,23 @@ indicators/
 ├── README.md (este arquivo)
 │
 ├── dnp/                          # DNP v2.0 (Didi's Needle Prick)
-│   ├── README.md                 # Documentação completa
-│   ├── pinescript/
-│   │   └── dnp_v2.0_mtf.pine    # Código Pine Script v2.0
-│   ├── n8n/
-│   │   ├── processador_v2.0.js  # Processador n8n com MTF
-│   │   └── workflow.json         # Workflow n8n completo
-│   └── docs/
-│       ├── MANUAL_OPERACAO.md   # Manual de operação
-│       └── CHANGELOG.md          # Histórico de mudanças
+│   └── ...
 │
 ├── trs/                          # TRS v6.1 (Trend Reversal Setup)
+│   └── ...
+│
+├── sts/                          # STS v1.0 (Stormer Trap Setup)
 │   ├── README.md                 # Documentação completa
 │   ├── pinescript/
-│   │   └── trs_v6.1_mtf.pine    # Código Pine Script v6.1
+│   │   └── sts_v1.0_mtf.pine    # Código Pine Script v1.0
 │   ├── n8n/
-│   │   ├── processador_v6.1.js  # Processador n8n com MTF
-│   │   └── workflow.json         # Workflow n8n completo
+│   │   ├── processador_v1.0.js  # Processador n8n
+│   │   └── workflow_sts_v1.0.json # Workflow n8n completo
 │   └── docs/
 │       └── CHANGELOG.md          # Histórico de mudanças
 │
 └── usdt-d/                       # USDT.D v2.0 (Monitor)
-    ├── README.md                 # Documentação completa
-    ├── pinescript/
-    │   └── usdt_d_v2.0.pine     # Código Pine Script v2.0
-    ├── n8n/
-    │   ├── processador_v2.0.js  # Processador n8n
-    │   └── workflow.json         # Workflow n8n completo
-    └── docs/
-        └── CHANGELOG.md          # Histórico de mudanças
+    └── ...
 ```
 
 ---
@@ -124,20 +136,24 @@ indicators/
 │  1️⃣ USDT.D v2.0 (Contexto Macro)                           │
 │     └─ Identifica momento do mercado (BULLISH/BEARISH)     │
 │                                                             │
-│  2️⃣ TRS v6.1 (Reversões de Tendência)                      │
-│     └─ Detecta reversões com validação tripla + MTF        │
+│  2️⃣ DNP v2.0 (Ignição de Tendência)                        │
+│     └─ Busca entradas no início de um movimento forte      │
 │                                                             │
-│  3️⃣ DNP v2.0 (Setup Completo)                              │
-│     └─ Confirmação final com análise MTF                   │
+│  3️⃣ TRS v6.1 (Reversão de Tendência)                       │
+│     └─ Detecta reversões em pontos de exaustão             │
+│                                                             │
+│  4️⃣ STS v1.0 (Rejeição e Continuação)                      │
+│     └─ Capitaliza em traps de rejeição de zonas            │
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
 
 ### **Uso Recomendado:**
 
-1. **USDT.D:** Verificar contexto macro antes de operar
-2. **TRS:** Identificar reversões de tendência com confluências
-3. **DNP:** Entradas precisas com validação macro (MTF)
+1. **USDT.D:** Verificar contexto macro antes de operar.
+2. **DNP:** Entradas precisas na **ignição** da tendência.
+3. **TRS:** Identificar **reversões** de tendência com confluências.
+4. **STS:** Operar **rejeições** em zonas fortes, seja para continuação ou reversão.
 
 ---
 
@@ -234,6 +250,7 @@ A análise MTF (Multi-Timeframe) avalia a **tendência do fractal superior** par
 
 - **DNP v2.0:** [`dnp/README.md`](dnp/README.md)
 - **TRS v6.1:** [`trs/README.md`](trs/README.md)
+- **STS v1.0:** [`sts/README.md`](sts/README.md)
 - **USDT.D v2.0:** [`usdt-d/README.md`](usdt-d/README.md)
 
 ---
@@ -243,6 +260,7 @@ A análise MTF (Multi-Timeframe) avalia a **tendência do fractal superior** par
 ### **URLs n8n:**
 - **DNP:** `https://cryptomindia.app.n8n.cloud/webhook/dnp-alert`
 - **TRS:** `https://cryptomindia.app.n8n.cloud/webhook/cryptomind-alert`
+- **STS:** `https://cryptomindia.app.n8n.cloud/webhook/sts-webhook` (exemplo)
 - **USDT.D:** `https://cryptomindia.app.n8n.cloud/webhook/usdt-d-alert`
 
 ---
@@ -262,6 +280,12 @@ A análise MTF (Multi-Timeframe) avalia a **tendência do fractal superior** par
 ---
 
 ## 📝 CHANGELOG GERAL
+
+### **[17/01/2026] - STS v1.0**
+- ✨ **NOVO INDICADOR:** Lançamento do STS by CryptoMind v1.0
+- ✨ Foco em rejeição de zonas com candle martelo
+- ✨ Filtro MTF atuante (bloqueia sinais laterais)
+- ✨ Classificação PREMIUM e CONTRA (Bottom/Top Fishing)
 
 ### **[16/01/2026] - DNP v2.0 COM MTF**
 - ✨ Adicionada lógica MTF ao DNP
@@ -295,5 +319,5 @@ Para questões técnicas ou dúvidas sobre os indicadores:
 ---
 
 **Desenvolvido por:** CryptoMind IA  
-**Última Atualização:** 16/01/2026  
-**Versão:** 2.0
+**Última Atualização:** 17/01/2026  
+**Versão:** 3.0
