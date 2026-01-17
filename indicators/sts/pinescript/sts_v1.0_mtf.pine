@@ -36,7 +36,6 @@ getHigherTimeframe() =>
     currentTF == "1" ? "15" : currentTF == "5" ? "60" : currentTF == "15" ? "240" : currentTF == "60" ? "D" : currentTF == "240" ? "W" : currentTF == "D" ? "M" : ""
 
 structuralTimeframe = getHigherTimeframe()
-higherTimeframe = structuralTimeframe  // Alias para compatibilidade com alertas
 
 // Buscar dados do timeframe superior
 var float htf_ema55 = na
@@ -284,29 +283,21 @@ var bool signalArmed = false
 var float triggerPrice = na
 var string signalDirection = ""
 var int signalArmedBar = na
-var string signalConfluence = ""
+var int signalConfluence = na
 var string signalSetupQuality = ""
 var string signalFishingType = ""
 var string signalRejectionZones = ""
 var string signalEmasRejected = ""
 var int signalEmasCount = 0
 var float signalWickRatio = na
-var float signalTriggerLow = na
-var float signalTriggerHigh = na
 
 // GATILHO: Armar sinal
 if (trapLong or trapShort) and canSignal and not blockSignal and not signalArmed
     signalArmed := true
     triggerPrice := trapLong ? high : low
-    signalTriggerHigh := trapLong ? high : na
-    signalTriggerLow := trapShort ? low : na
     signalDirection := trapLong ? "LONG" : "SHORT"
     signalArmedBar := bar_index
-    
-    // Armazenar confluence como TEXTO
-    confluenceNum = trapLong ? confluenceLong : confluenceShort
-    signalConfluence := confluenceNum == 1 ? "Simples" : confluenceNum == 2 ? "Dupla ⭐" : "Tripla 🌟🌟"
-    
+    signalConfluence := trapLong ? confluenceLong : confluenceShort
     signalSetupQuality := setupQuality
     signalFishingType := fishingType
     signalEmasRejected := emasRejectedList
@@ -317,22 +308,22 @@ if (trapLong or trapShort) and canSignal and not blockSignal and not signalArmed
     zonesText = ""
     if trapLong
         if srRejectionLong
-            zonesText := zonesText == "" ? "SR" : zonesText + ",SR"
+            zonesText := zonesText == "" ? "SR" : zonesText + " + SR"
         if fiboRejectionLong
-            zonesText := zonesText == "" ? "Fibo" : zonesText + ",Fibo"
+            zonesText := zonesText == "" ? "Fibo 0.5-0.618" : zonesText + " + Fibo 0.5-0.618"
         if emaRejectionLong
-            zonesText := zonesText == "" ? "EMA" : zonesText + ",EMA"
+            zonesText := zonesText == "" ? "EMA" : zonesText + " + EMA"
     else
         if srRejectionShort
-            zonesText := zonesText == "" ? "SR" : zonesText + ",SR"
+            zonesText := zonesText == "" ? "SR" : zonesText + " + SR"
         if fiboRejectionShort
-            zonesText := zonesText == "" ? "Fibo" : zonesText + ",Fibo"
+            zonesText := zonesText == "" ? "Fibo 0.5-0.618" : zonesText + " + Fibo 0.5-0.618"
         if emaRejectionShort
-            zonesText := zonesText == "" ? "EMA" : zonesText + ",EMA"
+            zonesText := zonesText == "" ? "EMA" : zonesText + " + EMA"
     
     signalRejectionZones := zonesText
     
-    confluenceText = signalConfluence
+    confluenceText = signalConfluence == 1 ? "Simples" : signalConfluence == 2 ? "Dupla ⭐" : "Tripla 🌟🌟"
     
     // Label de GATILHO
     if showLabels
@@ -351,7 +342,7 @@ if signalArmed
             signalArmed := false
             lastSignalBar := bar_index
             
-            confluenceText = signalConfluence
+            confluenceText = signalConfluence == 1 ? "Simples" : signalConfluence == 2 ? "Dupla ⭐" : "Tripla 🌟🌟"
             
             // Label de CONFIRMAÇÃO
             if showLabels
@@ -365,7 +356,7 @@ if signalArmed
             signalArmed := false
             lastSignalBar := bar_index
             
-            confluenceText = signalConfluence
+            confluenceText = signalConfluence == 1 ? "Simples" : signalConfluence == 2 ? "Dupla ⭐" : "Tripla 🌟🌟"
             
             // Label de CONFIRMAÇÃO
             if showLabels
@@ -383,72 +374,61 @@ if signalArmed
         signalArmed := false
 
 // ============================================
-// ALERTAS COM JSON DINÂMICO - ESTRUTURA TRS
+// ALERTAS COM JSON DINÂMICO - PADRÃO DNP/TRS
 // ============================================
+// Calcular wickToBodyRatio para o alerta
+var float alertWickToBodyRatio = na
+
+if trapLong
+    alertWickToBodyRatio := body > 0 ? lowerWick / body : 0
+else if trapShort
+    alertWickToBodyRatio := body > 0 ? math.abs(upperWick) / body : 0
 
 // Alerta de GATILHO LONG
 if trapLong
-    wickRatio = body > 0 ? lowerWick / body : 0
-    confluenceText = confluenceLong == 1 ? "Simples" : confluenceLong == 2 ? "Dupla ⭐" : "Tripla 🌟🌟"
-    zonesText = ""
-    if srRejectionLong
-        zonesText := "SR"
-    if fiboRejectionLong
-        zonesText := zonesText == "" ? "Fibo" : zonesText + ",Fibo"
-    if emaRejectionLong
-        zonesText := zonesText == "" ? "EMA" : zonesText + ",EMA"
-    emasText = emasRejectedList
-    emasCountNum = emasRejectedCount
-    alert('{"symbol":"' + syminfo.ticker + '","action":"TRIGGER","direction":"LONG","setup":"STS","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close) + '","wickToBodyRatio":"' + str.tostring(wickRatio, '#.#') + '","confluence":"' + confluenceText + '","rejectionZones":"' + zonesText + '","emasRejected":"' + emasText + '","emasCount":"' + str.tostring(emasCountNum) + '","setupQuality":"' + setupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + higherTimeframe + '","fishingType":"' + fishingType + '"}', alert.freq_once_per_bar)
+    if barstate.isconfirmed
+        alertJson = '{"symbol":"' + syminfo.ticker + '","action":"TRIGGER","direction":"LONG","setup":"STS","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close, '#.########') + '","triggerHigh":"' + str.tostring(triggerPrice, '#.########') + '","wickToBodyRatio":"' + str.tostring(alertWickToBodyRatio, '#.#') + '","confluence":"' + signalConfluence + '","rejectionZones":"' + signalRejectionZones + '","emasRejected":"' + signalEmasRejected + '","emasCount":"' + str.tostring(signalEmasCount) + '","setupQuality":"' + signalSetupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + higherTimeframe + '","fishingType":"' + signalFishingType + '"}'
+        alert(alertJson, alert.freq_once_per_bar)
 
 // Alerta de GATILHO SHORT
 if trapShort
-    wickRatio = body > 0 ? math.abs(upperWick) / body : 0
-    confluenceText = confluenceShort == 1 ? "Simples" : confluenceShort == 2 ? "Dupla ⭐" : "Tripla 🌟🌟"
-    zonesText = ""
-    if srRejectionShort
-        zonesText := "SR"
-    if fiboRejectionShort
-        zonesText := zonesText == "" ? "Fibo" : zonesText + ",Fibo"
-    if emaRejectionShort
-        zonesText := zonesText == "" ? "EMA" : zonesText + ",EMA"
-    emasText = emasRejectedList
-    emasCountNum = emasRejectedCount
-    alert('{"symbol":"' + syminfo.ticker + '","action":"TRIGGER","direction":"SHORT","setup":"STS","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close) + '","wickToBodyRatio":"' + str.tostring(wickRatio, '#.#') + '","confluence":"' + confluenceText + '","rejectionZones":"' + zonesText + '","emasRejected":"' + emasText + '","emasCount":"' + str.tostring(emasCountNum) + '","setupQuality":"' + setupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + higherTimeframe + '","fishingType":"' + fishingType + '"}', alert.freq_once_per_bar)
+    if barstate.isconfirmed
+        alertJson = '{"symbol":"' + syminfo.ticker + '","action":"TRIGGER","direction":"SHORT","setup":"STS","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close, '#.########') + '","triggerLow":"' + str.tostring(triggerPrice, '#.########') + '","wickToBodyRatio":"' + str.tostring(alertWickToBodyRatio, '#.#') + '","confluence":"' + signalConfluence + '","rejectionZones":"' + signalRejectionZones + '","emasRejected":"' + signalEmasRejected + '","emasCount":"' + str.tostring(signalEmasCount) + '","setupQuality":"' + signalSetupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + higherTimeframe + '","fishingType":"' + signalFishingType + '"}'
+        alert(alertJson, alert.freq_once_per_bar)
 
 // Alerta de CONFIRMAÇÃO LONG
 if signalArmed and signalDirection == "LONG" and bar_index - signalArmedBar == 1 and close > triggerPrice
-    // Calcular entry, SL, alvos e trailing
-    tickSize = syminfo.mintick
-    entryPrice = triggerPrice
-    stopLossPrice = signalTriggerLow - tickSize
-    riskValue = entryPrice - stopLossPrice
-    riskPercent = (riskValue / entryPrice) * 100
-    
-    target1 = entryPrice + riskValue
-    target2 = entryPrice + (riskValue * 2)
-    trailingDistance = riskValue * 0.5
-    
-    wickRatio = signalWickRatio
-    
-    alert('{"symbol":"' + syminfo.ticker + '","action":"CONFIRMED","direction":"LONG","setup":"STS","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close, '#.########') + '","entry":"' + str.tostring(entryPrice, '#.########') + '","stopLoss":"' + str.tostring(stopLossPrice, '#.########') + '","risk":"' + str.tostring(riskValue, '#.########') + '","riskPercent":"' + str.tostring(riskPercent, '#.##') + '","target1":"' + str.tostring(target1, '#.########') + '","target2":"' + str.tostring(target2, '#.########') + '","trailingDistance":"' + str.tostring(trailingDistance, '#.########') + '","triggerHigh":"' + str.tostring(signalTriggerHigh, '#.########') + '","triggerLow":"' + str.tostring(signalTriggerLow, '#.########') + '","wickToBodyRatio":"' + str.tostring(wickRatio, '#.#') + '","confluence":"' + signalConfluence + '","rejectionZones":"' + signalRejectionZones + '","emasRejected":"' + signalEmasRejected + '","emasCount":"' + str.tostring(signalEmasCount) + '","setupQuality":"' + signalSetupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + higherTimeframe + '","fishingType":"' + signalFishingType + '"}', alert.freq_once_per_bar)
+    if barstate.isconfirmed
+        // Calcular entry, SL, alvos e trailing
+        tickSize = syminfo.mintick
+        entryPrice = triggerPrice
+        stopLossPrice = signalTriggerLow - tickSize
+        riskValue = entryPrice - stopLossPrice
+        riskPercent = (riskValue / entryPrice) * 100
+        
+        target1 = entryPrice + riskValue
+        target2 = entryPrice + (riskValue * 2)
+        trailingDistance = riskValue * 0.5
+        
+        alertJson = '{"symbol":"' + syminfo.ticker + '","action":"CONFIRMED","direction":"LONG","setup":"STS","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close, '#.########') + '","entry":"' + str.tostring(entryPrice, '#.########') + '","stopLoss":"' + str.tostring(stopLossPrice, '#.########') + '","risk":"' + str.tostring(riskValue, '#.########') + '","riskPercent":"' + str.tostring(riskPercent, '#.##') + '","target1":"' + str.tostring(target1, '#.########') + '","target2":"' + str.tostring(target2, '#.########') + '","trailingDistance":"' + str.tostring(trailingDistance, '#.########') + '","triggerHigh":"' + str.tostring(triggerPrice, '#.########') + '","wickToBodyRatio":"' + str.tostring(alertWickToBodyRatio, '#.#') + '","confluence":"' + signalConfluence + '","rejectionZones":"' + signalRejectionZones + '","emasRejected":"' + signalEmasRejected + '","emasCount":"' + str.tostring(signalEmasCount) + '","setupQuality":"' + signalSetupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + higherTimeframe + '","fishingType":"' + signalFishingType + '"}'
+        alert(alertJson, alert.freq_once_per_bar)
 
 // Alerta de CONFIRMAÇÃO SHORT
 if signalArmed and signalDirection == "SHORT" and bar_index - signalArmedBar == 1 and close < triggerPrice
-    // Calcular entry, SL, alvos e trailing
-    tickSize = syminfo.mintick
-    entryPrice = triggerPrice
-    stopLossPrice = signalTriggerHigh + tickSize
-    riskValue = stopLossPrice - entryPrice
-    riskPercent = (riskValue / entryPrice) * 100
-    
-    target1 = entryPrice - riskValue
-    target2 = entryPrice - (riskValue * 2)
-    trailingDistance = riskValue * 0.5
-    
-    wickRatio = signalWickRatio
-    
-    alert('{"symbol":"' + syminfo.ticker + '","action":"CONFIRMED","direction":"SHORT","setup":"STS","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close, '#.########') + '","entry":"' + str.tostring(entryPrice, '#.########') + '","stopLoss":"' + str.tostring(stopLossPrice, '#.########') + '","risk":"' + str.tostring(riskValue, '#.########') + '","riskPercent":"' + str.tostring(riskPercent, '#.##') + '","target1":"' + str.tostring(target1, '#.########') + '","target2":"' + str.tostring(target2, '#.########') + '","trailingDistance":"' + str.tostring(trailingDistance, '#.########') + '","triggerHigh":"' + str.tostring(signalTriggerHigh, '#.########') + '","triggerLow":"' + str.tostring(signalTriggerLow, '#.########') + '","wickToBodyRatio":"' + str.tostring(wickRatio, '#.#') + '","confluence":"' + signalConfluence + '","rejectionZones":"' + signalRejectionZones + '","emasRejected":"' + signalEmasRejected + '","emasCount":"' + str.tostring(signalEmasCount) + '","setupQuality":"' + signalSetupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + higherTimeframe + '","fishingType":"' + signalFishingType + '"}', alert.freq_once_per_bar)
+    if barstate.isconfirmed
+        // Calcular entry, SL, alvos e trailing
+        tickSize = syminfo.mintick
+        entryPrice = triggerPrice
+        stopLossPrice = signalTriggerHigh + tickSize
+        riskValue = stopLossPrice - entryPrice
+        riskPercent = (riskValue / entryPrice) * 100
+        
+        target1 = entryPrice - riskValue
+        target2 = entryPrice - (riskValue * 2)
+        trailingDistance = riskValue * 0.5
+        
+        alertJson = '{"symbol":"' + syminfo.ticker + '","action":"CONFIRMED","direction":"SHORT","setup":"STS","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close, '#.########') + '","entry":"' + str.tostring(entryPrice, '#.########') + '","stopLoss":"' + str.tostring(stopLossPrice, '#.########') + '","risk":"' + str.tostring(riskValue, '#.########') + '","riskPercent":"' + str.tostring(riskPercent, '#.##') + '","target1":"' + str.tostring(target1, '#.########') + '","target2":"' + str.tostring(target2, '#.########') + '","trailingDistance":"' + str.tostring(trailingDistance, '#.########') + '","triggerLow":"' + str.tostring(triggerPrice, '#.########') + '","wickToBodyRatio":"' + str.tostring(alertWickToBodyRatio, '#.#') + '","confluence":"' + signalConfluence + '","rejectionZones":"' + signalRejectionZones + '","emasRejected":"' + signalEmasRejected + '","emasCount":"' + str.tostring(signalEmasCount) + '","setupQuality":"' + signalSetupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + higherTimeframe + '","fishingType":"' + signalFishingType + '"}'
+        alert(alertJson, alert.freq_once_per_bar)
 
 
 // ============================================
