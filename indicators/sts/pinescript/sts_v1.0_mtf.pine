@@ -131,8 +131,8 @@ body = math.abs(close - open)
 lowerWick = open > close ? low - close : low - open
 upperWick = open > close ? open - high : close - high
 
-hammerLong = lowerWick >= (body * wickToBodyRatio) and body > 0
-hammerShort = upperWick >= (body * wickToBodyRatio) and body > 0
+hammerLong = body > 0 and lowerWick >= (body * wickToBodyRatio) and close > open
+hammerShort = body > 0 and upperWick >= (body * wickToBodyRatio) and close < open
 
 // Validação de Zonas de Rejeição
 tolerance = 0.002  // 0.2%
