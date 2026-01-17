@@ -36,6 +36,7 @@ getHigherTimeframe() =>
     currentTF == "1" ? "15" : currentTF == "5" ? "60" : currentTF == "15" ? "240" : currentTF == "60" ? "D" : currentTF == "240" ? "W" : currentTF == "D" ? "M" : ""
 
 structuralTimeframe = getHigherTimeframe()
+higherTimeframe = structuralTimeframe  // Alias para compatibilidade com alertas
 
 // Buscar dados do timeframe superior
 var float htf_ema55 = na
@@ -290,11 +291,15 @@ var string signalRejectionZones = ""
 var string signalEmasRejected = ""
 var int signalEmasCount = 0
 var float signalWickRatio = na
+var float signalTriggerLow = na
+var float signalTriggerHigh = na
 
 // GATILHO: Armar sinal
 if (trapLong or trapShort) and canSignal and not blockSignal and not signalArmed
     signalArmed := true
     triggerPrice := trapLong ? high : low
+    signalTriggerHigh := trapLong ? high : na
+    signalTriggerLow := trapShort ? low : na
     signalDirection := trapLong ? "LONG" : "SHORT"
     signalArmedBar := bar_index
     signalConfluence := trapLong ? confluenceLong : confluenceShort
