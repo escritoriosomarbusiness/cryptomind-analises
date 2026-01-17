@@ -284,7 +284,7 @@ var bool signalArmed = false
 var float triggerPrice = na
 var string signalDirection = ""
 var int signalArmedBar = na
-var int signalConfluence = na
+var string signalConfluence = ""
 var string signalSetupQuality = ""
 var string signalFishingType = ""
 var string signalRejectionZones = ""
@@ -302,7 +302,11 @@ if (trapLong or trapShort) and canSignal and not blockSignal and not signalArmed
     signalTriggerLow := trapShort ? low : na
     signalDirection := trapLong ? "LONG" : "SHORT"
     signalArmedBar := bar_index
-    signalConfluence := trapLong ? confluenceLong : confluenceShort
+    
+    // Armazenar confluence como TEXTO
+    confluenceNum = trapLong ? confluenceLong : confluenceShort
+    signalConfluence := confluenceNum == 1 ? "Simples" : confluenceNum == 2 ? "Dupla ⭐" : "Tripla 🌟🌟"
+    
     signalSetupQuality := setupQuality
     signalFishingType := fishingType
     signalEmasRejected := emasRejectedList
@@ -313,22 +317,22 @@ if (trapLong or trapShort) and canSignal and not blockSignal and not signalArmed
     zonesText = ""
     if trapLong
         if srRejectionLong
-            zonesText := zonesText == "" ? "SR" : zonesText + " + SR"
+            zonesText := zonesText == "" ? "SR" : zonesText + ",SR"
         if fiboRejectionLong
-            zonesText := zonesText == "" ? "Fibo 0.5-0.618" : zonesText + " + Fibo 0.5-0.618"
+            zonesText := zonesText == "" ? "Fibo" : zonesText + ",Fibo"
         if emaRejectionLong
-            zonesText := zonesText == "" ? "EMA" : zonesText + " + EMA"
+            zonesText := zonesText == "" ? "EMA" : zonesText + ",EMA"
     else
         if srRejectionShort
-            zonesText := zonesText == "" ? "SR" : zonesText + " + SR"
+            zonesText := zonesText == "" ? "SR" : zonesText + ",SR"
         if fiboRejectionShort
-            zonesText := zonesText == "" ? "Fibo 0.5-0.618" : zonesText + " + Fibo 0.5-0.618"
+            zonesText := zonesText == "" ? "Fibo" : zonesText + ",Fibo"
         if emaRejectionShort
-            zonesText := zonesText == "" ? "EMA" : zonesText + " + EMA"
+            zonesText := zonesText == "" ? "EMA" : zonesText + ",EMA"
     
     signalRejectionZones := zonesText
     
-    confluenceText = signalConfluence == 1 ? "Simples" : signalConfluence == 2 ? "Dupla ⭐" : "Tripla 🌟🌟"
+    confluenceText = signalConfluence
     
     // Label de GATILHO
     if showLabels
