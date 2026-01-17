@@ -16,9 +16,12 @@ Este diretório contém os **3 indicadores principais** do sistema CryptoMind IA
 O DNP é o indicador **mais completo** do sistema, combinando múltiplos sinais de confirmação com análise de tendência do fractal superior (Multi-Timeframe).
 
 **Características:**
-- ✅ Detecção de Dedo no Pavio (rejeição de preço)
-- ✅ Validação com REMI (Relative Momentum Index)
-- ✅ Pivots de Suporte/Resistência
+- ✅ **7 Validações Simultâneas:** Didi Index, ADX/DMI, REMI (Bollinger), Pivots S/R, Filtro de Candle, Janela Temporal
+- ✅ **REMI Customizado:** Razão de expansão da Bollinger (8,2) comparada aos últimos N candles
+- ✅ **ADX Dinâmico:** Exige ADX >= mínimo E crescimento entre candles
+- ✅ **Didi Index:** Cruzamento próximo ao eixo para identificar início de tendência
+- ✅ **Janela Temporal:** Todas as condições devem se alinhar em N candles (configurável)
+- ✅ **Rompimento de Pivot:** Exige romper resistência (LONG) ou suporte (SHORT)
 - ✅ **NOVO:** Análise MTF (Multi-Timeframe) com classificação PREMIUM/CAUTELA/CONTRA
 - ✅ Gestão completa de risco (Entry, SL, TP1, TP2, Trailing Stop)
 - ✅ Sistema de confirmação: Gatilho + Rompimento

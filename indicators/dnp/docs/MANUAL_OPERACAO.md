@@ -29,7 +29,8 @@
 - **ADX/DMI:** Confirma força e direção da tendência
 - **REMI (Bollinger Bands):** Valida expansão de volatilidade
 - **Pivots S/R:** Confirma rompimento de suporte/resistência
-- **Candle Forte:** Filtra candles com corpo forte e pavio pequeno
+- **Filtro de Candle:** Valida pavios (máximo 40% do corpo)
+- **Janela Temporal:** Todas as condições em N candles (padrão: 3)
 
 ### **Arquitetura do Sistema**
 

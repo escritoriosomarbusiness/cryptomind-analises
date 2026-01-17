@@ -74,8 +74,7 @@ O sistema possui **3 indicadores principais** integrados:
 Indicador **mais completo** do sistema, combinando múltiplos sinais com análise macro (MTF).
 
 **Características:**
-- ✅ Dedo no Pavio (rejeição de preço)
-- ✅ REMI + Pivots
+- ✅ 7 validações simultâneas: Didi Index, ADX/DMI, REMI (Bollinger), Pivots, Filtro de Candle, Janela Temporal
 - ✅ **Análise MTF:** Classificação PREMIUM/CAUTELA/CONTRA
 - ✅ Gestão completa de risco
 

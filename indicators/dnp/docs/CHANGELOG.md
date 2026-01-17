@@ -57,7 +57,7 @@
 ## [1.0] - Versão Inicial
 
 ### ✨ Características Iniciais
-- **Detecção de Dedo no Pavio:** Rejeição de preço (wicks grandes)
+- **7 Validações Simultâneas:** Didi Index, ADX/DMI, REMI (Bollinger), Pivots, Filtro de Candle, Janela Temporal
 - **REMI:** Relative Momentum Index para confirmação
 - **Pivots:** Suporte e Resistência automáticos
 - **Sistema de Confirmação:** Gatilho + Rompimento
@@ -101,7 +101,11 @@
 
 | Característica | v1.0 | v1.1 | v2.0 |
 |----------------|------|------|------|
-| Dedo no Pavio | ✅ | ✅ | ✅ |
+| 7 Validações | ✅ | ✅ | ✅ |
+| REMI (Bollinger) | ✅ | ✅ | ✅ |
+| ADX Dinâmico | ✅ | ✅ | ✅ |
+| Didi Index | ✅ | ✅ | ✅ |
+| Janela Temporal | ✅ | ✅ | ✅ |
 | REMI | ✅ | ✅ | ✅ |
 | Pivots | ✅ | ✅ | ✅ |
 | Gestão de Risco | ✅ | ✅ | ✅ |

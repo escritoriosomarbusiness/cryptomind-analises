@@ -1,12 +1,12 @@
 # 🎯 DNP v2.0 - Didi's Needle Prick (COM MTF)
 
-**Indicador completo de entrada com validação macro (Multi-Timeframe)**
+**Indicador avançado de entrada com validação multi-critério e análise macro (Multi-Timeframe)**
 
 ---
 
 ## 📊 VISÃO GERAL
 
-O **DNP (Didi's Needle Prick)** é o indicador **mais completo** do sistema CryptoMind IA, combinando múltiplos sinais de confirmação com análise de tendência do fractal superior (MTF).
+O **DNP (Didi's Needle Prick)** é o indicador **mais completo e rigoroso** do sistema CryptoMind IA, combinando **7 validações técnicas simultâneas** com análise de tendência do fractal superior (MTF) para identificar pontos de entrada de alta probabilidade.
 
 **Status:** ✅ Operacional com MTF  
 **Versão:** 2.0  
@@ -14,97 +14,198 @@ O **DNP (Didi's Needle Prick)** é o indicador **mais completo** do sistema Cryp
 
 ---
 
-## ✨ CARACTERÍSTICAS
+## ✨ ARQUITETURA DO INDICADOR
 
-### **Detecção de Sinais:**
-- ✅ **Dedo no Pavio:** Rejeição de preço (wicks grandes)
-- ✅ **REMI:** Relative Momentum Index (confirmação de momentum)
-- ✅ **Pivots:** Suporte e Resistência automáticos
-- ✅ **Sistema de Confirmação:** Gatilho + Rompimento
+O DNP utiliza uma **abordagem multi-critério rigorosa** onde TODAS as condições devem ser satisfeitas simultaneamente dentro de uma janela de tempo configurável.
 
-### **Análise MTF (Multi-Timeframe):** 🆕
-- ✅ **Detecção de Tendência HTF:** EMA 55 vs EMA 233
-- ✅ **Classificação Automática:** PREMIUM/CAUTELA/CONTRA
-- ✅ **Hierarquia de Timeframes:** 1m→15m, 5m→H1, 15m→H4, H1→D, H4→W, D→M
+### **Sistema de Validação em 7 Camadas:**
 
-### **Gestão de Risco:**
-- ✅ **Entry:** Preço de entrada calculado automaticamente
-- ✅ **Stop Loss:** Baseado no pivot + margem de segurança
-- ✅ **TP1:** Target 1 (1:1 Risk:Reward)
-- ✅ **TP2:** Target 2 (1:2 Risk:Reward)
-- ✅ **Trailing Stop:** Distância calculada automaticamente
-- ✅ **Alavancagem Sugerida:** Baseada no risco percentual
+1. **Didi Index** - Cruzamento próximo ao eixo
+2. **ADX/DMI** - Força e direção da tendência
+3. **REMI (Bollinger)** - Expansão controlada da volatilidade
+4. **Pivots S/R** - Rompimento de níveis estruturais
+5. **Filtro de Candle** - Validação de pavios
+6. **Janela Temporal** - Construção dentro de N candles
+7. **MTF (Multi-Timeframe)** - Alinhamento com fractal superior
 
 ---
 
-## 🎯 CLASSIFICAÇÃO MTF
+## 🔬 VALIDAÇÕES TÉCNICAS DETALHADAS
 
-### **⭐⭐⭐ SETUP PREMIUM**
-**Condição:** Setup alinhado com tendência do fractal superior
+### **1. Didi Index - Cruzamento Próximo ao Eixo**
 
-**Exemplo LONG:**
-- Sinal: LONG no timeframe 15m
-- HTF: 240m (H4) em tendência de ALTA
-- Resultado: Alta probabilidade de sucesso
+**Componentes:**
+- **Curta:** SMA(3) / SMA(8)
+- **Média:** SMA(8) (eixo de referência = 1.0)
+- **Longa:** SMA(20) / SMA(8)
 
-**Mensagem:**
-```
-⭐⭐⭐ SETUP PREMIUM ⭐⭐⭐
-📈 240 em tendência de ALTA favorável
-━━━━━━━━━━━━━━━━━━
-💡 Alta probabilidade de sucesso
-```
+**Condições:**
+- ✅ **LONG:** Curta cruza acima da Longa (`ta.crossover(curta, longa)`)
+- ✅ **SHORT:** Curta cruza abaixo da Longa (`ta.crossunder(curta, longa)`)
+- ✅ **Proximidade ao Eixo:** `|longa - 1.0| * 100 <= maxDistanceFromAxis`
+  - Padrão: 0.15% (configurável por timeframe)
+  - 5min: 0.10% | 15min: 0.20% | 1H: 0.30% | 4H: 0.50%
+- ✅ **Cruzamento Recente:** Deve ocorrer dentro da janela de construção (`setupWindow`)
 
----
-
-### **⚠️ CAUTELA RECOMENDADA**
-**Condição:** Fractal superior sem tendência definida (neutro)
-
-**Exemplo LONG:**
-- Sinal: LONG no timeframe 15m
-- HTF: 240m (H4) sem tendência clara
-- Resultado: Risco elevado
-
-**Mensagem:**
-```
-⚠️ CAUTELA RECOMENDADA ⚠️
-📊 240 sem tendência definida
-━━━━━━━━━━━━━━━━━━
-⚠️ Fractal superior neutro - Risco elevado
-```
+**Objetivo:** Identificar início de tendência quando o preço está próximo ao equilíbrio (eixo).
 
 ---
 
-### **🔴 CONTRA-TENDÊNCIA**
-**Condição:** Setup contra a tendência do fractal superior
+### **2. ADX/DMI - Força e Direção da Tendência**
 
-**Exemplo LONG:**
-- Sinal: LONG no timeframe 15m
-- HTF: 240m (H4) em tendência de BAIXA
-- Resultado: Alto risco
+**Componentes:**
+- **ADX:** Average Directional Index (força da tendência)
+- **DI+:** Directional Indicator positivo
+- **DI-:** Directional Indicator negativo
 
-**Mensagem:**
+**Condições:**
+- ✅ **ADX Mínimo:** `adx >= adxMinValue` (padrão: 15.0)
+- ✅ **ADX Crescente:** `adxSlope >= adxMinSlope`
+  - `adxSlope = adx - adx[1]`
+  - Inclinação mínima (configurável por timeframe):
+    - 5min: 1.5 | 15min: 2.5 | 1H: 3.0 | 4H: 4.0
+- ✅ **Direção LONG:** `DI+ > DI-`
+- ✅ **Direção SHORT:** `DI- > DI+`
+
+**Objetivo:** Garantir que existe força direcional crescente no momento da entrada.
+
+---
+
+### **3. REMI - Razão de Expansão da Bollinger (Volatilidade Controlada)**
+
+**Componentes:**
+- **Bollinger Bands:** Período 8, Desvio 2.0
+- **BBW (Bandwidth):** `BBW = Upper Band - Lower Band`
+
+**Cálculo do REMI:**
 ```
-🚫 CONTRA-TENDÊNCIA 🚫
-📉 240 em tendência de BAIXA
-━━━━━━━━━━━━━━━━━━
-⛔ ALTO RISCO - Operação contra o fluxo maior
-⚠️ Não recomendado para iniciantes
+1. BBW atual = BBW do candle gatilho
+2. BBW histórico = Média do menor e maior BBW dos últimos N candles
+3. REMI = BBW atual / BBW histórico
 ```
+
+**Condições:**
+- ✅ **REMI Mínimo:** `REMI >= bbExpansionRatio` (padrão: 1.5)
+- ✅ **REMI Máximo:** `REMI <= bbExpansionMaxRatio` (padrão: 3.0)
+- ✅ **Lookback:** 7 candles (configurável)
+
+**Objetivo:** Validar expansão de volatilidade (momentum) sem volatilidade extrema.
+
+**Interpretação:**
+- REMI < 1.5: Volatilidade insuficiente (setup rejeitado)
+- REMI 1.5-3.0: Volatilidade ideal (setup válido)
+- REMI > 3.0: Volatilidade extrema (setup rejeitado)
+
+---
+
+### **4. Pivots S/R - Rompimento de Níveis Estruturais**
+
+**Componentes:**
+- **Pivot High:** Resistência (lookback configurável, padrão: 10)
+- **Pivot Low:** Suporte (lookback configurável, padrão: 10)
+
+**Métodos de Validação (configurável):**
+
+**A) Por Pavio (High/Low):**
+- LONG: `high > resistance`
+- SHORT: `low < support`
+
+**B) Por Fechamento (Close):**
+- LONG: `close > resistance`
+- SHORT: `close < support`
+
+**Objetivo:** Confirmar rompimento de níveis estruturais importantes.
+
+---
+
+### **5. Filtro de Candle - Validação de Pavios**
+
+**Cálculo:**
+```
+candleBody = |close - open|
+upperWick = high - max(close, open)
+lowerWick = min(close, open) - low
+```
+
+**Condições:**
+- ✅ **LONG:** `(upperWick / candleBody) <= maxWickPercent` (padrão: 0.40)
+  - Pavio superior não pode ser maior que 40% do corpo
+- ✅ **SHORT:** `(lowerWick / candleBody) <= maxWickPercent` (padrão: 0.40)
+  - Pavio inferior não pode ser maior que 40% do corpo
+
+**Objetivo:** Garantir que o candle tem corpo forte (não é indecisão).
+
+---
+
+### **6. Janela Temporal - Construção do Setup**
+
+**Condição:**
+- ✅ **Todas as validações devem ocorrer dentro de N candles** (configurável)
+- ✅ **Padrão:** `setupWindow = 3 candles`
+- ✅ **Range:** 2-10 candles
+
+**Fluxo:**
+1. Cruzamento Didi inicia a janela
+2. Todas as outras condições devem se alinhar dentro de N candles
+3. Se passar da janela, setup é descartado
+
+**Objetivo:** Garantir que o setup é coeso e não baseado em condições espalhadas no tempo.
+
+---
+
+### **7. MTF (Multi-Timeframe) - Análise do Fractal Superior**
+
+**Hierarquia:**
+| Timeframe Atual | Fractal Superior (HTF) |
+|-----------------|------------------------|
+| 1 minuto        | 15 minutos             |
+| 5 minutos       | 60 minutos (H1)        |
+| 15 minutos      | 240 minutos (H4)       |
+| 60 minutos (H1) | Daily (D)              |
+| 240 minutos (H4)| Weekly (W)             |
+| Daily (D)       | Monthly (M)            |
+
+**Detecção de Tendência HTF:**
+
+**Tendência de ALTA (3 condições):**
+```pinescript
+htf_trendUp = (htf_ema55 > htf_ema233) and 
+              (htf_ema55 > htf_ema55[1]) and 
+              (htf_close > htf_ema55)
+```
+
+**Tendência de BAIXA (3 condições):**
+```pinescript
+htf_trendDown = (htf_ema55 < htf_ema233) and 
+                (htf_ema55 < htf_ema55[1]) and 
+                (htf_close < htf_ema55)
+```
+
+**Classificação:**
+- **PREMIUM** ⭐⭐⭐: Setup alinhado com HTF (alta probabilidade)
+- **CAUTELA** ⚠️: HTF neutro (risco elevado)
+- **CONTRA** 🔴: Setup contra HTF (alto risco)
 
 ---
 
 ## 🔄 FLUXO DE OPERAÇÃO
 
-### **1. TRIGGER (Gatilho Armado)**
+### **Fase 1: TRIGGER (Gatilho Armado)**
 
-Quando o sinal é detectado, mas ainda não confirmado:
+Todas as 6 validações locais foram satisfeitas:
+1. ✅ Didi cruzou próximo ao eixo
+2. ✅ ADX >= mínimo e crescente
+3. ✅ REMI entre 1.5-3.0
+4. ✅ Pivot rompido
+5. ✅ Pavio validado
+6. ✅ Tudo dentro da janela temporal
 
+**Mensagem:**
 ```
 🔔 🟢 LONG BTCUSDT
 ━━━━━━━━━━━━━━━━━━
 🔔 GATILHO ARMADO
-📊 Setup: DNP
+📊 Setup: DNP v2.0
 ⏱ Timeframe: 15
 
 ━━━━━━━━━━━━━━━━━━
@@ -117,22 +218,29 @@ Quando o sinal é detectado, mas ainda não confirmado:
 💰 Preço: $95,234.50
 🎯 Trigger: $95,450.00
 ━━━━━━━━━━━━━━━━━━
-📈 ADX: 28.5 | REMI: 65.2
+📊 VALIDAÇÕES:
+✅ Didi Index: Cruzamento próximo ao eixo
+✅ ADX: 18.5 (↑ +2.1)
+✅ REMI: 2.1x (expansão ideal)
+✅ Pivot: Resistência rompida
+✅ Candle: Pavio validado (28%)
+✅ Janela: 2/3 candles
 ━━━━━━━━━━━━━━━━━━
 ⚠️ Aguardando confirmação por rompimento
 ```
 
 ---
 
-### **2. CONFIRMED (Confirmado por Rompimento)**
+### **Fase 2: CONFIRMED (Confirmado por Rompimento)**
 
-Quando o preço rompe o trigger e confirma o sinal:
+O preço rompeu o trigger no candle seguinte:
 
+**Mensagem:**
 ```
 ✅ 🟢 LONG BTCUSDT
 ━━━━━━━━━━━━━━━━━━
 ✅ CONFIRMADO POR ROMPIMENTO
-📊 Setup: DNP
+📊 Setup: DNP v2.0
 ⏱ Timeframe: 15
 
 ━━━━━━━━━━━━━━━━━━
@@ -164,12 +272,48 @@ Quando o preço rompe o trigger e confirma o sinal:
    • Seguir preço até TP2
 
 ━━━━━━━━━━━━━━━━━━
-📊 INDICADORES
-📈 ADX: 28.5 | REMI: 65.2
+📊 VALIDAÇÕES FINAIS
+✅ Didi Index: Mantido em tendência
+✅ ADX: 19.2 (força confirmada)
+✅ REMI: 2.3x (volatilidade ideal)
+✅ Pivot: Rompimento confirmado
+✅ MTF: H4 em ALTA (PREMIUM)
 ⚖️ Alavancagem sugerida: 5-10x
 ━━━━━━━━━━━━━━━━━━
 ⚠️ Não é recomendação de investimento
 ```
+
+---
+
+## 📋 PARÂMETROS CONFIGURÁVEIS
+
+### **Didi Index:**
+- Curta: 3 (SMA)
+- Média: 8 (SMA)
+- Longa: 20 (SMA)
+- Distância Máx. do Eixo: 0.15% (ajustar por timeframe)
+
+### **ADX/DMI:**
+- ADX Length: 8
+- ADX Smoothing: 8
+- ADX Mínimo: 15.0
+- Inclinação Mínima: 1.5 (ajustar por timeframe)
+
+### **Bollinger Bands (REMI):**
+- BB Length: 8
+- BB Mult: 2.0
+- Lookback: 7 candles
+- REMI Mínimo: 1.5
+- REMI Máximo: 3.0
+
+### **Pivots:**
+- Lookback: 10
+- Método: Por Fechamento (Close) ou Por Pavio (High/Low)
+
+### **Setup:**
+- Janela de Construção: 3 candles
+- Pavio Máximo: 40%
+- Método Stop Loss: Pivots (S/R) ou 3 Candles Anteriores
 
 ---
 
@@ -179,17 +323,9 @@ Quando o preço rompe o trigger e confirma o sinal:
 
 **Arquivo:** [`pinescript/dnp_v2.0_mtf.pine`](pinescript/dnp_v2.0_mtf.pine)
 
-**Parâmetros:**
-- **Lookback Pivots:** 5 (padrão)
-- **REMI Period:** 14 (padrão)
-- **REMI Overbought:** 70
-- **REMI Oversold:** 30
-- **Min Distance to Pivot:** 0.5%
-- **Risk Percent:** 2.5%
-
 **Alertas:**
 1. Criar alerta no indicador
-2. Configurar condição: "Any alert() function call"
+2. Condição: "Any alert() function call"
 3. Webhook URL: `https://cryptomindia.app.n8n.cloud/webhook/dnp-alert`
 4. Formato: JSON
 
@@ -204,120 +340,19 @@ Quando o preço rompe o trigger e confirma o sinal:
 2. **Processador:** Formata mensagem com bloco MTF
 3. **Telegram:** Envia notificação
 
-**Campos MTF (novos):**
-```javascript
-const setupQuality = alertData.setupQuality || 'CAUTELA';
-const htfTrend = alertData.htfTrend || 'NEUTRO';
-const htfTimeframe = alertData.htfTimeframe || 'N/A';
-```
-
----
-
-## 📊 LÓGICA MTF
-
-### **Hierarquia de Timeframes:**
-
-| Timeframe Atual | Fractal Superior (HTF) |
-|-----------------|------------------------|
-| 1 minuto        | 15 minutos             |
-| 5 minutos       | 60 minutos (H1)        |
-| 15 minutos      | 240 minutos (H4)       |
-| 60 minutos (H1) | Daily (D)              |
-| 240 minutos (H4)| Weekly (W)             |
-| Daily (D)       | Monthly (M)            |
-
-### **Detecção de Tendência (HTF):**
-
-**Tendência de ALTA (3 condições):**
-```pinescript
-htf_trendUp = (htf_ema55 > htf_ema233) and 
-              (htf_ema55 > htf_ema55[1]) and 
-              (htf_close > htf_ema55)
-```
-
-**Tendência de BAIXA (3 condições):**
-```pinescript
-htf_trendDown = (htf_ema55 < htf_ema233) and 
-                (htf_ema55 < htf_ema55[1]) and 
-                (htf_close < htf_ema55)
-```
-
-### **Classificação:**
-
-```pinescript
-setupQuality = 
-    (direction == "LONG" and htf_trendUp) or 
-    (direction == "SHORT" and htf_trendDown) ? "PREMIUM" :
-    
-    (direction == "LONG" and htf_trendDown) or 
-    (direction == "SHORT" and htf_trendUp) ? "CONTRA" :
-    
-    "CAUTELA"
-```
-
----
-
-## 📁 ARQUIVOS
-
-### **Pine Script:**
-- [`pinescript/dnp_v2.0_mtf.pine`](pinescript/dnp_v2.0_mtf.pine) - Código completo do indicador
-
-### **n8n:**
-- [`n8n/processador_v2.0.js`](n8n/processador_v2.0.js) - Processador com MTF
-- [`n8n/workflow.json`](n8n/workflow.json) - Workflow completo
-
-### **Documentação:**
-- [`docs/MANUAL_OPERACAO.md`](docs/MANUAL_OPERACAO.md) - Manual de operação
-- [`docs/CHANGELOG.md`](docs/CHANGELOG.md) - Histórico de mudanças
-
----
-
-## 🚀 QUICK START
-
-### **Passo 1: Adicionar Indicador**
-1. Abra o TradingView
-2. Copie o código de `pinescript/dnp_v2.0_mtf.pine`
-3. Cole no Pine Editor
-4. Salve como "DNP v2.0"
-5. Adicione ao gráfico
-
-### **Passo 2: Configurar Alerta**
-1. Clique com botão direito no indicador
-2. "Add alert..."
-3. Condição: "Any alert() function call"
-4. Webhook URL: `https://cryptomindia.app.n8n.cloud/webhook/dnp-alert`
-5. Salvar
-
-### **Passo 3: Configurar n8n**
-1. Acesse n8n Cloud
-2. Importe `n8n/workflow.json`
-3. Configure credenciais Telegram
-4. Ative workflow
-
-### **Passo 4: Testar**
-1. Dispare alerta manual no TradingView
-2. Verifique recebimento no Telegram
-3. Confirme bloco MTF na mensagem
-
 ---
 
 ## 📊 INDICADORES UTILIZADOS
 
-### **REMI (Relative Momentum Index):**
-- Similar ao RSI, mas mais suave
-- Overbought: > 70
-- Oversold: < 30
-- Usado para confirmar momentum
-
-### **Pivots (Suporte/Resistência):**
-- Lookback: 5 candles
-- Automático
-- Usado para definir stop loss
-
-### **ADX (Average Directional Index):**
-- Mede força da tendência
-- > 25: Tendência forte
-- < 20: Tendência fraca
+| Indicador | Função | Parâmetros |
+|-----------|--------|------------|
+| **Didi Index** | Cruzamento próximo ao eixo | SMA(3,8,20) |
+| **ADX** | Força da tendência | Length 8, Smoothing 8 |
+| **DI+/DI-** | Direção da tendência | Parte do ADX |
+| **Bollinger Bands** | Base para REMI | Período 8, Desvio 2.0 |
+| **REMI** | Razão de expansão | BBW atual / BBW médio |
+| **Pivots** | Suporte/Resistência | Lookback 10 |
+| **EMA 55/233** | Tendência HTF | Multi-Timeframe |
 
 ---
 
@@ -343,19 +378,55 @@ setupQuality =
 
 ---
 
+## 🎯 DIFERENCIAIS DO DNP
+
+### **Por que o DNP é o mais completo?**
+
+1. **Validação Multi-Critério:** 7 validações simultâneas
+2. **Janela Temporal:** Garante coesão do setup
+3. **REMI Customizado:** Mede expansão real da volatilidade
+4. **ADX Dinâmico:** Exige crescimento, não apenas valor mínimo
+5. **Didi Index:** Cruzamento próximo ao equilíbrio
+6. **Filtro de Candle:** Evita indecisão
+7. **MTF:** Alinhamento com fractal superior
+
+### **Comparação com outros indicadores:**
+
+| Característica | DNP v2.0 | TRS v6.1 | USDT.D v2.0 |
+|----------------|----------|----------|-------------|
+| Validações | 7 | 3 | 1 |
+| REMI | ✅ | ❌ | ❌ |
+| ADX Dinâmico | ✅ | ❌ | ❌ |
+| Didi Index | ✅ | ❌ | ❌ |
+| Janela Temporal | ✅ | ❌ | ❌ |
+| MTF | ✅ | ✅ | ❌ |
+| Pivots | ✅ | ✅ | ❌ |
+
+---
+
+## 📁 ARQUIVOS
+
+### **Pine Script:**
+- [`pinescript/dnp_v2.0_mtf.pine`](pinescript/dnp_v2.0_mtf.pine)
+
+### **n8n:**
+- [`n8n/processador_v2.0.js`](n8n/processador_v2.0.js)
+- [`n8n/workflow.json`](n8n/workflow.json)
+
+### **Documentação:**
+- [`docs/MANUAL_OPERACAO.md`](docs/MANUAL_OPERACAO.md)
+- [`docs/CHANGELOG.md`](docs/CHANGELOG.md)
+
+---
+
 ## 📝 CHANGELOG
 
 ### **[16/01/2026] - v2.0 COM MTF**
 - ✨ Adicionada lógica MTF completa
 - ✨ Classificação PREMIUM/CAUTELA/CONTRA
-- ✨ Campos MTF no JSON (setupQuality, htfTrend, htfTimeframe)
-- ✨ Processador n8n atualizado com bloco macro
-- 📚 Documentação completa criada
-
-### **[10/01/2026] - v1.1**
-- 🔧 Correções no REMI
-- 🔧 Ajustes nos pivots
-- 📚 Manual de operação atualizado
+- ✨ Campos MTF no JSON
+- ✨ Processador n8n atualizado
+- 📚 Documentação técnica completa
 
 ---
 
@@ -364,22 +435,13 @@ setupQuality =
 ### **Uso Responsável:**
 - ✅ Sempre usar stop loss
 - ✅ Respeitar gestão de risco
-- ✅ Não operar contra tendência (setups CONTRA)
 - ✅ Priorizar setups PREMIUM
+- ✅ Evitar setups CONTRA
 
-### **Limitações:**
-- ⚠️ Não é recomendação de investimento
-- ⚠️ Trading envolve riscos
-- ⚠️ Resultados passados não garantem resultados futuros
-
----
-
-## 📞 SUPORTE
-
-Para dúvidas ou problemas:
-- Consulte o [`MANUAL_OPERACAO.md`](docs/MANUAL_OPERACAO.md)
-- Verifique o [`CHANGELOG.md`](docs/CHANGELOG.md)
-- Abra uma issue no GitHub
+### **Complexidade:**
+- ⚠️ Indicador mais rigoroso do sistema
+- ⚠️ Menos sinais, maior qualidade
+- ⚠️ Requer paciência e disciplina
 
 ---
 
