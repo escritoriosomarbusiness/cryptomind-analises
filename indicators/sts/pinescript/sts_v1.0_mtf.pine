@@ -36,6 +36,7 @@ getHigherTimeframe() =>
     currentTF == "1" ? "15" : currentTF == "5" ? "60" : currentTF == "15" ? "240" : currentTF == "60" ? "D" : currentTF == "240" ? "W" : currentTF == "D" ? "M" : ""
 
 structuralTimeframe = getHigherTimeframe()
+higherTimeframe = structuralTimeframe
 
 // Buscar dados do timeframe superior
 var float htf_ema55 = na
@@ -290,6 +291,8 @@ var string signalRejectionZones = ""
 var string signalEmasRejected = ""
 var int signalEmasCount = 0
 var float signalWickRatio = na
+var float signalTriggerLow = na
+var float signalTriggerHigh = na
 
 // GATILHO: Armar sinal
 if (trapLong or trapShort) and canSignal and not blockSignal and not signalArmed
@@ -303,6 +306,8 @@ if (trapLong or trapShort) and canSignal and not blockSignal and not signalArmed
     signalEmasRejected := emasRejectedList
     signalEmasCount := emasRejectedCount
     signalWickRatio := trapLong ? lowerWick / body : upperWick / body
+    signalTriggerLow := low
+    signalTriggerHigh := high
     
     // Montar texto de zonas rejeitadas
     zonesText = ""
