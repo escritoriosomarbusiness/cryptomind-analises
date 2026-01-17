@@ -374,7 +374,7 @@ if signalArmed
         signalArmed := false
 
 // ============================================
-// ALERTAS COM JSON DINÂMICO - COMPATÍVEL COM PROCESSADOR n8n
+// ALERTAS COM JSON DINÂMICO - PADRÃO DNP/TRS
 // ============================================
 // Calcular wickToBodyRatio para o alerta
 var float alertWickToBodyRatio = na
@@ -384,38 +384,48 @@ if trapLong
 else if trapShort
     alertWickToBodyRatio := body > 0 ? math.abs(upperWick) / body : 0
 
-// Alerta de GATILHO (TRIGGER)
-if trapLong or trapShort
+// Alerta de GATILHO LONG
+if trapLong
     if barstate.isconfirmed
-        alertJson = '{"symbol":"' + syminfo.ticker + '","status":"TRIGGER","direction":"' + signalDirection + '","timeframe":"' + timeframe.period + '","setupQuality":"' + signalSetupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + higherTimeframe + '","fishingType":"' + signalFishingType + '","confluence":"' + signalConfluence + '","rejectionZones":"' + signalRejectionZones + '","emasRejected":"' + signalEmasRejected + '","emasCount":"' + str.tostring(signalEmasCount) + '","wickToBodyRatio":"' + str.tostring(alertWickToBodyRatio, '#.#') + '","price":"' + str.tostring(close, '#.########') + '","trigger":"' + str.tostring(triggerPrice, '#.########') + '"}'
+        alertJson = '{"symbol":"' + syminfo.ticker + '","action":"TRIGGER","direction":"LONG","setup":"STS","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close, '#.########') + '","triggerHigh":"' + str.tostring(triggerPrice, '#.########') + '","wickToBodyRatio":"' + str.tostring(alertWickToBodyRatio, '#.#') + '","confluence":"' + signalConfluence + '","rejectionZones":"' + signalRejectionZones + '","emasRejected":"' + signalEmasRejected + '","emasCount":"' + str.tostring(signalEmasCount) + '","setupQuality":"' + signalSetupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + higherTimeframe + '","fishingType":"' + signalFishingType + '"}'
+        alert(alertJson, alert.freq_once_per_bar)
+
+// Alerta de GATILHO SHORT
+if trapShort
+    if barstate.isconfirmed
+        alertJson = '{"symbol":"' + syminfo.ticker + '","action":"TRIGGER","direction":"SHORT","setup":"STS","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close, '#.########') + '","triggerLow":"' + str.tostring(triggerPrice, '#.########') + '","wickToBodyRatio":"' + str.tostring(alertWickToBodyRatio, '#.#') + '","confluence":"' + signalConfluence + '","rejectionZones":"' + signalRejectionZones + '","emasRejected":"' + signalEmasRejected + '","emasCount":"' + str.tostring(signalEmasCount) + '","setupQuality":"' + signalSetupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + higherTimeframe + '","fishingType":"' + signalFishingType + '"}'
         alert(alertJson, alert.freq_once_per_bar)
 
 // Alerta de CONFIRMAÇÃO LONG
 if signalArmed and signalDirection == "LONG" and bar_index - signalArmedBar == 1 and close > triggerPrice
     if barstate.isconfirmed
-        // Calcular entry, SL, alvos
+        // Calcular entry, SL, alvos e trailing
         tickSize = syminfo.mintick
         entryPrice = triggerPrice
         stopLossPrice = signalTriggerLow - tickSize
         riskValue = entryPrice - stopLossPrice
+        riskPercent = (riskValue / entryPrice) * 100
         
         target1 = entryPrice + riskValue
         target2 = entryPrice + (riskValue * 2)
+        trailingDistance = riskValue * 0.5
         
-        alertJson = '{"symbol":"' + syminfo.ticker + '","status":"CONFIRMED","direction":"LONG","timeframe":"' + timeframe.period + '","setupQuality":"' + signalSetupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + higherTimeframe + '","fishingType":"' + signalFishingType + '","confluence":"' + signalConfluence + '","rejectionZones":"' + signalRejectionZones + '","emasRejected":"' + signalEmasRejected + '","emasCount":"' + str.tostring(signalEmasCount) + '","wickToBodyRatio":"' + str.tostring(alertWickToBodyRatio, '#.#') + '","entry":"' + str.tostring(entryPrice, '#.########') + '","trigger":"' + str.tostring(triggerPrice, '#.########') + '","sl":"' + str.tostring(stopLossPrice, '#.########') + '","tp1":"' + str.tostring(target1, '#.########') + '","tp2":"' + str.tostring(target2, '#.########') + '"}'
+        alertJson = '{"symbol":"' + syminfo.ticker + '","action":"CONFIRMED","direction":"LONG","setup":"STS","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close, '#.########') + '","entry":"' + str.tostring(entryPrice, '#.########') + '","stopLoss":"' + str.tostring(stopLossPrice, '#.########') + '","risk":"' + str.tostring(riskValue, '#.########') + '","riskPercent":"' + str.tostring(riskPercent, '#.##') + '","target1":"' + str.tostring(target1, '#.########') + '","target2":"' + str.tostring(target2, '#.########') + '","trailingDistance":"' + str.tostring(trailingDistance, '#.########') + '","triggerHigh":"' + str.tostring(triggerPrice, '#.########') + '","wickToBodyRatio":"' + str.tostring(alertWickToBodyRatio, '#.#') + '","confluence":"' + signalConfluence + '","rejectionZones":"' + signalRejectionZones + '","emasRejected":"' + signalEmasRejected + '","emasCount":"' + str.tostring(signalEmasCount) + '","setupQuality":"' + signalSetupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + higherTimeframe + '","fishingType":"' + signalFishingType + '"}'
         alert(alertJson, alert.freq_once_per_bar)
 
 // Alerta de CONFIRMAÇÃO SHORT
 if signalArmed and signalDirection == "SHORT" and bar_index - signalArmedBar == 1 and close < triggerPrice
     if barstate.isconfirmed
-        // Calcular entry, SL, alvos
+        // Calcular entry, SL, alvos e trailing
         tickSize = syminfo.mintick
         entryPrice = triggerPrice
         stopLossPrice = signalTriggerHigh + tickSize
         riskValue = stopLossPrice - entryPrice
+        riskPercent = (riskValue / entryPrice) * 100
         
         target1 = entryPrice - riskValue
         target2 = entryPrice - (riskValue * 2)
+        trailingDistance = riskValue * 0.5
         
-        alertJson = '{"symbol":"' + syminfo.ticker + '","status":"CONFIRMED","direction":"SHORT","timeframe":"' + timeframe.period + '","setupQuality":"' + signalSetupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + higherTimeframe + '","fishingType":"' + signalFishingType + '","confluence":"' + signalConfluence + '","rejectionZones":"' + signalRejectionZones + '","emasRejected":"' + signalEmasRejected + '","emasCount":"' + str.tostring(signalEmasCount) + '","wickToBodyRatio":"' + str.tostring(alertWickToBodyRatio, '#.#') + '","entry":"' + str.tostring(entryPrice, '#.########') + '","trigger":"' + str.tostring(triggerPrice, '#.########') + '","sl":"' + str.tostring(stopLossPrice, '#.########') + '","tp1":"' + str.tostring(target1, '#.########') + '","tp2":"' + str.tostring(target2, '#.########') + '"}'
+        alertJson = '{"symbol":"' + syminfo.ticker + '","action":"CONFIRMED","direction":"SHORT","setup":"STS","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close, '#.########') + '","entry":"' + str.tostring(entryPrice, '#.########') + '","stopLoss":"' + str.tostring(stopLossPrice, '#.########') + '","risk":"' + str.tostring(riskValue, '#.########') + '","riskPercent":"' + str.tostring(riskPercent, '#.##') + '","target1":"' + str.tostring(target1, '#.########') + '","target2":"' + str.tostring(target2, '#.########') + '","trailingDistance":"' + str.tostring(trailingDistance, '#.########') + '","triggerLow":"' + str.tostring(triggerPrice, '#.########') + '","wickToBodyRatio":"' + str.tostring(alertWickToBodyRatio, '#.#') + '","confluence":"' + signalConfluence + '","rejectionZones":"' + signalRejectionZones + '","emasRejected":"' + signalEmasRejected + '","emasCount":"' + str.tostring(signalEmasCount) + '","setupQuality":"' + signalSetupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + higherTimeframe + '","fishingType":"' + signalFishingType + '"}'
         alert(alertJson, alert.freq_once_per_bar)
