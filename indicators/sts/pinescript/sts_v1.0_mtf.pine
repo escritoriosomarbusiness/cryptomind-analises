@@ -427,7 +427,6 @@ var string alertJson = na
 var float riskValue = na
 var float riskPercent = na
 var float trailingDistance = na
-var label triggerLabel = na
 
 // GATILHO: Armar sinal (apenas se não for CAUTELA)
 if (trapLong or trapShort) and not signalArmed and setupQuality != "CAUTELA"
@@ -458,36 +457,34 @@ if (trapLong or trapShort) and not signalArmed and setupQuality != "CAUTELA"
         alertJson := '{"symbol":"' + syminfo.ticker + '","action":"TRIGGER","direction":"SHORT","setup":"STS","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close, format.mintick) + '","triggerLow":"' + str.tostring(triggerPrice, format.mintick) + '","setupQuality":"' + signalSetupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + structuralTimeframe + '","fishingType":"' + signalFishingType + '","confluence":"' + signalConfluence + '","rejectionZones":"' + signalRejectionZones + '","emasRejected":"' + signalEmasRejected + '","emasCount":' + str.tostring(signalEmasCount) + ',"wickToBodyRatio":' + str.tostring(signalWickRatio, '#.##') + '}'
         alert(alertJson, alert.freq_once_per_bar_close)
 
-// Label de GATILHO
-if trapLong and setupQuality != "CAUTELA" and showLabels
-    if not na(triggerLabel)
-        label.delete(triggerLabel)
-    
+// Label de GATILHO (padrão TRS/DNP)
+if trapLong and not cooldownActive and setupQuality != "CAUTELA" and showLabels
     labelText = setupQuality == "PREMIUM" ? "STS LONG 🌟\n✓ " + validationText : setupQuality == "CONTRA" ? "STS LONG ⚠️\n✓ " + validationText : "STS LONG\n✓ " + validationText
     labelColor = setupQuality == "PREMIUM" ? color.new(color.lime, 0) : setupQuality == "CONTRA" ? color.new(color.green, 30) : color.green
     
-    triggerLabel := label.new(bar_index, low, 
+    label.new(bar_index, low, 
         labelText, 
         color=labelColor, 
         style=label.style_label_up, 
         textcolor=color.white, 
         size=size.small)
-    lastSignalBar := bar_index
-
-if trapShort and setupQuality != "CAUTELA" and showLabels
-    if not na(triggerLabel)
-        label.delete(triggerLabel)
     
+    lastSignalBar := bar_index
+    cooldownActive := true
+
+if trapShort and not cooldownActive and setupQuality != "CAUTELA" and showLabels
     labelText = setupQuality == "PREMIUM" ? "STS SHORT 🌟\n✓ " + validationText : setupQuality == "CONTRA" ? "STS SHORT ⚠️\n✓ " + validationText : "STS SHORT\n✓ " + validationText
     labelColor = setupQuality == "PREMIUM" ? color.new(color.orange, 0) : setupQuality == "CONTRA" ? color.new(color.red, 30) : color.red
     
-    triggerLabel := label.new(bar_index, high, 
+    label.new(bar_index, high, 
         labelText, 
         color=labelColor, 
         style=label.style_label_down, 
         textcolor=color.white, 
         size=size.small)
+    
     lastSignalBar := bar_index
+    cooldownActive := true
 
 // CONFIRMAÇÃO: Verificar rompimento no candle seguinte (apenas 1 candle)
 if signalArmed
