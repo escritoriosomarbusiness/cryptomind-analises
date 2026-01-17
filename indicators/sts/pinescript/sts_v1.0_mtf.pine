@@ -292,14 +292,10 @@ srRejectedShort = usePivots and not na(lastPivotHigh) and high >= (lastPivotHigh
 // ============================================
 
 // LONG: Pavio toca Golden Zone + fecha acima de 0.618
-fiboRejectedLong = useFibonacci and not na(goldenZoneTop) and not na(goldenZoneBottom) and 
-                   low <= goldenZoneTop and low >= goldenZoneBottom and 
-                   close > goldenZoneTop
+fiboRejectedLong = useFibonacci and not na(goldenZoneTop) and not na(goldenZoneBottom) and low <= goldenZoneTop and low >= goldenZoneBottom and close > goldenZoneTop
 
 // SHORT: Pavio toca Golden Zone + fecha abaixo de 0.618
-fiboRejectedShort = useFibonacci and not na(goldenZoneTopShort) and not na(goldenZoneBottomShort) and 
-                    high >= goldenZoneBottomShort and high <= goldenZoneTopShort and 
-                    close < goldenZoneBottomShort
+fiboRejectedShort = useFibonacci and not na(goldenZoneTopShort) and not na(goldenZoneBottomShort) and high >= goldenZoneBottomShort and high <= goldenZoneTopShort and close < goldenZoneBottomShort
 
 // ============================================
 // SISTEMA DE CONFLUÊNCIAS
