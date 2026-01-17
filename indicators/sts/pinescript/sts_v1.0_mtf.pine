@@ -351,7 +351,7 @@ if signalArmed
             signalArmed := false
             lastSignalBar := bar_index
             
-            confluenceText = signalConfluence == 1 ? "Simples" : signalConfluence == 2 ? "Dupla ⭐" : "Tripla 🌟🌟"
+            confluenceText = signalConfluence
             
             // Label de CONFIRMAÇÃO
             if showLabels
@@ -365,7 +365,7 @@ if signalArmed
             signalArmed := false
             lastSignalBar := bar_index
             
-            confluenceText = signalConfluence == 1 ? "Simples" : signalConfluence == 2 ? "Dupla ⭐" : "Tripla 🌟🌟"
+            confluenceText = signalConfluence
             
             // Label de CONFIRMAÇÃO
             if showLabels
