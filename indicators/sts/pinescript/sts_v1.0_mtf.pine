@@ -389,12 +389,32 @@ if signalArmed
 // Alerta de GATILHO LONG
 if trapLong
     wickRatio = body > 0 ? lowerWick / body : 0
-    alert('{"symbol":"' + syminfo.ticker + '","action":"TRIGGER","direction":"LONG","setup":"STS","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close) + '","wickToBodyRatio":"' + str.tostring(wickRatio, '#.#') + '","confluence":"' + signalConfluence + '","rejectionZones":"' + signalRejectionZones + '","emasRejected":"' + signalEmasRejected + '","emasCount":"' + str.tostring(signalEmasCount) + '","setupQuality":"' + setupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + higherTimeframe + '","fishingType":"' + fishingType + '"}', alert.freq_once_per_bar)
+    confluenceText = confluenceLong == 1 ? "Simples" : confluenceLong == 2 ? "Dupla ⭐" : "Tripla 🌟🌟"
+    zonesText = ""
+    if srRejectionLong
+        zonesText := "SR"
+    if fiboRejectionLong
+        zonesText := zonesText == "" ? "Fibo" : zonesText + ",Fibo"
+    if emaRejectionLong
+        zonesText := zonesText == "" ? "EMA" : zonesText + ",EMA"
+    emasText = emasRejectedList
+    emasCountNum = emasRejectedCount
+    alert('{"symbol":"' + syminfo.ticker + '","action":"TRIGGER","direction":"LONG","setup":"STS","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close) + '","wickToBodyRatio":"' + str.tostring(wickRatio, '#.#') + '","confluence":"' + confluenceText + '","rejectionZones":"' + zonesText + '","emasRejected":"' + emasText + '","emasCount":"' + str.tostring(emasCountNum) + '","setupQuality":"' + setupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + higherTimeframe + '","fishingType":"' + fishingType + '"}', alert.freq_once_per_bar)
 
 // Alerta de GATILHO SHORT
 if trapShort
     wickRatio = body > 0 ? math.abs(upperWick) / body : 0
-    alert('{"symbol":"' + syminfo.ticker + '","action":"TRIGGER","direction":"SHORT","setup":"STS","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close) + '","wickToBodyRatio":"' + str.tostring(wickRatio, '#.#') + '","confluence":"' + signalConfluence + '","rejectionZones":"' + signalRejectionZones + '","emasRejected":"' + signalEmasRejected + '","emasCount":"' + str.tostring(signalEmasCount) + '","setupQuality":"' + setupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + higherTimeframe + '","fishingType":"' + fishingType + '"}', alert.freq_once_per_bar)
+    confluenceText = confluenceShort == 1 ? "Simples" : confluenceShort == 2 ? "Dupla ⭐" : "Tripla 🌟🌟"
+    zonesText = ""
+    if srRejectionShort
+        zonesText := "SR"
+    if fiboRejectionShort
+        zonesText := zonesText == "" ? "Fibo" : zonesText + ",Fibo"
+    if emaRejectionShort
+        zonesText := zonesText == "" ? "EMA" : zonesText + ",EMA"
+    emasText = emasRejectedList
+    emasCountNum = emasRejectedCount
+    alert('{"symbol":"' + syminfo.ticker + '","action":"TRIGGER","direction":"SHORT","setup":"STS","timeframe":"' + timeframe.period + '","price":"' + str.tostring(close) + '","wickToBodyRatio":"' + str.tostring(wickRatio, '#.#') + '","confluence":"' + confluenceText + '","rejectionZones":"' + zonesText + '","emasRejected":"' + emasText + '","emasCount":"' + str.tostring(emasCountNum) + '","setupQuality":"' + setupQuality + '","htfTrend":"' + htf_trendText + '","htfTimeframe":"' + higherTimeframe + '","fishingType":"' + fishingType + '"}', alert.freq_once_per_bar)
 
 // Alerta de CONFIRMAÇÃO LONG
 if signalArmed and signalDirection == "LONG" and bar_index - signalArmedBar == 1 and close > triggerPrice
