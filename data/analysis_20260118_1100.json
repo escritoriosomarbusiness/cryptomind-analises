@@ -1,0 +1,236 @@
+{
+  "timestamp": "2026-01-18T11:00:50.081274-03:00",
+  "date": "18 de Janeiro de 2026",
+  "time": "11:00",
+  "fear_greed": {
+    "value": 49,
+    "classification": "Neutral",
+    "yesterday": 50,
+    "week_ago": 27
+  },
+  "usdt_d": {
+    "dominance": 5.638,
+    "dominance_formatted": "5.638%",
+    "ema_9": 5.64,
+    "ema_21": 5.64,
+    "ema_200": 6.17,
+    "rsi": 48.16,
+    "atr": 0.0002,
+    "macd": 0.0,
+    "sr_levels": {
+      "resistance_w1": 6.74,
+      "resistance_d1": 6.53,
+      "resistance_h4": 6.17,
+      "support_h4": 6.0,
+      "support_w1": 5.86
+    },
+    "trend": "bearish",
+    "crypto_impact": "BULLISH",
+    "crypto_impact_class": "bullish",
+    "impact_reason": "USDT.D abaixo da EMA 200 - dinheiro entrando em cripto (tendência de alta)",
+    "next_level": "Suporte W1: 5.86%",
+    "invalidation": "USDT.D voltar acima de 6.17% (EMA 200)",
+    "below_ema_200": true,
+    "below_ema_21": true,
+    "below_ema_9": true
+  },
+  "analyses": {
+    "BTC": {
+      "symbol": "BTC",
+      "price": 95103.0,
+      "price_formatted": "$95,103.00",
+      "price_change": -0.30283,
+      "price_change_formatted": "-0.30%",
+      "high_24h": 99858.15000000001,
+      "low_24h": 90347.84999999999,
+      "volume": 19394504327.0,
+      "emas": {
+        "price": 95103.0,
+        "ema_9": 95182.1,
+        "ema_21": 95076.04,
+        "ema_200": 95129.0
+      },
+      "rsi": 47.02,
+      "atr": 457.29,
+      "macd": {
+        "macd_line": 277.84,
+        "signal_line": 450.5,
+        "histogram": -172.66,
+        "trend": "bearish"
+      },
+      "structure": {
+        "type": "consolidation",
+        "swing_highs": [
+          97113.0,
+          95520.0,
+          95544.0
+        ],
+        "swing_lows": [
+          94369.0,
+          95020.0,
+          94869.0
+        ],
+        "last_swing_high": 95544.0,
+        "last_swing_low": 94869.0
+      },
+      "sr_levels": {
+        "pdh": 95544.0,
+        "pdl": 94869.0,
+        "resistances": [
+          95544.0,
+          96000
+        ],
+        "supports": [
+          95000,
+          94869.0
+        ]
+      },
+      "funding_rate": 0,
+      "funding_formatted": "0.0000%",
+      "open_interest": 0,
+      "long_percent": 50.0,
+      "short_percent": 50.0,
+      "setups": {
+        "long": {
+          "type": "LONG",
+          "style": "Moderado",
+          "entry_low": 95095.0,
+          "entry_high": 95475.0,
+          "stop_loss": 94050.0,
+          "target1": 96662.5,
+          "target2": 97707.5,
+          "rr1": "1.5:1",
+          "rr2": "2.5:1",
+          "trigger": "Rejeição com volume no suporte",
+          "score": 5.5,
+          "reasons": [
+            "Consolidação - aguardar confirmação",
+            "Preço próximo ao suporte $95,000",
+            "EMA 9 > EMA 21 (momentum bullish)",
+            "Funding Rate baixo/negativo"
+          ]
+        },
+        "short": {
+          "type": "SHORT",
+          "style": "Agressivo",
+          "entry_low": 95066.28,
+          "entry_high": 95448.46,
+          "stop_loss": 96499.44,
+          "target1": 93871.98,
+          "target2": 92821.0,
+          "rr1": "1.5:1",
+          "rr2": "2.5:1",
+          "trigger": "Rejeição com volume na resistência",
+          "score": 4,
+          "reasons": [
+            "Consolidação - aguardar confirmação",
+            "Preço próximo à resistência $95,544",
+            "Preço abaixo da EMA 200"
+          ]
+        }
+      },
+      "bias": {
+        "bias": "NEUTRO",
+        "bias_class": "neutral",
+        "bullish_factors": [
+          "EMA 9 > EMA 21",
+          "Funding Rate saudável"
+        ],
+        "bearish_factors": [
+          "Preço abaixo da EMA 200"
+        ]
+      },
+      "has_setup": true
+    },
+    "ETH": {
+      "symbol": "ETH",
+      "price": 3324.26,
+      "price_formatted": "$3,324.26",
+      "price_change": 0.66677,
+      "price_change_formatted": "+0.67%",
+      "high_24h": 3490.4730000000004,
+      "low_24h": 3158.047,
+      "volume": 11986081572.0,
+      "emas": {
+        "price": 3324.26,
+        "ema_9": 3308.94,
+        "ema_21": 3295.09,
+        "ema_200": 3320.38
+      },
+      "rsi": 56.33,
+      "atr": 21.75,
+      "macd": {
+        "macd_line": 19.68,
+        "signal_line": 23.5,
+        "histogram": -3.82,
+        "trend": "bearish"
+      },
+      "structure": {
+        "type": "consolidation",
+        "swing_highs": [
+          3386.55,
+          3378.86,
+          3327.51
+        ],
+        "swing_lows": [
+          3278.6,
+          3258.59,
+          3296.39
+        ],
+        "last_swing_high": 3327.51,
+        "last_swing_low": 3296.39
+      },
+      "sr_levels": {
+        "pdh": 3327.51,
+        "pdl": 3296.39,
+        "resistances": [
+          3327.51,
+          4000
+        ],
+        "supports": [
+          3296.39,
+          3000
+        ]
+      },
+      "funding_rate": 0,
+      "funding_formatted": "0.0000%",
+      "open_interest": 0,
+      "long_percent": 50.0,
+      "short_percent": 50.0,
+      "setups": {
+        "long": {
+          "type": "LONG",
+          "style": "Conservador",
+          "entry_low": 3299.69,
+          "entry_high": 3312.87,
+          "stop_loss": 3263.43,
+          "target1": 3354.08,
+          "target2": 3390.34,
+          "rr1": "1.5:1",
+          "rr2": "2.5:1",
+          "trigger": "Rejeição com volume no suporte",
+          "score": 6,
+          "reasons": [
+            "Consolidação - aguardar confirmação",
+            "Preço próximo ao suporte $3,296",
+            "Preço acima da EMA 200",
+            "EMA 9 > EMA 21 (momentum bullish)",
+            "Funding Rate baixo/negativo"
+          ]
+        },
+        "short": null
+      },
+      "bias": {
+        "bias": "BULLISH",
+        "bias_class": "bullish",
+        "bullish_factors": [
+          "Preço acima da EMA 200",
+          "EMA 9 > EMA 21",
+          "Funding Rate saudável"
+        ],
+        "bearish_factors": []
+      },
+      "has_setup": true
+    }
+  }
+}
