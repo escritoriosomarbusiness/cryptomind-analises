@@ -52,7 +52,7 @@ if higherTimeframe != ""
         htf_trendUp := htf_ema55 > htf_ema233 and htf_ema55 > htf_ema55_prev and htf_close > htf_ema55
         htf_trendDown := htf_ema55 < htf_ema233 and htf_ema55 < htf_ema55_prev and htf_close < htf_ema55
         htf_trendNeutral := not htf_trendUp and not htf_trendDown
-        htf_trendText := htf_trendUp ? "ALTA" : htf_trendDown ? "BAIXA" : "NEUTRO"
+        htf_trendText := htf_trendUp ? "ALTA" : (htf_trendDown ? "BAIXA" : "NEUTRO")
 
 // =============================================================================
 //                             CÁLCULO DOS CANAIS
@@ -94,9 +94,9 @@ generate_signal_id() =>
 // Função para classificar qualidade do sinal
 classify_signal_quality(is_long) =>
     if is_long
-        htf_trendUp ? "PREMIUM" : htf_trendDown ? "CONTRA" : "CAUTELA"
+        htf_trendUp ? "PREMIUM" : (htf_trendDown ? "CONTRA" : "CAUTELA")
     else
-        htf_trendDown ? "PREMIUM" : htf_trendUp ? "CONTRA" : "CAUTELA"
+        htf_trendDown ? "PREMIUM" : (htf_trendUp ? "CONTRA" : "CAUTELA")
 
 // =============================================================================
 //                             LÓGICA DE SINAIS
@@ -188,13 +188,9 @@ if short_exit_condition
 // =============================================================================
 
 // Cores das labels baseadas na qualidade
-label_color_long = signal_quality == "PREMIUM" ? color.new(color.green, 0) : 
-                   signal_quality == "CAUTELA" ? color.new(color.yellow, 0) : 
-                   color.new(color.orange, 0)
+label_color_long = signal_quality == "PREMIUM" ? color.new(color.green, 0) : (signal_quality == "CAUTELA" ? color.new(color.yellow, 0) : color.new(color.orange, 0))
 
-label_color_short = signal_quality == "PREMIUM" ? color.new(color.red, 0) : 
-                    signal_quality == "CAUTELA" ? color.new(color.yellow, 0) : 
-                    color.new(color.orange, 0)
+label_color_short = signal_quality == "PREMIUM" ? color.new(color.red, 0) : (signal_quality == "CAUTELA" ? color.new(color.yellow, 0) : color.new(color.orange, 0))
 
 // Plotar sinais com cores baseadas na qualidade
 plotshape(long_entry_condition, title="Entrada Long", location=location.belowbar, 
@@ -207,8 +203,7 @@ plotshape(short_exit_condition, title="Saída Short", location=location.abovebar
           color=color.new(color.teal, 0), style=shape.cross, size=size.small)
 
 // Fundo colorido para indicar posição
-bg_color = in_long_position ? color.new(color.green, 90) : 
-           in_short_position ? color.new(color.red, 90) : na
+bg_color = in_long_position ? color.new(color.green, 90) : (in_short_position ? color.new(color.red, 90) : na)
 bgcolor(bg_color)
 
 // =============================================================================
@@ -228,15 +223,15 @@ if show_dashboard
     // MTF Tendência
     table.cell(dashboard, 0, 1, "MTF (" + higherTimeframe + "):", text_color=color.gray, 
                text_size=size.small, bgcolor=color.new(color.black, 10))
-    mtfColor = htf_trendUp ? color.green : htf_trendDown ? color.red : color.gray
+    mtfColor = htf_trendUp ? color.green : (htf_trendDown ? color.red : color.gray)
     table.cell(dashboard, 1, 1, htf_trendText, text_color=mtfColor, text_size=size.small, 
                bgcolor=color.new(color.black, 10))
     
     // Posição Atual
     table.cell(dashboard, 0, 2, "Posição:", text_color=color.gray, text_size=size.small, 
                bgcolor=color.new(color.black, 10))
-    positionText = in_long_position ? "LONG" : in_short_position ? "SHORT" : "AGUARDANDO"
-    positionColor = in_long_position ? color.green : in_short_position ? color.red : color.gray
+    positionText = in_long_position ? "LONG" : (in_short_position ? "SHORT" : "AGUARDANDO")
+    positionColor = in_long_position ? color.green : (in_short_position ? color.red : color.gray)
     table.cell(dashboard, 1, 2, positionText, text_color=positionColor, text_size=size.small, 
                bgcolor=color.new(color.black, 10))
     
@@ -244,8 +239,7 @@ if show_dashboard
     if not na(signal_quality)
         table.cell(dashboard, 0, 3, "Qualidade:", text_color=color.gray, text_size=size.small, 
                    bgcolor=color.new(color.black, 10))
-        qualityColor = signal_quality == "PREMIUM" ? color.green : 
-                       signal_quality == "CAUTELA" ? color.yellow : color.orange
+        qualityColor = signal_quality == "PREMIUM" ? color.green : (signal_quality == "CAUTELA" ? color.yellow : color.orange)
         table.cell(dashboard, 1, 3, signal_quality, text_color=qualityColor, text_size=size.small, 
                    bgcolor=color.new(color.black, 10))
     
