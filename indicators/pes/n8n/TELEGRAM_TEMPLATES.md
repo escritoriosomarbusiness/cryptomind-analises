@@ -1,4 +1,4 @@
-# 📱 Templates de Mensagens do Telegram - TuTCI v2.0
+# 📱 Templates de Mensagens do Telegram - PES v2.0
 
 ---
 
@@ -9,7 +9,7 @@ Este documento contém os templates formatados das mensagens que serão enviadas
 ### Exemplo: Sinal PREMIUM
 
 ```
-🟢 TURTLE LONG ENTRY - PREMIUM 🌟
+🟢 PES LONG ENTRY - PREMIUM 🌟
 
 Ativo: BTCUSDT
 Timeframe: 15min
@@ -30,7 +30,7 @@ Horário: 19/01/2026 13:40 (GMT-3)
 ### Exemplo: Sinal de CAUTELA
 
 ```
-🟡 TURTLE LONG ENTRY - CAUTELA ⚠️
+🟡 PES LONG ENTRY - CAUTELA ⚠️
 
 Ativo: ETHUSDT
 Timeframe: 1h
@@ -51,7 +51,7 @@ Horário: 19/01/2026 14:00 (GMT-3)
 ### Exemplo: Sinal CONTRA Tendência
 
 ```
-🔴 TURTLE LONG ENTRY - CONTRA 🚫
+🔴 PES LONG ENTRY - CONTRA 🚫
 
 Ativo: SOLUSDT
 Timeframe: 5min
@@ -76,7 +76,7 @@ Horário: 19/01/2026 14:10 (GMT-3)
 ### Exemplo: Trade com Lucro
 
 ```
-🔴 TURTLE LONG EXIT
+🔴 PES LONG EXIT
 
 Ativo: BTCUSDT
 Timeframe: 15min
@@ -96,7 +96,7 @@ ID: BTCUSDT_15_1737301200
 ### Exemplo: Trade com Prejuízo
 
 ```
-🔴 TURTLE LONG EXIT
+🔴 PES LONG EXIT
 
 Ativo: SOLUSDT
 Timeframe: 5min

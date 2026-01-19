@@ -1,10 +1,10 @@
-# 🐢 Indicador Turtle Trade Channels (TuTCI) v2.0 - MTF & Reporting
+# 📈 Indicador Price Expansion System (PES) v2.0 - MTF & Reporting
 
 ---
 
 ## 📊 VISÃO GERAL
 
-O **TuTCI (Turtle Trade Channels Indicator)** é um sistema de trading completo baseado na estratégia clássica de Turtle Trading, aprimorado com análises de múltiplos timeframes (MTF), filtros de qualidade de sinal e um sistema robusto de relatórios de performance via n8n e Airtable.
+O **PES (Price Expansion System)** é um sistema de trading completo baseado na estratégia clássica de Donchian Channels, aprimorado com análises de múltiplos timeframes (MTF), filtros de qualidade de sinal e um sistema robusto de relatórios de performance via n8n e Airtable.
 
 O objetivo é fornecer sinais de entrada e saída claros, baseados no rompimento de canais de preço (Donchian Channels), e ao mesmo tempo qualificar esses sinais com base na tendência macro, permitindo uma tomada de decisão mais informada e uma análise de performance totalmente automatizada.
 
@@ -15,7 +15,7 @@ O objetivo é fornecer sinais de entrada e saída claros, baseados no rompimento
 
 ## ✨ CARACTERÍSTICAS PRINCIPAIS (v2.0)
 
-1.  **Sinais de Turtle Trading:**
+1.  **Sinais de Donchian Channels:**
     *   **Entrada Long:** Rompimento do canal superior (máxima de X períodos).
     *   **Entrada Short:** Rompimento do canal inferior (mínima de X períodos).
     *   **Saída Long:** Rompimento do canal inferior de saída (mínima de Y períodos, com Y < X).

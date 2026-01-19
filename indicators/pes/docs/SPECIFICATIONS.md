@@ -1,10 +1,10 @@
-# ⚙️ Especificações Técnicas - TuTCI v2.0
+# ⚙️ Especificações Técnicas - PES v2.0
 
 ---
 
-Este documento detalha a lógica interna, os cálculos e as regras do indicador **Turtle Trade Channels Indicator (TuTCI) v2.0**.
+Este documento detalha a lógica interna, os cálculos e as regras do indicador **Price Expansion System (PES) v2.0**.
 
-## 1. Lógica Central: Turtle Trading com Canais Duplos
+## 1. Lógica Central: Donchian Channels com Canais Duplos
 
 O indicador utiliza dois conjuntos de Donchian Channels para operar rompimentos de preço.
 
@@ -120,7 +120,7 @@ Um ID único é gerado no momento da **ENTRADA** e reutilizado na **SAÍDA** par
 
 ```json
 {
-  "action": "TUTCI_SIGNAL",
+  "action": "PES_SIGNAL",
   "signal_id": "{string}", // ID único da operação
   "symbol": "{string}", // Ex: "BTCUSDT"
   "timeframe": "{string}", // Ex: "15"

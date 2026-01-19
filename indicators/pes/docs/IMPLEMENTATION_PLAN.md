@@ -1,8 +1,8 @@
-# 🚀 Plano de Implementação Priorizado - TuTCI v2.0
+# 🚀 Plano de Implementação Priorizado - PES v2.0
 
 ---
 
-Este documento divide o desenvolvimento do projeto TuTCI v2.0 em 3 Tiers (níveis) de prioridade, permitindo uma entrega incremental de valor, do MVP (Produto Mínimo Viável) à solução completa com relatórios avançados.
+Este documento divide o desenvolvimento do projeto PES v2.0 em 3 Tiers (níveis) de prioridade, permitindo uma entrega incremental de valor, do MVP (Produto Mínimo Viável) à solução completa com relatórios avançados.
 
 ## Tier 1: MVP - Sinais e Rastreamento de Resultados
 
@@ -10,7 +10,7 @@ Este documento divide o desenvolvimento do projeto TuTCI v2.0 em 3 Tiers (nívei
 
 ### 1.1. Pine Script (TradingView)
 
-*   [ ] **Lógica Central:** Implementar a estratégia base de Turtle Trading com canais duplos (entrada de 20 períodos, saída de 10 períodos).
+*   [ ] **Lógica Central:** Implementar a estratégia base de Donchian Channels com canais duplos (entrada de 20 períodos, saída de 10 períodos).
 *   [ ] **Gestão de Posição Básica:** Adicionar a lógica para não entrar `long` se já estiver `long`, e vice-versa.
 *   [ ] **`signal_id` Único:** Criar o ID único no momento da entrada (`{ticker}_{timeframe}_{timestamp}`) e persistir esse ID até o sinal de saída.
 *   [ ] **Webhook Simplificado:** Configurar o `alert()` para enviar um JSON contendo apenas os campos essenciais:
@@ -18,12 +18,12 @@ Este documento divide o desenvolvimento do projeto TuTCI v2.0 em 3 Tiers (nívei
 
 ### 1.2. Airtable
 
-*   [ ] **Criar Base:** Configurar a base `[Crypto] TuTCI Performance`.
+*   [ ] **Criar Base:** Configurar a base `[Crypto] PES Performance`.
 *   [ ] **Tabela `Trades`:** Criar apenas a tabela principal `Trades` com os campos essenciais para calcular o resultado de um trade (ex: `signal_id`, `status`, `entry_price`, `exit_price`, `result_percent`). As fórmulas e campos de data mais complexos podem ser deixados para o Tier 2.
 
 ### 1.3. n8n
 
-*   [ ] **Workflow `[TUTCI] Trade Processor` (v1):**
+*   [ ] **Workflow `[PES] Trade Processor` (v1):**
     *   [ ] Criar o webhook para receber os alertas do TradingView.
     *   [ ] Lógica para `ENTRY`: Criar um novo registro na tabela `Trades` do Airtable com status `OPEN`.
     *   [ ] Lógica para `EXIT`: Buscar o registro correspondente pelo `signal_id`, atualizar com o `exit_price` e mudar o status para `CLOSED`.
@@ -54,7 +54,7 @@ Este documento divide o desenvolvimento do projeto TuTCI v2.0 em 3 Tiers (nívei
 
 ### 2.3. n8n
 
-*   [ ] **Workflow `[TUTCI] Trade Processor` (v2):**
+*   [ ] **Workflow `[PES] Trade Processor` (v2):**
     *   [ ] Adaptar o workflow para receber e salvar os novos campos (`quality`, `mtf_trend`) no Airtable.
     *   [ ] **Melhorar Notificações:** Formatar as mensagens do Telegram para incluir a qualidade do sinal, usando emojis (🌟, ⚠️, 🚫) e destacando a informação.
 
@@ -75,13 +75,13 @@ Este documento divide o desenvolvimento do projeto TuTCI v2.0 em 3 Tiers (nívei
 ### 3.2. n8n
 
 *   [ ] **Ajuste no Workflow Principal:** Atualizar o workflow `Trade Processor` para calcular e preencher corretamente o campo `crypto_date` (respeitando a virada das 21:00) em cada novo trade.
-*   [ ] **Workflow `[TUTCI] Daily Report`:**
+*   [ ] **Workflow `[PES] Daily Report`:**
     *   [ ] Criar o workflow agendado para rodar às 20:59 (GMT-3).
     *   [ ] Implementar a lógica para ler os dados da tabela `Daily_Summary`.
     *   [ ] Formatar e enviar o relatório diário completo para o Telegram.
-*   [ ] **Workflow `[TUTCI] Weekly Report`:** Criar e configurar o workflow para o relatório semanal.
-*   [ ] **Workflow `[TUTCI] Monthly Report`:** Criar e configurar o workflow para o relatório mensal.
-*   [ ] **Workflow `[TUTCI] Annual Report`:** Criar e configurar o workflow para o relatório anual.
+*   [ ] **Workflow `[PES] Weekly Report`:** Criar e configurar o workflow para o relatório semanal.
+*   [ ] **Workflow `[PES] Monthly Report`:** Criar e configurar o workflow para o relatório mensal.
+*   [ ] **Workflow `[PES] Annual Report`:** Criar e configurar o workflow para o relatório anual.
 
 ### 3.3. Pine Script (TradingView)
 

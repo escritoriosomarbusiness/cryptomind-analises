@@ -1,8 +1,8 @@
-# 🗄️ Estrutura do Airtable e Sistema de Relatórios - TuTCI v2.0
+# 🗄️ Estrutura do Airtable e Sistema de Relatórios - PES v2.0
 
 ---
 
-Este documento descreve a arquitetura do banco de dados no Airtable e a lógica dos workflows de automação no n8n, que juntos formam o sistema de relatórios de performance do indicador TuTCI.
+Este documento descreve a arquitetura do banco de dados no Airtable e a lógica dos workflows de automação no n8n, que juntos formam o sistema de relatórios de performance do indicador PES.
 
 ## 1. Visão Geral da Arquitetura
 
@@ -16,7 +16,7 @@ O sistema é composto por três partes principais:
 
 ## 2. Estrutura da Base no Airtable
 
-A base será chamada `[Crypto] TuTCI Performance` e conterá 5 tabelas interligadas.
+A base será chamada `[Crypto] PES Performance` e conterá 5 tabelas interligadas.
 
 ### Tabela 1: `Trades`
 
@@ -77,7 +77,7 @@ As tabelas `Weekly`, `Monthly` e `Annual` seguem a mesma lógica, usando seus re
 
 Serão criados 5 workflows principais.
 
-### Workflow 1: `[TUTCI] Trade Processor`
+### Workflow 1: `[PES] Trade Processor`
 
 *   **Gatilho:** Webhook (escuta os sinais do TradingView).
 *   **Lógica Principal:**
@@ -92,7 +92,7 @@ Serão criados 5 workflows principais.
         c. Os campos de fórmula (`result_percent`, `duration_minutes`, etc.) serão calculados automaticamente pelo Airtable.
         d. Envia notificação de "TRADE FECHADO" para o Telegram, já incluindo o resultado.
 
-### Workflow 2: `[TUTCI] Daily Report`
+### Workflow 2: `[PES] Daily Report`
 
 *   **Gatilho:** Agendado (Cron Job).
 *   **Horário:** `59 20 * * *` (20:59, todos os dias, no fuso `America/Sao_Paulo`).
