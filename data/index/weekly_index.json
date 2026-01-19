@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-01-17T21:17:07.096247-03:00",
-  "total_weeks": 2,
+  "generated_at": "2026-01-18T23:35:01.354686-03:00",
+  "total_weeks": 3,
   "weeks": [
     {
       "year": "2026",
@@ -25,6 +25,19 @@
       "summary": {
         "win_rate": null,
         "total_setups": 0,
+        "best_asset": null
+      }
+    },
+    {
+      "year": "2026",
+      "month": "01",
+      "week": "03",
+      "filename": "week_03.json",
+      "path": "data/archive/2026/01/weekly/week_03.json",
+      "timestamp": "2026-01-18T23:35:01.286973-03:00",
+      "summary": {
+        "win_rate": null,
+        "total_setups": 4,
         "best_asset": null
       }
     }
