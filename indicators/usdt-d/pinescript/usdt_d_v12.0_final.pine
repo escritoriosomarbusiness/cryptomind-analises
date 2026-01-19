@@ -1,0 +1,402 @@
+//@version=6
+// ============================================
+// USDT.D MONITOR v12.0 - LUXALGO EDITION [PROFESSIONAL]
+// ============================================
+// Autor: CryptoMind IA
+// Versão: 12.0 (Correção Profissional)
+// Data: 19/01/2026
+//
+// CHANGELOG v12.0:
+// ✅ Alertas disparam apenas UMA vez no momento exato do evento
+// ✅ Detecção de reteste em níveis rompidos (inversão automática)
+// ✅ Sistema de rastreamento de níveis quebrados
+// ✅ Lógica profissional com crossover/crossunder
+// ✅ 100% compatível com v11.0 (mesma visualização)
+//
+// Baseado no algoritmo LuxAlgo de Pivot Points & Missed Reversals
+// Detecta automaticamente suporte/resistência e reversões perdidas
+// Sistema de alertas otimizado para webhook n8n → Telegram
+// ============================================
+
+indicator("USDT.D Monitor v12.0 [LuxAlgo Edition]", overlay=true, max_labels_count=500, max_lines_count=500, max_bars_back=500)
+
+// ============================================
+// INPUTS
+// ============================================
+length = input.int(50, 'Pivot Length', minval=1, tooltip='Tamanho da janela para detecção de pivots. Valores maiores = reversões mais significativas')
+
+show_reg = input.bool(true, 'Mostrar Pivots Regulares', inline='inline1')
+reg_ph_css = input.color(#ef5350, 'Resistência', inline='inline1')
+reg_pl_css = input.color(#26a69a, 'Suporte', inline='inline1')
+
+show_miss = input.bool(true, 'Mostrar Reversões Perdidas', inline='inline2')
+miss_ph_css = input.color(#ef5350, 'Resistência', inline='inline2')
+miss_pl_css = input.color(#26a69a, 'Suporte', inline='inline2')
+
+label_css = input.color(color.white, 'Cor do Texto')
+
+// Configurações de alerta
+touchTolerance = input.float(0.02, 'Tolerância de Toque (%)', minval=0.01, step=0.01, tooltip='Distância percentual para considerar toque no nível')
+
+// ============================================
+// VARIÁVEIS PRINCIPAIS
+// ============================================
+var line zigzag = na
+var line ghost_level = na
+var float max = 0.
+var float min = 0.
+var int max_x1 = 0
+var int min_x1 = 0
+var float follow_max = 0.
+var int follow_max_x1 = 0
+var float follow_min = 0.
+var int follow_min_x1 = 0
+var int os = 0
+var float py1 = 0.
+var int px1 = 0
+
+// Variáveis para alertas
+var float lastRegularHigh = na
+var float lastRegularLow = na
+var float lastMissedHigh = na
+var float lastMissedLow = na
+
+// ============================================
+// NOVO v12.0: RASTREAMENTO DE NÍVEIS ROMPIDOS
+// ============================================
+var float brokenResistance = na  // Resistência rompida (agora é suporte)
+var float brokenSupport = na     // Suporte rompido (agora é resistência)
+var int lastBreakBar = na        // Barra do último rompimento
+
+// ============================================
+// DETECÇÃO DE PIVOTS
+// ============================================
+n = bar_index
+ph = ta.pivothigh(length, length)
+pl = ta.pivotlow(length, length)
+
+// Rastreamento contínuo de máximos e mínimos
+max := math.max(high[length], max)
+min := math.min(low[length], min)
+follow_max := math.max(high[length], follow_max)
+follow_min := math.min(low[length], follow_min)
+
+// Atualizar posições dos extremos
+if max > max[1]
+    max_x1 := n - length
+    follow_min := low[length]
+
+if min < min[1]
+    min_x1 := n - length    
+    follow_max := high[length]
+
+if follow_min < follow_min[1]
+    follow_min_x1 := n - length
+
+if follow_max > follow_max[1]
+    follow_max_x1 := n - length
+
+// ============================================
+// ESTENDER NÍVEIS FANTASMA
+// ============================================
+line.set_x2(ghost_level[1], n)
+
+// ============================================
+// PROCESSAR PIVOT HIGH
+// ============================================
+if not na(ph)
+    if show_miss
+        if os[1] == 1
+            // Dois pivot highs consecutivos → Missed reversal LOW
+            label.new(min_x1, min, '👻', color=miss_pl_css, style=label.style_label_up, size=size.small,
+              tooltip=str.tostring(min, '#.####'))
+            
+            zigzag := line.new(px1, py1, min_x1, min, color=miss_ph_css, style=line.style_dashed)
+            px1 := min_x1
+            py1 := min
+            
+            line.set_x2(ghost_level[1], px1)
+            ghost_level := line.new(px1, py1, px1, py1, color=color.new(reg_pl_css, 50), width=2)
+            
+            // Registrar missed reversal para alertas
+            lastMissedLow := min
+            
+        else if ph < max
+            // Pivot high menor que máximo anterior → Missed reversals
+            label.new(max_x1, max, '👻', color=miss_ph_css, style=label.style_label_down, size=size.small,
+              tooltip=str.tostring(max, '#.####'))
+            label.new(follow_min_x1, follow_min, '👻', color=miss_pl_css, style=label.style_label_up, size=size.small,
+              tooltip=str.tostring(min, '#.####'))
+            
+            zigzag := line.new(px1, py1, max_x1, max, color=miss_pl_css, style=line.style_dashed)
+            px1 := max_x1
+            py1 := max
+            line.set_x2(ghost_level[1], px1)
+            ghost_level := line.new(px1, py1, px1, py1, color=color.new(reg_ph_css, 50), width=2)
+            
+            zigzag := line.new(px1, py1, follow_min_x1, follow_min, color=miss_ph_css, style=line.style_dashed)
+            px1 := follow_min_x1
+            py1 := follow_min
+            line.set_x2(ghost_level, px1)
+            ghost_level := line.new(px1, py1, px1, py1, color=color.new(reg_pl_css, 50), width=2)
+            
+            // Registrar missed reversals para alertas
+            lastMissedHigh := max
+            lastMissedLow := follow_min
+
+    if show_reg
+        label.new(n - length, ph, '▼', textcolor=label_css, color=reg_ph_css, style=label.style_label_down, size=size.small,
+          tooltip=str.tostring(ph, '#.####'))
+        zigzag := line.new(px1, py1, n - length, ph, color=miss_pl_css, style=ph < max or os[1] == 1 ? line.style_dashed : line.style_solid)
+    
+    // Registrar pivot regular para alertas
+    lastRegularHigh := ph
+    
+    py1 := ph
+    px1 := n - length
+    os := 1
+    max := ph
+    min := ph
+
+// ============================================
+// PROCESSAR PIVOT LOW
+// ============================================
+if not na(pl)
+    if show_miss  
+        if os[1] == 0
+            // Dois pivot lows consecutivos → Missed reversal HIGH
+            label.new(max_x1, max, '👻', color=miss_ph_css, style=label.style_label_down, size=size.small,
+              tooltip=str.tostring(max, '#.####'))
+            
+            zigzag := line.new(px1, py1, max_x1, max, color=miss_pl_css, style=line.style_dashed)
+            px1 := max_x1
+            py1 := max
+            
+            line.set_x2(ghost_level[1], px1)
+            ghost_level := line.new(px1, py1, px1, py1, color=color.new(reg_ph_css, 50), width=2)
+            
+            // Registrar missed reversal para alertas
+            lastMissedHigh := max
+            
+        else if pl > min
+            // Pivot low maior que mínimo anterior → Missed reversals
+            label.new(follow_max_x1, follow_max, '👻', color=miss_ph_css, style=label.style_label_down, size=size.small,
+              tooltip=str.tostring(max, '#.####'))
+            label.new(min_x1, min, '👻', color=miss_pl_css, style=label.style_label_up, size=size.small,
+              tooltip=str.tostring(min, '#.####'))
+            
+            zigzag := line.new(px1, py1, min_x1, min, color=miss_ph_css, style=line.style_dashed)
+            px1 := min_x1
+            py1 := min
+            line.set_x2(ghost_level[1], px1)
+            ghost_level := line.new(px1, py1, px1, py1, color=color.new(reg_pl_css, 50), width=2)
+            
+            zigzag := line.new(px1, py1, follow_max_x1, follow_max, color=miss_pl_css, style=line.style_dashed)
+            px1 := follow_max_x1
+            py1 := follow_max
+            line.set_x2(ghost_level, px1)
+            ghost_level := line.new(px1, py1, px1, py1, color=color.new(reg_ph_css, 50), width=2)
+            
+            // Registrar missed reversals para alertas
+            lastMissedHigh := follow_max
+            lastMissedLow := min
+
+    if show_reg
+        label.new(n - length, pl, '▲', textcolor=label_css, color=reg_pl_css, style=label.style_label_up, size=size.small,
+          tooltip=str.tostring(pl, '#.####'))
+        zigzag := line.new(px1, py1, n - length, pl, color=miss_ph_css, style=pl > min or os[1] == 0 ? line.style_dashed : line.style_solid)
+    
+    // Registrar pivot regular para alertas
+    lastRegularLow := pl
+    
+    py1 := pl
+    px1 := n - length
+    os := 0
+    max := pl
+    min := pl
+
+// ============================================
+// ESTIMATIVA EM TEMPO REAL
+// ============================================
+var label lbl = na
+if barstate.islast
+    x = 0
+    y = 0.
+    
+    prices = array.new<float>(0)
+    prices_x = array.new<int>(0)
+    
+    for i = 0 to n - px1 - 1
+        array.push(prices, os == 1 ? low[i] : high[i])
+        array.push(prices_x, n - i)
+    
+    label.delete(lbl[1])
+    
+    if os == 1
+        y := array.min(prices)
+        x := array.get(prices_x, array.indexof(prices, y))
+        
+        if show_miss
+            lbl := label.new(x, y, '👻', color=miss_pl_css, style=label.style_label_up, size=size.small,
+              tooltip=str.tostring(y, '#.####'))
+    else
+        y := array.max(prices)
+        x := array.get(prices_x, array.indexof(prices, y))
+        
+        if show_miss
+            lbl := label.new(x, y, '👻', color=miss_ph_css, style=label.style_label_down, size=size.small,
+              tooltip=str.tostring(y, '#.####'))
+            
+    if show_miss
+        line.delete(line.new(px1, py1, x, y, color=os == 1 ? miss_ph_css : miss_pl_css, style=line.style_dashed)[1])
+    
+    line.delete(line.new(x, y, n, y, color=color.new(os == 1 ? miss_ph_css : miss_pl_css, 50), width=2)[1])
+
+// ============================================
+// SISTEMA DE ALERTAS v12.0 (PROFISSIONAL)
+// ============================================
+
+// Calcular tolerância em valor absoluto
+tolerance = close * touchTolerance / 100
+
+// ============================================
+// DETECÇÃO DE EVENTOS ÚNICOS (NOVO v12.0)
+// ============================================
+
+// 1. DETECÇÃO DE ROMPIMENTOS (usando crossover/crossunder para disparo único)
+bool breakRegularHigh = false
+bool breakRegularLow = false
+
+if not na(lastRegularHigh)
+    // Rompimento de resistência: crossover acima do nível + tolerância
+    breakRegularHigh := ta.crossover(close, lastRegularHigh + tolerance)
+    
+if not na(lastRegularLow)
+    // Rompimento de suporte: crossunder abaixo do nível - tolerância
+    breakRegularLow := ta.crossunder(close, lastRegularLow - tolerance)
+
+// Atualizar níveis rompidos quando ocorre BREAK
+if breakRegularHigh
+    brokenResistance := lastRegularHigh  // Resistência rompida vira suporte
+    brokenSupport := na                   // Limpar suporte rompido anterior
+    lastBreakBar := bar_index
+
+if breakRegularLow
+    brokenSupport := lastRegularLow      // Suporte rompido vira resistência
+    brokenResistance := na                // Limpar resistência rompida anterior
+    lastBreakBar := bar_index
+
+// 2. DETECÇÃO DE TOQUES (somente se não houve BREAK nesta barra)
+bool touchRegularHigh = false
+bool touchRegularLow = false
+bool touchMissedHigh = false
+bool touchMissedLow = false
+
+// Toques em níveis ATIVOS (não rompidos)
+if not breakRegularHigh and not breakRegularLow
+    // Touch em pivots regulares (somente se não foram rompidos)
+    if not na(lastRegularHigh) and na(brokenResistance)
+        // Toque em resistência: preço entra na zona de tolerância vindo de baixo
+        touchRegularHigh := close >= lastRegularHigh - tolerance and close <= lastRegularHigh + tolerance and close[1] < lastRegularHigh - tolerance
+    
+    if not na(lastRegularLow) and na(brokenSupport)
+        // Toque em suporte: preço entra na zona de tolerância vindo de cima
+        touchRegularLow := close >= lastRegularLow - tolerance and close <= lastRegularLow + tolerance and close[1] > lastRegularLow + tolerance
+    
+    // Touch em missed reversals
+    if not na(lastMissedHigh)
+        touchMissedHigh := close >= lastMissedHigh - tolerance and close <= lastMissedHigh + tolerance and close[1] < lastMissedHigh - tolerance
+    
+    if not na(lastMissedLow)
+        touchMissedLow := close >= lastMissedLow - tolerance and close <= lastMissedLow + tolerance and close[1] > lastMissedLow + tolerance
+
+// 3. DETECÇÃO DE RETESTE (NOVO v12.0)
+bool retestBrokenResistance = false
+bool retestBrokenSupport = false
+
+// Reteste de resistência rompida (agora é suporte)
+if not na(brokenResistance) and not na(lastBreakBar) and (bar_index - lastBreakBar) > 1
+    // Preço volta e toca o nível que era resistência (agora suporte)
+    retestBrokenResistance := close >= brokenResistance - tolerance and close <= brokenResistance + tolerance and close[1] < brokenResistance - tolerance
+
+// Reteste de suporte rompido (agora é resistência)
+if not na(brokenSupport) and not na(lastBreakBar) and (bar_index - lastBreakBar) > 1
+    // Preço volta e toca o nível que era suporte (agora resistência)
+    retestBrokenSupport := close >= brokenSupport - tolerance and close <= brokenSupport + tolerance and close[1] > brokenSupport + tolerance
+
+// ============================================
+// CONSTRUÇÃO DO ALERTA
+// ============================================
+
+string eventType = na
+string pivotType = na
+string direction = na
+float level = na
+
+// Prioridade: BREAK > RETESTE > TOUCH
+
+if breakRegularHigh
+    eventType := "BREAK"
+    pivotType := "REGULAR"
+    direction := "HIGH"
+    level := lastRegularHigh
+else if breakRegularLow
+    eventType := "BREAK"
+    pivotType := "REGULAR"
+    direction := "LOW"
+    level := lastRegularLow
+else if retestBrokenResistance
+    eventType := "TOUCH"
+    pivotType := "RETEST"
+    direction := "LOW"  // Agora é suporte (ex-resistência)
+    level := brokenResistance
+else if retestBrokenSupport
+    eventType := "TOUCH"
+    pivotType := "RETEST"
+    direction := "HIGH"  // Agora é resistência (ex-suporte)
+    level := brokenSupport
+else if touchRegularHigh
+    eventType := "TOUCH"
+    pivotType := "REGULAR"
+    direction := "HIGH"
+    level := lastRegularHigh
+else if touchRegularLow
+    eventType := "TOUCH"
+    pivotType := "REGULAR"
+    direction := "LOW"
+    level := lastRegularLow
+else if touchMissedHigh
+    eventType := "TOUCH"
+    pivotType := "MISSED"
+    direction := "HIGH"
+    level := lastMissedHigh
+else if touchMissedLow
+    eventType := "TOUCH"
+    pivotType := "MISSED"
+    direction := "LOW"
+    level := lastMissedLow
+
+// Detectar timeframe atual
+currentTF = timeframe.period
+
+// Construir timestamp
+timestamp = str.format("{0,date,yyyy-MM-dd} {0,time,HH:mm:ss}", timenow)
+
+// Construir JSON para webhook
+alertMessage = not na(eventType) ? '{"action":"USDT_D_AUTO_EVENT","timeframe":"' + currentTF + '","eventType":"' + eventType + '","pivotInfo":{"type":"' + pivotType + '","direction":"' + direction + '","level":' + str.tostring(level, '#.####') + ',"pivotLength":' + str.tostring(length) + '},"dominance":' + str.tostring(close, '#.####') + ',"timestamp":"' + timestamp + '"}' : na
+
+// Condição de alerta unificada
+alertCondition = not na(eventType)
+
+// Alerta único com JSON dinâmico (freq_once_per_bar garante disparo único)
+if alertCondition
+    alert(alertMessage, alert.freq_once_per_bar)
+
+// ============================================
+// PLOTAGEM DE DEBUG (OPCIONAL)
+// ============================================
+// Descomentar para debug
+// plot(lastRegularHigh, "Last Regular High", color=color.new(color.red, 80), linewidth=1, style=plot.style_circles)
+// plot(lastRegularLow, "Last Regular Low", color=color.new(color.green, 80), linewidth=1, style=plot.style_circles)
+// plot(brokenResistance, "Broken Resistance (now Support)", color=color.new(color.blue, 70), linewidth=2, style=plot.style_cross)
+// plot(brokenSupport, "Broken Support (now Resistance)", color=color.new(color.orange, 70), linewidth=2, style=plot.style_cross)
