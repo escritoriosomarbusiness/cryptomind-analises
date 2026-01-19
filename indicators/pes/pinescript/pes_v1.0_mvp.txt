@@ -1,0 +1,113 @@
+//@version=5
+indicator("PES v1.0 (MVP) - Price Expansion System", shorttitle="PES v1.0", overlay=true)
+
+// =============================================================================
+//                             INPUTS
+// =============================================================================
+entry_len = input.int(20, "Período Canal de Entrada", minval=1, group="Configurações dos Canais")
+exit_len = input.int(10, "Período Canal de Saída", minval=1, group="Configurações dos Canais")
+show_channels = input.bool(true, "Mostrar Canais no Gráfico", group="Visualização")
+
+// =============================================================================
+//                             CÁLCULO DOS CANAIS
+// =============================================================================
+entry_high = ta.highest(high, entry_len)[1]
+entry_low = ta.lowest(low, entry_len)[1]
+exit_high = ta.highest(high, exit_len)[1]
+exit_low = ta.lowest(low, exit_len)[1]
+
+// Plotar canais
+plot(show_channels ? entry_high : na, "Entrada Long", color=color.new(color.green, 0))
+plot(show_channels ? entry_low : na, "Entrada Short", color=color.new(color.red, 0))
+plot(show_channels ? exit_low : na, "Saída Long", color=color.new(color.maroon, 20))
+plot(show_channels ? exit_high : na, "Saída Short", color=color.new(color.teal, 20))
+
+// =============================================================================
+//                             GESTÃO DE ESTADO
+// =============================================================================
+var bool in_long_position = false
+var bool in_short_position = false
+var string signal_id = na
+
+// Função para gerar um ID único para o sinal
+// Usamos o timestamp UTC como base para garantir a unicidade
+generate_signal_id() =>
+    str.tostring(syminfo.ticker) + "_" + timeframe.period + "_" + str.tostring(time_utc)
+
+// =============================================================================
+//                             LÓGICA DE SINAIS E ALERTAS
+// =============================================================================
+
+// --- CONDIÇÕES DE ENTRADA ---
+// Apenas entra se não estiver em nenhuma posição
+long_entry_condition = not in_long_position and not in_short_position and close > entry_high
+short_entry_condition = not in_short_position and not in_long_position and close < entry_low
+
+// --- CONDIÇÕES DE SAÍDA ---
+// Apenas sai se estiver na posição correspondente
+long_exit_condition = in_long_position and close < exit_low
+short_exit_condition = in_short_position and close > exit_high
+
+// --- LÓGICA DE ENTRADA LONG ---
+if long_entry_condition
+    in_long_position := true
+    signal_id := generate_signal_id()
+    alert_message_long_entry = 
+     "{\"action\": \"PES_SIGNAL\", " + 
+     "\"signal_id\": \"" + signal_id + "\", " + 
+     "\"symbol\": \"" + syminfo.ticker + "\", " + 
+     "\"timeframe\": \"" + timeframe.period + "\", " + 
+     "\"type\": \"LONG_ENTRY\", " + 
+     "\"price\": " + str.tostring(close) + "}"
+    alert(alert_message_long_entry, freq=alert.freq_once_per_bar_close)
+
+// --- LÓGICA DE SAÍDA LONG ---
+if long_exit_condition
+    in_long_position := false
+    alert_message_long_exit = 
+     "{\"action\": \"PES_SIGNAL\", " + 
+     "\"signal_id\": \"" + signal_id + "\", " + 
+     "\"symbol\": \"" + syminfo.ticker + "\", " + 
+     "\"timeframe\": \"" + timeframe.period + "\", " + 
+     "\"type\": \"LONG_EXIT\", " + 
+     "\"price\": " + str.tostring(close) + "}"
+    alert(alert_message_long_exit, freq=alert.freq_once_per_bar_close)
+    signal_id := na // Reseta o ID após a saída
+
+// --- LÓGICA DE ENTRADA SHORT ---
+if short_entry_condition
+    in_short_position := true
+    signal_id := generate_signal_id()
+    alert_message_short_entry = 
+     "{\"action\": \"PES_SIGNAL\", " + 
+     "\"signal_id\": \"" + signal_id + "\", " + 
+     "\"symbol\": \"" + syminfo.ticker + "\", " + 
+     "\"timeframe\": \"" + timeframe.period + "\", " + 
+     "\"type\": \"SHORT_ENTRY\", " + 
+     "\"price\": " + str.tostring(close) + "}"
+    alert(alert_message_short_entry, freq=alert.freq_once_per_bar_close)
+
+// --- LÓGICA DE SAÍDA SHORT ---
+if short_exit_condition
+    in_short_position := false
+    alert_message_short_exit = 
+     "{\"action\": \"PES_SIGNAL\", " + 
+     "\"signal_id\": \"" + signal_id + "\", " + 
+     "\"symbol\": \"" + syminfo.ticker + "\", " + 
+     "\"timeframe\": \"" + timeframe.period + "\", " + 
+     "\"type\": \"SHORT_EXIT\", " + 
+     "\"price\": " + str.tostring(close) + "}"
+    alert(alert_message_short_exit, freq=alert.freq_once_per_bar_close)
+    signal_id := na // Reseta o ID após a saída
+
+// =============================================================================
+//                             VISUALIZAÇÃO NO GRÁFICO
+// =============================================================================
+plotshape(long_entry_condition, title="Entrada Long", location=location.belowbar, color=color.new(color.green, 0), style=shape.triangleup, size=size.small)
+plotshape(short_entry_condition, title="Entrada Short", location=location.abovebar, color=color.new(color.red, 0), style=shape.triangledown, size=size.small)
+plotshape(long_exit_condition, title="Saída Long", location=location.belowbar, color=color.new(color.maroon, 0), style=shape.cross, size=size.small)
+plotshape(short_exit_condition, title="Saída Short", location=location.abovebar, color=color.new(color.teal, 0), style=shape.cross, size=size.small)
+
+// Mudar a cor do fundo para indicar a posição
+bg_color = in_long_position ? color.new(color.green, 90) : in_short_position ? color.new(color.red, 90) : na
+bgcolor(bg_color)
