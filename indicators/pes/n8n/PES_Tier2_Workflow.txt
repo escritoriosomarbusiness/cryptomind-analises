@@ -1,0 +1,348 @@
+{
+  "name": "[PES] Trade Processor v2.0 (Tier 2)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "pes-signals",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "webhook-tradingview",
+      "name": "Webhook TradingView",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "pes-signals"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "rules": [
+            {
+              "name": "Entrada",
+              "conditions": {
+                "string": [
+                  {
+                    "value1": "={{ $json.body.type }}",
+                    "operation": "contains",
+                    "value2": "ENTRY"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "Saída",
+              "conditions": {
+                "string": [
+                  {
+                    "value1": "={{ $json.body.type }}",
+                    "operation": "contains",
+                    "value2": "EXIT"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "id": "switch-entry-exit",
+      "name": "Switch Entry/Exit",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "direction",
+              "value": "={{ $json.body.type.includes('LONG') ? 'LONG' : 'SHORT' }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-direction",
+      "name": "Set Direction",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [650, 200]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "application": "appXXXXXXXXXXXXXX",
+        "table": "Trades",
+        "fields": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "signal_id": "={{ $json.body.signal_id }}",
+            "status": "OPEN",
+            "symbol": "={{ $json.body.symbol }}",
+            "timeframe": "={{ $json.body.timeframe }}",
+            "direction": "={{ $json.direction }}",
+            "entry_price": "={{ $json.body.price }}",
+            "entry_time_utc": "={{ $now.toISO() }}",
+            "quality": "={{ $json.body.quality }}",
+            "mtf_trend": "={{ $json.body.mtf_trend }}",
+            "entry_channel": "={{ $json.body.entry_channel }}",
+            "exit_channel": "={{ $json.body.exit_channel }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "airtable-create-trade",
+      "name": "Airtable - Create Trade",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [850, 200],
+      "credentials": {
+        "airtableApi": {
+          "id": "1",
+          "name": "Airtable Crypto"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "YOUR_CHAT_ID",
+        "text": "={{ $json.body.quality === 'PREMIUM' ? '🟢' : $json.body.quality === 'CAUTELA' ? '🟡' : '🟠' }} PES {{ $json.direction }} ENTRY - {{ $json.body.quality }} {{ $json.body.quality === 'PREMIUM' ? '🌟' : $json.body.quality === 'CAUTELA' ? '⚠️' : '🚫' }}\n\nAtivo: {{ $json.body.symbol }}\nTimeframe: {{ $json.body.timeframe }}min\nPreço Entrada: ${{ $json.body.price.toFixed(2) }}\n\n📊 Canal Superior: ${{ $json.body.entry_channel.toFixed(2) }}\n📊 Canal Inferior: ${{ $json.body.exit_channel.toFixed(2) }}\n\n📈 Tendência Macro: {{ $json.body.mtf_trend }} {{ $json.body.mtf_trend === 'ALTA' ? '✅' : $json.body.mtf_trend === 'BAIXA' ? '❌' : '〰️' }}\n🎯 Qualidade: {{ $json.body.quality }} {{ $json.body.quality === 'PREMIUM' ? '🌟' : $json.body.quality === 'CAUTELA' ? '⚠️' : '🚫' }}\n\n{{ $json.body.quality === 'PREMIUM' ? '⚠️ Este é um sinal de alta qualidade, alinhado com a tendência macro!' : $json.body.quality === 'CAUTELA' ? '⚠️ Sinal em tendência neutra. Opere com gestão de risco reforçada.' : '⚠️ Sinal contra a tendência macro. Alto risco!' }}\n\nID: {{ $json.body.signal_id }}",
+        "additionalFields": {
+          "disable_notification": false,
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "telegram-notify-entry",
+      "name": "Telegram - Notify Entry",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [1050, 200],
+      "credentials": {
+        "telegramApi": {
+          "id": "2",
+          "name": "Telegram Bot Principal"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "list",
+        "application": "appXXXXXXXXXXXXXX",
+        "table": "Trades",
+        "options": {
+          "filterByFormula": "AND({signal_id} = '{{ $json.body.signal_id }}', {status} = 'OPEN')"
+        }
+      },
+      "id": "airtable-find-trade",
+      "name": "Airtable - Find Trade",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [650, 400],
+      "credentials": {
+        "airtableApi": {
+          "id": "1",
+          "name": "Airtable Crypto"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.fields }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "id": "if-trade-found",
+      "name": "IF Trade Found",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [850, 400]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "application": "appXXXXXXXXXXXXXX",
+        "table": "Trades",
+        "id": "={{ $items('Airtable - Find Trade')[0].json.id }}",
+        "fields": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "CLOSED",
+            "exit_price": "={{ $json.body.price }}",
+            "exit_time_utc": "={{ $now.toISO() }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "airtable-update-trade",
+      "name": "Airtable - Update Trade",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [1050, 400],
+      "credentials": {
+        "airtableApi": {
+          "id": "1",
+          "name": "Airtable Crypto"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "keepOnlySet": false,
+        "values": {
+          "number": [
+            {
+              "name": "result_percent",
+              "value": "={{ (() => { const entryPrice = $items('Airtable - Find Trade')[0].json.fields.entry_price; const exitPrice = $json.body.price; const direction = $items('Airtable - Find Trade')[0].json.fields.direction; let result = 0; if (direction === 'LONG') { result = ((exitPrice - entryPrice) / entryPrice) * 100; } else { result = ((entryPrice - exitPrice) / entryPrice) * 100; } return result.toFixed(2); })() }}"
+            }
+          ],
+          "string": [
+            {
+              "name": "result_emoji",
+              "value": "={{ $json.result_percent >= 0 ? '✅' : '❌' }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-calculate-result",
+      "name": "Set - Calculate Result",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [1250, 400]
+    },
+    {
+      "parameters": {
+        "chatId": "YOUR_CHAT_ID",
+        "text": "🔴 PES {{ $items('Airtable - Find Trade')[0].json.fields.direction }} EXIT\n\nAtivo: {{ $json.body.symbol }}\n\n📈 Entrada: ${{ $items('Airtable - Find Trade')[0].json.fields.entry_price.toFixed(2) }}\n📉 Saída: ${{ $json.body.price.toFixed(2) }}\n\n💰 Resultado: {{ $json.result_percent }}% {{ $json.result_emoji }}\n\n🎯 Qualidade do Setup: {{ $items('Airtable - Find Trade')[0].json.fields.quality }} {{ $items('Airtable - Find Trade')[0].json.fields.quality === 'PREMIUM' ? '🌟' : $items('Airtable - Find Trade')[0].json.fields.quality === 'CAUTELA' ? '⚠️' : '🚫' }}\n📊 Tendência Macro: {{ $items('Airtable - Find Trade')[0].json.fields.mtf_trend }} {{ $items('Airtable - Find Trade')[0].json.fields.mtf_trend === 'ALTA' ? '✅' : $items('Airtable - Find Trade')[0].json.fields.mtf_trend === 'BAIXA' ? '❌' : '〰️' }}\n\nID: {{ $json.body.signal_id }}",
+        "additionalFields": {
+          "disable_notification": false,
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "telegram-notify-exit",
+      "name": "Telegram - Notify Exit",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [1450, 400],
+      "credentials": {
+        "telegramApi": {
+          "id": "2",
+          "name": "Telegram Bot Principal"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook TradingView": {
+      "main": [
+        [
+          {
+            "node": "Switch Entry/Exit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch Entry/Exit": {
+      "main": [
+        [
+          {
+            "node": "Set Direction",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Airtable - Find Trade",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Direction": {
+      "main": [
+        [
+          {
+            "node": "Airtable - Create Trade",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable - Create Trade": {
+      "main": [
+        [
+          {
+            "node": "Telegram - Notify Entry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable - Find Trade": {
+      "main": [
+        [
+          {
+            "node": "IF Trade Found",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Trade Found": {
+      "main": [
+        [
+          {
+            "node": "Airtable - Update Trade",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable - Update Trade": {
+      "main": [
+        [
+          {
+            "node": "Set - Calculate Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set - Calculate Result": {
+      "main": [
+        [
+          {
+            "node": "Telegram - Notify Exit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "versionId": "1",
+  "id": "pes-tier2-workflow",
+  "meta": {
+    "instanceId": "your-instance-id"
+  },
+  "tags": []
+}
