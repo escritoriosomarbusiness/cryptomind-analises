@@ -1,4 +1,4 @@
-//@version=5
+//@version=6
 indicator("PES v1.0 (MVP) - Price Expansion System", shorttitle="PES v1.0", overlay=true)
 
 // =============================================================================
@@ -32,7 +32,7 @@ var string signal_id = na
 // Função para gerar um ID único para o sinal
 // Usamos o timestamp UTC como base para garantir a unicidade
 generate_signal_id() =>
-    str.tostring(syminfo.ticker) + "_" + timeframe.period + "_" + str.tostring(time_utc)
+    str.tostring(syminfo.ticker) + "_" + timeframe.period + "_" + str.tostring(time)
 
 // =============================================================================
 //                             LÓGICA DE SINAIS E ALERTAS
@@ -59,7 +59,7 @@ if long_entry_condition
      "\"timeframe\": \"" + timeframe.period + "\", " + 
      "\"type\": \"LONG_ENTRY\", " + 
      "\"price\": " + str.tostring(close) + "}"
-    alert(alert_message_long_entry, freq=alert.freq_once_per_bar_close)
+    alert(alert_message_long_entry, alert.freq_once_per_bar_close)
 
 // --- LÓGICA DE SAÍDA LONG ---
 if long_exit_condition
@@ -71,7 +71,7 @@ if long_exit_condition
      "\"timeframe\": \"" + timeframe.period + "\", " + 
      "\"type\": \"LONG_EXIT\", " + 
      "\"price\": " + str.tostring(close) + "}"
-    alert(alert_message_long_exit, freq=alert.freq_once_per_bar_close)
+    alert(alert_message_long_exit, alert.freq_once_per_bar_close)
     signal_id := na // Reseta o ID após a saída
 
 // --- LÓGICA DE ENTRADA SHORT ---
@@ -85,7 +85,7 @@ if short_entry_condition
      "\"timeframe\": \"" + timeframe.period + "\", " + 
      "\"type\": \"SHORT_ENTRY\", " + 
      "\"price\": " + str.tostring(close) + "}"
-    alert(alert_message_short_entry, freq=alert.freq_once_per_bar_close)
+    alert(alert_message_short_entry, alert.freq_once_per_bar_close)
 
 // --- LÓGICA DE SAÍDA SHORT ---
 if short_exit_condition
@@ -97,7 +97,7 @@ if short_exit_condition
      "\"timeframe\": \"" + timeframe.period + "\", " + 
      "\"type\": \"SHORT_EXIT\", " + 
      "\"price\": " + str.tostring(close) + "}"
-    alert(alert_message_short_exit, freq=alert.freq_once_per_bar_close)
+    alert(alert_message_short_exit, alert.freq_once_per_bar_close)
     signal_id := na // Reseta o ID após a saída
 
 // =============================================================================
