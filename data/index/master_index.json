@@ -1,21 +1,25 @@
 {
-  "generated_at": "2026-01-18T23:35:01.355341-03:00",
+  "generated_at": "2026-01-19T09:38:33.833786-03:00",
   "statistics": {
-    "total_days": 15,
+    "total_days": 16,
     "total_weeks": 3,
     "total_months": 1,
-    "total_analyses": 37
+    "total_analyses": 38
   },
   "latest": {
     "daily": {
-      "type": "closing",
-      "filename": "closing_21-16.json",
-      "path": "data/archive/2026/01/daily/17/closing_21-16.json",
-      "timestamp": "2026-01-17T21:16:59.995697-03:00",
-      "time": "21:16",
+      "type": "opening",
+      "filename": "opening_09-38.json",
+      "path": "data/archive/2026/01/daily/19/opening_09-38.json",
+      "timestamp": "2026-01-19T09:38:00.450363-03:00",
+      "time": "09:38",
       "summary": {
-        "summary": "",
-        "performance": {}
+        "assets": [
+          "BTC"
+        ],
+        "setups_count": 1,
+        "fear_greed": 44,
+        "usdt_d_impact": "BULLISH"
       }
     },
     "weekly": {
