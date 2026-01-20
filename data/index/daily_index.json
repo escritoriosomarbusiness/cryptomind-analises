@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-01-19T22:39:01.084838-03:00",
-  "total_days": 16,
+  "generated_at": "2026-01-20T09:38:14.072718-03:00",
+  "total_days": 17,
   "days": [
     {
       "date": "2026-01-02",
@@ -633,6 +633,29 @@
             ],
             "setups_count": 1,
             "fear_greed": 44,
+            "usdt_d_impact": "BULLISH"
+          }
+        }
+      ]
+    },
+    {
+      "date": "2026-01-20",
+      "year": "2026",
+      "month": "01",
+      "day": "20",
+      "analyses": [
+        {
+          "type": "opening",
+          "filename": "opening_09-37.json",
+          "path": "data/archive/2026/01/daily/20/opening_09-37.json",
+          "timestamp": "2026-01-20T09:37:40.757775-03:00",
+          "time": "09:37",
+          "summary": {
+            "assets": [
+              "BTC"
+            ],
+            "setups_count": 1,
+            "fear_greed": 32,
             "usdt_d_impact": "BULLISH"
           }
         }
