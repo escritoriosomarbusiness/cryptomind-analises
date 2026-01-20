@@ -1,66 +1,63 @@
 {
-  "timestamp": "2026-01-17T21:16:59.995697-03:00",
-  "date": "17 de Janeiro de 2026",
-  "time": "21:16",
+  "timestamp": "2026-01-19T22:39:00.219841-03:00",
+  "date": "19 de Janeiro de 2026",
+  "time": "22:39",
   "results": {
     "BTC": {
       "symbol": "BTC",
-      "open_price": 95465.97,
-      "close_price": 95224.17,
-      "price_change": -0.25,
-      "bias_morning": "BULLISH",
+      "open_price": 93122.0,
+      "close_price": 0,
+      "price_change": -100.0,
+      "bias_morning": "NEUTRO",
       "bias_result": {
-        "correct": true,
+        "correct": false,
         "result": "🟡 PARCIAL",
-        "description": "Viés bullish, mercado lateral (-0.25%)"
+        "description": "Viés neutro, mas mercado moveu -100.00%"
       },
       "long_setup": {
         "type": "LONG",
         "style": "Moderado",
-        "entry_low": 95095.0,
-        "entry_high": 95475.0,
-        "stop_loss": 94050.0,
-        "target1": 96662.5,
-        "target2": 97707.5,
+        "entry_low": 93093.0,
+        "entry_high": 93465.0,
+        "stop_loss": 92070.0,
+        "target1": 94627.5,
+        "target2": 95650.5,
         "rr1": "1.5:1",
         "rr2": "2.5:1",
         "trigger": "Rejeição com volume no suporte",
-        "score": 5.5,
+        "score": 4,
         "reasons": [
-          "Preço próximo ao suporte $95,000",
-          "Preço acima da EMA 200",
-          "EMA 9 > EMA 21 (momentum bullish)",
+          "Preço próximo ao suporte $93,000",
+          "RSI sobrevendido (27.28)",
           "Funding Rate baixo/negativo"
         ]
       },
       "long_result": {
-        "status": "ongoing",
-        "result": "⏳ EM ANDAMENTO",
-        "description": "Posição aberta, preço atual $95,224.17",
-        "pnl": -0.17
+        "status": "not_evaluated",
+        "result": null
       },
       "short_setup": {
         "type": "SHORT",
-        "style": "Agressivo",
-        "entry_low": 95160.8,
-        "entry_high": 95543.36,
-        "stop_loss": 96595.39,
-        "target1": 93965.32,
-        "target2": 92913.29,
+        "style": "Moderado",
+        "entry_low": 93530.0,
+        "entry_high": 93906.0,
+        "stop_loss": 94940.0,
+        "target1": 92355.0,
+        "target2": 91321.0,
         "rr1": "1.5:1",
         "rr2": "2.5:1",
         "trigger": "Rejeição com volume na resistência",
-        "score": 5,
+        "score": 7,
         "reasons": [
           "Estrutura LH + LL confirmada",
-          "Preço próximo à resistência $95,639"
+          "Preço próximo à resistência $94,000",
+          "Preço abaixo da EMA 200",
+          "EMA 9 < EMA 21 (momentum bearish)"
         ]
       },
       "short_result": {
-        "status": "ongoing",
-        "result": "⏳ EM ANDAMENTO",
-        "description": "Posição aberta, preço atual $95,224.17",
-        "pnl": 0.32
+        "status": "not_evaluated",
+        "result": null
       }
     }
   },
@@ -68,18 +65,18 @@
     "total_setups": 2,
     "winning": 0,
     "losing": 0,
-    "ongoing": 2,
-    "not_activated": 0,
-    "total_pnl": 0.15,
-    "bias_correct": 1,
+    "ongoing": 0,
+    "not_activated": 2,
+    "total_pnl": 0,
+    "bias_correct": 0,
     "bias_total": 1
   },
   "cumulative_stats": {
-    "total_setups": 116,
+    "total_setups": 118,
     "winning_setups": 22,
     "losing_setups": 7,
-    "ongoing_setups": 2,
+    "ongoing_setups": 0,
     "win_rate": 75.9,
-    "bias_accuracy": 31.5
+    "bias_accuracy": 31.2
   }
 }
