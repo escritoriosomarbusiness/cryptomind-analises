@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-01-21T09:38:12.113987-03:00",
+  "generated_at": "2026-01-21T22:41:41.208175-03:00",
   "total_days": 18,
   "days": [
     {
@@ -678,6 +678,17 @@
       "month": "01",
       "day": "21",
       "analyses": [
+        {
+          "type": "closing",
+          "filename": "closing_22-41.json",
+          "path": "data/archive/2026/01/daily/21/closing_22-41.json",
+          "timestamp": "2026-01-21T22:41:40.414289-03:00",
+          "time": "22:41",
+          "summary": {
+            "summary": "",
+            "performance": {}
+          }
+        },
         {
           "type": "opening",
           "filename": "opening_09-37.json",
