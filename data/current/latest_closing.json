@@ -1,34 +1,35 @@
 {
-  "timestamp": "2026-01-21T22:41:40.414289-03:00",
-  "date": "21 de Janeiro de 2026",
-  "time": "22:41",
+  "timestamp": "2026-01-22T22:39:22.511402-03:00",
+  "date": "22 de Janeiro de 2026",
+  "time": "22:39",
   "results": {
     "BTC": {
       "symbol": "BTC",
-      "open_price": 88461.0,
+      "open_price": 89969.0,
       "close_price": 0,
       "price_change": -100.0,
-      "bias_morning": "NEUTRO",
+      "bias_morning": "BULLISH",
       "bias_result": {
         "correct": false,
-        "result": "🟡 PARCIAL",
-        "description": "Viés neutro, mas mercado moveu -100.00%"
+        "result": "❌ ERRO",
+        "description": "Viés bullish, mas mercado caiu -100.00%"
       },
       "long_setup": {
         "type": "LONG",
         "style": "Moderado",
-        "entry_low": 88088.0,
-        "entry_high": 88440.0,
-        "stop_loss": 87120.0,
-        "target1": 89540.0,
-        "target2": 90508.0,
+        "entry_low": 89089.0,
+        "entry_high": 89445.0,
+        "stop_loss": 88110.0,
+        "target1": 90557.5,
+        "target2": 91536.5,
         "rr1": "1.5:1",
         "rr2": "2.5:1",
         "trigger": "Rejeição com volume no suporte",
-        "score": 4,
+        "score": 5,
         "reasons": [
-          "Preço próximo ao suporte $88,000",
-          "RSI sobrevendido (22.88)",
+          "Preço próximo ao suporte $89,000",
+          "Preço acima da EMA 200",
+          "RSI sobrevendido (34.91)",
           "Funding Rate baixo/negativo"
         ]
       },
@@ -39,19 +40,18 @@
       "short_setup": {
         "type": "SHORT",
         "style": "Moderado",
-        "entry_low": 88555.0,
-        "entry_high": 88911.0,
-        "stop_loss": 89890.0,
-        "target1": 87442.5,
-        "target2": 86463.5,
+        "entry_low": 89550.0,
+        "entry_high": 89910.0,
+        "stop_loss": 90900.0,
+        "target1": 88425.0,
+        "target2": 87435.0,
         "rr1": "1.5:1",
         "rr2": "2.5:1",
         "trigger": "Rejeição com volume na resistência",
-        "score": 7,
+        "score": 6,
         "reasons": [
           "Estrutura LH + LL confirmada",
-          "Preço próximo à resistência $89,000",
-          "Preço abaixo da EMA 200",
+          "Preço próximo à resistência $90,000",
           "EMA 9 < EMA 21 (momentum bearish)"
         ]
       },
@@ -72,11 +72,11 @@
     "bias_total": 1
   },
   "cumulative_stats": {
-    "total_setups": 122,
+    "total_setups": 124,
     "winning_setups": 22,
     "losing_setups": 7,
     "ongoing_setups": 0,
     "win_rate": 75.9,
-    "bias_accuracy": 30.5
+    "bias_accuracy": 30.2
   }
 }
