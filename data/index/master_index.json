@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-01-23T22:27:16.757343-03:00",
+  "generated_at": "2026-01-25T23:40:49.889248-03:00",
   "statistics": {
     "total_days": 20,
-    "total_weeks": 3,
+    "total_weeks": 4,
     "total_months": 1,
     "total_analyses": 47
   },
@@ -27,13 +27,13 @@
     "weekly": {
       "year": "2026",
       "month": "01",
-      "week": "03",
-      "filename": "week_03.json",
-      "path": "data/archive/2026/01/weekly/week_03.json",
-      "timestamp": "2026-01-18T23:35:01.286973-03:00",
+      "week": "04",
+      "filename": "week_04.json",
+      "path": "data/archive/2026/01/weekly/week_04.json",
+      "timestamp": "2026-01-25T23:40:49.817746-03:00",
       "summary": {
         "win_rate": null,
-        "total_setups": 4,
+        "total_setups": 7,
         "best_asset": null
       }
     },
