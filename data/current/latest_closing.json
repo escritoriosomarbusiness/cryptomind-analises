@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-01-26T22:45:09.134396-03:00",
-  "date": "26 de Janeiro de 2026",
-  "time": "22:45",
+  "timestamp": "2026-01-27T22:41:27.158539-03:00",
+  "date": "27 de Janeiro de 2026",
+  "time": "22:41",
   "results": {
     "BTC": {
       "symbol": "BTC",
-      "open_price": 87736.0,
+      "open_price": 87933.0,
       "close_price": 0,
       "price_change": -100.0,
       "bias_morning": "NEUTRO",
@@ -17,19 +17,18 @@
       "long_setup": {
         "type": "LONG",
         "style": "Moderado",
-        "entry_low": 87087.0,
-        "entry_high": 87435.0,
-        "stop_loss": 86130.0,
-        "target1": 88522.5,
-        "target2": 89479.5,
+        "entry_low": 87267.18,
+        "entry_high": 87615.9,
+        "stop_loss": 86308.2,
+        "target1": 88705.65,
+        "target2": 89664.63,
         "rr1": "1.5:1",
         "rr2": "2.5:1",
         "trigger": "Rejeição com volume no suporte",
-        "score": 5,
+        "score": 4.5,
         "reasons": [
           "Consolidação - aguardar confirmação",
-          "Preço próximo ao suporte $87,000",
-          "RSI sobrevendido (31.02)",
+          "Preço próximo ao suporte $87,180",
           "Funding Rate baixo/negativo"
         ]
       },
@@ -48,11 +47,10 @@
         "rr1": "1.5:1",
         "rr2": "2.5:1",
         "trigger": "Rejeição com volume na resistência",
-        "score": 5,
+        "score": 4,
         "reasons": [
           "Consolidação - aguardar confirmação",
           "Preço próximo à resistência $88,000",
-          "Preço abaixo da EMA 200",
           "EMA 9 < EMA 21 (momentum bearish)"
         ]
       },
@@ -73,11 +71,11 @@
     "bias_total": 1
   },
   "cumulative_stats": {
-    "total_setups": 131,
+    "total_setups": 133,
     "winning_setups": 22,
     "losing_setups": 7,
     "ongoing_setups": 0,
     "win_rate": 75.9,
-    "bias_accuracy": 29.0
+    "bias_accuracy": 28.7
   }
 }
