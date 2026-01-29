@@ -1,34 +1,35 @@
 {
-  "timestamp": "2026-01-27T22:41:27.158539-03:00",
-  "date": "27 de Janeiro de 2026",
-  "time": "22:41",
+  "timestamp": "2026-01-28T22:53:20.273059-03:00",
+  "date": "28 de Janeiro de 2026",
+  "time": "22:53",
   "results": {
     "BTC": {
       "symbol": "BTC",
-      "open_price": 87933.0,
+      "open_price": 89714.0,
       "close_price": 0,
       "price_change": -100.0,
-      "bias_morning": "NEUTRO",
+      "bias_morning": "BULLISH",
       "bias_result": {
         "correct": false,
-        "result": "🟡 PARCIAL",
-        "description": "Viés neutro, mas mercado moveu -100.00%"
+        "result": "❌ ERRO",
+        "description": "Viés bullish, mas mercado caiu -100.00%"
       },
       "long_setup": {
         "type": "LONG",
-        "style": "Moderado",
-        "entry_low": 87267.18,
-        "entry_high": 87615.9,
-        "stop_loss": 86308.2,
-        "target1": 88705.65,
-        "target2": 89664.63,
+        "style": "Conservador",
+        "entry_low": 89089.0,
+        "entry_high": 89445.0,
+        "stop_loss": 88110.0,
+        "target1": 90557.5,
+        "target2": 91536.5,
         "rr1": "1.5:1",
         "rr2": "2.5:1",
         "trigger": "Rejeição com volume no suporte",
-        "score": 4.5,
+        "score": 7,
         "reasons": [
-          "Consolidação - aguardar confirmação",
-          "Preço próximo ao suporte $87,180",
+          "Estrutura HH + HL confirmada",
+          "Preço próximo ao suporte $89,000",
+          "EMA 9 > EMA 21 (momentum bullish)",
           "Funding Rate baixo/negativo"
         ]
       },
@@ -39,19 +40,19 @@
       "short_setup": {
         "type": "SHORT",
         "style": "Agressivo",
-        "entry_low": 87560.0,
-        "entry_high": 87912.0,
-        "stop_loss": 88880.0,
-        "target1": 86460.0,
-        "target2": 85492.0,
+        "entry_low": 89446.52,
+        "entry_high": 89806.1,
+        "stop_loss": 90794.96,
+        "target1": 88322.82,
+        "target2": 87333.96,
         "rr1": "1.5:1",
         "rr2": "2.5:1",
         "trigger": "Rejeição com volume na resistência",
         "score": 4,
         "reasons": [
-          "Consolidação - aguardar confirmação",
-          "Preço próximo à resistência $88,000",
-          "EMA 9 < EMA 21 (momentum bearish)"
+          "Preço próximo à resistência $89,896",
+          "Preço abaixo da EMA 200",
+          "RSI sobrecomprado (75.08)"
         ]
       },
       "short_result": {
@@ -71,11 +72,11 @@
     "bias_total": 1
   },
   "cumulative_stats": {
-    "total_setups": 133,
+    "total_setups": 135,
     "winning_setups": 22,
     "losing_setups": 7,
     "ongoing_setups": 0,
     "win_rate": 75.9,
-    "bias_accuracy": 28.7
+    "bias_accuracy": 28.4
   }
 }
