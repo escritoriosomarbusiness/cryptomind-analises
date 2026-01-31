@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-01-03T15:26:38.642269-03:00",
+  "timestamp": "2026-01-30T23:47:27.781149-03:00",
   "report_type": "monthly",
   "year": 2026,
   "month": 1,
@@ -11,47 +11,71 @@
     "end_formatted": "31 de January de 2026"
   },
   "kpis": {
-    "total_setups": 22,
-    "total_long": 17,
-    "total_short": 11,
-    "long_percentage": 77.3,
-    "short_percentage": 50.0,
+    "total_setups": 44,
+    "total_long": 39,
+    "total_short": 25,
+    "long_percentage": 88.6,
+    "short_percentage": 56.8,
     "average_score": 5.3,
-    "average_daily_setups": 4.4,
+    "average_daily_setups": 1.7,
     "setups_by_asset": {
-      "BTC": 4,
-      "ETH": 4,
-      "SOL": 4,
-      "BNB": 4,
-      "XRP": 4,
-      "ADA": 2
+      "BTC": 19,
+      "ETH": 6,
+      "SOL": 5,
+      "BNB": 6,
+      "XRP": 5,
+      "ADA": 3
     },
     "best_asset": {
       "symbol": "BTC",
-      "setups_count": 4
+      "setups_count": 19
     },
     "worst_asset": {
       "symbol": "ADA",
-      "setups_count": 2
+      "setups_count": 3
     },
-    "trading_days": 5
+    "trading_days": 26
   },
   "trends": {
     "weekly_summary": [
       {
         "week": 1,
-        "setups": 22,
-        "avg_fear_greed": 28.6,
-        "avg_usdt_d": 5.993
+        "setups": 28,
+        "avg_fear_greed": 28.0,
+        "avg_usdt_d": 5.958
+      },
+      {
+        "week": 2,
+        "setups": 0,
+        "avg_fear_greed": 33.4,
+        "avg_usdt_d": 5.798
+      },
+      {
+        "week": 3,
+        "setups": 4,
+        "avg_fear_greed": 42.2,
+        "avg_usdt_d": 5.695
+      },
+      {
+        "week": 4,
+        "setups": 7,
+        "avg_fear_greed": 28.8,
+        "avg_usdt_d": 5.953
+      },
+      {
+        "week": 5,
+        "setups": 5,
+        "avg_fear_greed": 24.0,
+        "avg_usdt_d": 6.129
       }
     ],
     "best_week": {
       "week": 1,
-      "setups": 22,
-      "avg_fear_greed": 28.6,
-      "avg_usdt_d": 5.993
+      "setups": 28,
+      "avg_fear_greed": 28.0,
+      "avg_usdt_d": 5.958
     },
-    "total_weeks": 1
+    "total_weeks": 5
   },
   "advanced_stats": {
     "sharpe_ratio": null,
@@ -64,5 +88,5 @@
     "available": false,
     "message": "Relatório do mês anterior não disponível"
   },
-  "analyses_count": 6
+  "analyses_count": 57
 }

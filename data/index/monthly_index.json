@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-01-30T22:49:42.277033-03:00",
+  "generated_at": "2026-01-30T23:47:27.836586-03:00",
   "total_months": 1,
   "months": [
     {
@@ -8,11 +8,11 @@
       "month_name": "january",
       "filename": "january.json",
       "path": "data/archive/2026/01/monthly/january.json",
-      "timestamp": "2026-01-03T15:26:38.642269-03:00",
+      "timestamp": "2026-01-30T23:47:27.781149-03:00",
       "summary": {
         "win_rate": null,
         "profit_factor": null,
-        "total_setups": 22
+        "total_setups": 44
       }
     }
   ]
