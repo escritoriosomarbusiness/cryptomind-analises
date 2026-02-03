@@ -1,21 +1,21 @@
 {
-  "timestamp": "2026-02-02T09:45:05.337015-03:00",
-  "date": "02 de Fevereiro de 2026",
+  "timestamp": "2026-02-03T09:45:29.784944-03:00",
+  "date": "03 de Fevereiro de 2026",
   "time": "09:45",
   "fear_greed": {
-    "value": 14,
+    "value": 17,
     "classification": "Extreme Fear",
     "yesterday": 14,
     "week_ago": 29
   },
   "usdt_d": {
-    "dominance": 6.859,
-    "dominance_formatted": "6.859%",
-    "ema_9": 6.86,
-    "ema_21": 6.86,
+    "dominance": 6.827,
+    "dominance_formatted": "6.827%",
+    "ema_9": 6.83,
+    "ema_21": 6.83,
     "ema_200": 6.17,
-    "rsi": 60.86,
-    "atr": 0.0004,
+    "rsi": 38.57,
+    "atr": 0.0003,
     "macd": 0.0,
     "sr_levels": {
       "resistance_w1": 6.74,
@@ -37,50 +37,51 @@
   "analyses": {
     "BTC": {
       "symbol": "BTC",
-      "price": 77825.0,
-      "price_formatted": "$77,825.00",
-      "price_change": -0.75618,
-      "price_change_formatted": "-0.76%",
-      "high_24h": 81716.25,
-      "low_24h": 73933.75,
-      "volume": 85265271216.0,
+      "price": 78231.0,
+      "price_formatted": "$78,231.00",
+      "price_change": 0.57993,
+      "price_change_formatted": "+0.58%",
+      "high_24h": 82142.55,
+      "low_24h": 74319.45,
+      "volume": 58048798503.0,
       "emas": {
-        "price": 77825.0,
-        "ema_9": 77839.04,
-        "ema_21": 80054.81,
-        "ema_200": 77842.0
+        "price": 78231.0,
+        "ema_9": 78326.63,
+        "ema_21": 79387.88,
+        "ema_200": 78204.0
       },
-      "rsi": 25.91,
-      "atr": 1682.79,
+      "rsi": 46.48,
+      "atr": 1354.14,
       "macd": {
-        "macd_line": -2439.48,
-        "signal_line": -2351.88,
-        "histogram": -87.6,
-        "trend": "bearish_strong"
+        "macd_line": -1514.73,
+        "signal_line": -1911.6,
+        "histogram": 396.87,
+        "trend": "bullish"
       },
       "structure": {
         "type": "consolidation",
         "swing_highs": [
-          84368.0
+          84368.0,
+          79131.0
         ],
         "swing_lows": [
-          81953.0,
           77082.0,
-          74592.0
+          74592.0,
+          77647.0
         ],
-        "last_swing_high": 84368.0,
-        "last_swing_low": 74592.0
+        "last_swing_high": 79131.0,
+        "last_swing_low": 77647.0
       },
       "sr_levels": {
-        "pdh": 78675.0,
-        "pdl": 74592.0,
+        "pdh": 79131.0,
+        "pdl": 77642.0,
         "resistances": [
-          78000,
-          78675.0
+          79000,
+          79131.0
         ],
         "supports": [
-          77000,
-          74592.0
+          78000,
+          77642.0
         ]
       },
       "funding_rate": 0,
@@ -92,52 +93,50 @@
         "long": {
           "type": "LONG",
           "style": "Moderado",
-          "entry_low": 77077.0,
-          "entry_high": 77385.0,
-          "stop_loss": 76230.0,
-          "target1": 78347.5,
-          "target2": 79194.5,
+          "entry_low": 78078.0,
+          "entry_high": 78390.0,
+          "stop_loss": 77220.0,
+          "target1": 79365.0,
+          "target2": 80223.0,
           "rr1": "1.5:1",
           "rr2": "2.5:1",
           "trigger": "Rejeição com volume no suporte",
-          "score": 5,
+          "score": 5.5,
           "reasons": [
             "Consolidação - aguardar confirmação",
-            "Preço próximo ao suporte $77,000",
-            "RSI sobrevendido (25.91)",
+            "Preço próximo ao suporte $78,000",
+            "Preço acima da EMA 200",
             "Funding Rate baixo/negativo"
           ]
         },
         "short": {
           "type": "SHORT",
           "style": "Agressivo",
-          "entry_low": 77610.0,
-          "entry_high": 77922.0,
-          "stop_loss": 78780.0,
-          "target1": 76635.0,
-          "target2": 75777.0,
+          "entry_low": 78605.0,
+          "entry_high": 78921.0,
+          "stop_loss": 79790.0,
+          "target1": 77617.5,
+          "target2": 76748.5,
           "rr1": "1.5:1",
           "rr2": "2.5:1",
           "trigger": "Rejeição com volume na resistência",
-          "score": 5,
+          "score": 4,
           "reasons": [
             "Consolidação - aguardar confirmação",
-            "Preço próximo à resistência $78,000",
-            "Preço abaixo da EMA 200",
+            "Preço próximo à resistência $79,000",
             "EMA 9 < EMA 21 (momentum bearish)"
           ]
         }
       },
       "bias": {
-        "bias": "NEUTRO",
-        "bias_class": "neutral",
+        "bias": "BULLISH",
+        "bias_class": "bullish",
         "bullish_factors": [
-          "RSI sobrevendido (25.91)",
+          "Preço acima da EMA 200",
           "Funding Rate saudável",
-          "Fear extremo (14) - oportunidade"
+          "Fear extremo (17) - oportunidade"
         ],
         "bearish_factors": [
-          "Preço abaixo da EMA 200",
           "EMA 9 < EMA 21"
         ]
       },
