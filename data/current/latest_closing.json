@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-02-09T23:12:44.949321-03:00",
-  "date": "09 de Fevereiro de 2026",
-  "time": "23:12",
+  "timestamp": "2026-02-10T23:08:55.370845-03:00",
+  "date": "10 de Fevereiro de 2026",
+  "time": "23:08",
   "results": {
     "BTC": {
       "symbol": "BTC",
-      "open_price": 68983.0,
+      "open_price": 68563.0,
       "close_price": 0,
       "price_change": -100.0,
       "bias_morning": "BULLISH",
@@ -16,19 +16,19 @@
       },
       "long_setup": {
         "type": "LONG",
-        "style": "Conservador",
-        "entry_low": 68552.48,
-        "entry_high": 68826.42,
-        "stop_loss": 67799.16,
-        "target1": 69682.47,
-        "target2": 70435.79,
+        "style": "Moderado",
+        "entry_low": 68496.43,
+        "entry_high": 68770.14,
+        "stop_loss": 67743.72,
+        "target1": 69625.49,
+        "target2": 70378.2,
         "rr1": "1.5:1",
         "rr2": "2.5:1",
         "trigger": "Rejeição com volume no suporte",
-        "score": 7.5,
+        "score": 5.5,
         "reasons": [
-          "Estrutura HH + HL confirmada",
-          "Preço próximo ao suporte $68,484",
+          "Consolidação - aguardar confirmação",
+          "Preço próximo ao suporte $68,428",
           "Preço acima da EMA 200",
           "Funding Rate baixo/negativo"
         ]
@@ -37,26 +37,46 @@
         "status": "not_evaluated",
         "result": null
       },
-      "short_setup": null,
-      "short_result": null
+      "short_setup": {
+        "type": "SHORT",
+        "style": "Agressivo",
+        "entry_low": 68655.0,
+        "entry_high": 68931.0,
+        "stop_loss": 69690.0,
+        "target1": 67792.5,
+        "target2": 67033.5,
+        "rr1": "1.5:1",
+        "rr2": "2.5:1",
+        "trigger": "Rejeição com volume na resistência",
+        "score": 4,
+        "reasons": [
+          "Consolidação - aguardar confirmação",
+          "Preço próximo à resistência $69,000",
+          "EMA 9 < EMA 21 (momentum bearish)"
+        ]
+      },
+      "short_result": {
+        "status": "not_evaluated",
+        "result": null
+      }
     }
   },
   "day_stats": {
-    "total_setups": 1,
+    "total_setups": 2,
     "winning": 0,
     "losing": 0,
     "ongoing": 0,
-    "not_activated": 1,
+    "not_activated": 2,
     "total_pnl": 0,
     "bias_correct": 0,
     "bias_total": 1
   },
   "cumulative_stats": {
-    "total_setups": 149,
+    "total_setups": 151,
     "winning_setups": 22,
     "losing_setups": 7,
     "ongoing_setups": 0,
     "win_rate": 75.9,
-    "bias_accuracy": 26.4
+    "bias_accuracy": 26.1
   }
 }
