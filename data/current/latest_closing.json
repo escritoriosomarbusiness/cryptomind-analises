@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-02-12T23:05:22.590282-03:00",
-  "date": "12 de Fevereiro de 2026",
-  "time": "23:05",
+  "timestamp": "2026-02-13T22:53:59.058963-03:00",
+  "date": "13 de Fevereiro de 2026",
+  "time": "22:53",
   "results": {
     "BTC": {
       "symbol": "BTC",
-      "open_price": 67856.0,
+      "open_price": 67026.0,
       "close_price": 0,
       "price_change": -100.0,
       "bias_morning": "NEUTRO",
@@ -14,8 +14,28 @@
         "result": "🟡 PARCIAL",
         "description": "Viés neutro, mas mercado moveu -100.00%"
       },
-      "long_setup": null,
-      "long_result": null,
+      "long_setup": {
+        "type": "LONG",
+        "style": "Moderado",
+        "entry_low": 67067.0,
+        "entry_high": 67335.0,
+        "stop_loss": 66330.0,
+        "target1": 68172.5,
+        "target2": 68909.5,
+        "rr1": "1.5:1",
+        "rr2": "2.5:1",
+        "trigger": "Rejeição com volume no suporte",
+        "score": 4.5,
+        "reasons": [
+          "Preço próximo ao suporte $67,000",
+          "Preço acima da EMA 200",
+          "Funding Rate baixo/negativo"
+        ]
+      },
+      "long_result": {
+        "status": "not_evaluated",
+        "result": null
+      },
       "short_setup": {
         "type": "SHORT",
         "style": "Moderado",
@@ -27,48 +47,10 @@
         "rr1": "1.5:1",
         "rr2": "2.5:1",
         "trigger": "Rejeição com volume na resistência",
-        "score": 7,
+        "score": 6,
         "reasons": [
           "Estrutura LH + LL confirmada",
           "Preço próximo à resistência $68,000",
-          "Preço abaixo da EMA 200",
-          "EMA 9 < EMA 21 (momentum bearish)"
-        ]
-      },
-      "short_result": {
-        "status": "not_evaluated",
-        "result": null
-      }
-    },
-    "ETH": {
-      "symbol": "ETH",
-      "open_price": 1983.42,
-      "close_price": 0,
-      "price_change": -100.0,
-      "bias_morning": "NEUTRO",
-      "bias_result": {
-        "correct": false,
-        "result": "🟡 PARCIAL",
-        "description": "Viés neutro, mas mercado moveu -100.00%"
-      },
-      "long_setup": null,
-      "long_result": null,
-      "short_setup": {
-        "type": "SHORT",
-        "style": "Moderado",
-        "entry_low": 1989.24,
-        "entry_high": 1997.24,
-        "stop_loss": 2019.23,
-        "target1": 1964.25,
-        "target2": 1942.26,
-        "rr1": "1.5:1",
-        "rr2": "2.5:1",
-        "trigger": "Rejeição com volume na resistência",
-        "score": 7,
-        "reasons": [
-          "Estrutura LH + LL confirmada",
-          "Preço próximo à resistência $1,999",
-          "Preço abaixo da EMA 200",
           "EMA 9 < EMA 21 (momentum bearish)"
         ]
       },
@@ -86,14 +68,14 @@
     "not_activated": 2,
     "total_pnl": 0,
     "bias_correct": 0,
-    "bias_total": 2
+    "bias_total": 1
   },
   "cumulative_stats": {
-    "total_setups": 155,
+    "total_setups": 157,
     "winning_setups": 22,
     "losing_setups": 7,
     "ongoing_setups": 0,
     "win_rate": 75.9,
-    "bias_accuracy": 25.4
+    "bias_accuracy": 25.2
   }
 }
