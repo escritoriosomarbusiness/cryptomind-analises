@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-02-16T22:58:19.607919-03:00",
-  "date": "16 de Fevereiro de 2026",
-  "time": "22:58",
+  "timestamp": "2026-02-17T23:01:47.515588-03:00",
+  "date": "17 de Fevereiro de 2026",
+  "time": "23:01",
   "results": {
     "BTC": {
       "symbol": "BTC",
-      "open_price": 69491.0,
+      "open_price": 68040.0,
       "close_price": 0,
       "price_change": -100.0,
       "bias_morning": "BULLISH",
@@ -16,21 +16,20 @@
       },
       "long_setup": {
         "type": "LONG",
-        "style": "Conservador",
-        "entry_low": 69069.0,
-        "entry_high": 69345.0,
-        "stop_loss": 68310.0,
-        "target1": 70207.5,
-        "target2": 70966.5,
+        "style": "Moderado",
+        "entry_low": 68068.0,
+        "entry_high": 68340.0,
+        "stop_loss": 67320.0,
+        "target1": 69190.0,
+        "target2": 69938.0,
         "rr1": "1.5:1",
         "rr2": "2.5:1",
         "trigger": "Rejeição com volume no suporte",
-        "score": 6.5,
+        "score": 5,
         "reasons": [
-          "Consolidação - aguardar confirmação",
-          "Preço próximo ao suporte $69,000",
+          "Preço próximo ao suporte $68,000",
           "Preço acima da EMA 200",
-          "EMA 9 > EMA 21 (momentum bullish)",
+          "RSI sobrevendido (36.55)",
           "Funding Rate baixo/negativo"
         ]
       },
@@ -38,26 +37,46 @@
         "status": "not_evaluated",
         "result": null
       },
-      "short_setup": null,
-      "short_result": null
+      "short_setup": {
+        "type": "SHORT",
+        "style": "Moderado",
+        "entry_low": 68655.0,
+        "entry_high": 68931.0,
+        "stop_loss": 69690.0,
+        "target1": 67792.5,
+        "target2": 67033.5,
+        "rr1": "1.5:1",
+        "rr2": "2.5:1",
+        "trigger": "Rejeição com volume na resistência",
+        "score": 6,
+        "reasons": [
+          "Estrutura LH + LL confirmada",
+          "Preço próximo à resistência $69,000",
+          "EMA 9 < EMA 21 (momentum bearish)"
+        ]
+      },
+      "short_result": {
+        "status": "not_evaluated",
+        "result": null
+      }
     }
   },
   "day_stats": {
-    "total_setups": 1,
+    "total_setups": 2,
     "winning": 0,
     "losing": 0,
     "ongoing": 0,
-    "not_activated": 1,
+    "not_activated": 2,
     "total_pnl": 0,
     "bias_correct": 0,
     "bias_total": 1
   },
   "cumulative_stats": {
-    "total_setups": 158,
+    "total_setups": 160,
     "winning_setups": 22,
     "losing_setups": 7,
     "ongoing_setups": 0,
     "win_rate": 75.9,
-    "bias_accuracy": 25.0
+    "bias_accuracy": 24.8
   }
 }
