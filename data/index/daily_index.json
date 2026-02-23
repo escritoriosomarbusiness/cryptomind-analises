@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-02-23T00:19:08.328600-03:00",
-  "total_days": 40,
+  "generated_at": "2026-02-23T09:52:44.511965-03:00",
+  "total_days": 41,
   "days": [
     {
       "date": "2026-01-02",
@@ -1454,6 +1454,30 @@
             ],
             "setups_count": 1,
             "fear_greed": 7,
+            "usdt_d_impact": "BEARISH"
+          }
+        }
+      ]
+    },
+    {
+      "date": "2026-02-23",
+      "year": "2026",
+      "month": "02",
+      "day": "23",
+      "analyses": [
+        {
+          "type": "opening",
+          "filename": "opening_09-52.json",
+          "path": "data/archive/2026/02/daily/23/opening_09-52.json",
+          "timestamp": "2026-02-23T09:52:10.309130-03:00",
+          "time": "09:52",
+          "summary": {
+            "assets": [
+              "BTC",
+              "ETH"
+            ],
+            "setups_count": 1,
+            "fear_greed": 5,
             "usdt_d_impact": "BEARISH"
           }
         }
