@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-02-27T22:45:43.678885-03:00",
-  "total_months": 1,
+  "generated_at": "2026-02-27T23:40:39.797754-03:00",
+  "total_months": 2,
   "months": [
     {
       "year": "2026",
@@ -13,6 +13,19 @@
         "win_rate": null,
         "profit_factor": null,
         "total_setups": 44
+      }
+    },
+    {
+      "year": "2026",
+      "month": "02",
+      "month_name": "february",
+      "filename": "february.json",
+      "path": "data/archive/2026/02/monthly/february.json",
+      "timestamp": "2026-02-27T23:40:39.717262-03:00",
+      "summary": {
+        "win_rate": null,
+        "profit_factor": null,
+        "total_setups": 23
       }
     }
   ]

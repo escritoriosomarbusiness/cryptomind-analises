@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-02-27T22:45:43.679345-03:00",
+  "generated_at": "2026-02-27T23:40:39.798239-03:00",
   "statistics": {
     "total_days": 45,
     "total_weeks": 4,
-    "total_months": 1,
+    "total_months": 2,
     "total_analyses": 97
   },
   "latest": {
@@ -37,15 +37,15 @@
     },
     "monthly": {
       "year": "2026",
-      "month": "01",
-      "month_name": "january",
-      "filename": "january.json",
-      "path": "data/archive/2026/01/monthly/january.json",
-      "timestamp": "2026-01-30T23:47:27.781149-03:00",
+      "month": "02",
+      "month_name": "february",
+      "filename": "february.json",
+      "path": "data/archive/2026/02/monthly/february.json",
+      "timestamp": "2026-02-27T23:40:39.717262-03:00",
       "summary": {
         "win_rate": null,
         "profit_factor": null,
-        "total_setups": 44
+        "total_setups": 23
       }
     }
   },
