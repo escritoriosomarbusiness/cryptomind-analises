@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-03-09T22:51:55.771769-03:00",
-  "date": "09 de Março de 2026",
+  "timestamp": "2026-03-10T22:51:59.902652-03:00",
+  "date": "10 de Março de 2026",
   "time": "22:51",
   "results": {
     "BTC": {
       "symbol": "BTC",
-      "open_price": 68095.0,
+      "open_price": 70445.0,
       "close_price": 0,
       "price_change": -100.0,
       "bias_morning": "NEUTRO",
@@ -17,18 +17,19 @@
       "long_setup": {
         "type": "LONG",
         "style": "Moderado",
-        "entry_low": 68068.0,
-        "entry_high": 68340.0,
-        "stop_loss": 67320.0,
-        "target1": 69190.0,
-        "target2": 69938.0,
+        "entry_low": 70070.0,
+        "entry_high": 70350.0,
+        "stop_loss": 69300.0,
+        "target1": 71225.0,
+        "target2": 71995.0,
         "rr1": "1.5:1",
         "rr2": "2.5:1",
         "trigger": "Rejeição com volume no suporte",
-        "score": 4.5,
+        "score": 5,
         "reasons": [
-          "Preço próximo ao suporte $68,000",
-          "Preço acima da EMA 200",
+          "Consolidação - aguardar confirmação",
+          "Preço próximo ao suporte $70,000",
+          "EMA 9 > EMA 21 (momentum bullish)",
           "Funding Rate baixo/negativo"
         ]
       },
@@ -38,20 +39,21 @@
       },
       "short_setup": {
         "type": "SHORT",
-        "style": "Moderado",
-        "entry_low": 68012.23,
-        "entry_high": 68285.65,
-        "stop_loss": 69037.54,
-        "target1": 67157.8,
-        "target2": 66405.91,
+        "style": "Agressivo",
+        "entry_low": 70645.0,
+        "entry_high": 70929.0,
+        "stop_loss": 71710.0,
+        "target1": 69757.5,
+        "target2": 68976.5,
         "rr1": "1.5:1",
         "rr2": "2.5:1",
         "trigger": "Rejeição com volume na resistência",
-        "score": 6,
+        "score": 5,
         "reasons": [
-          "Estrutura LH + LL confirmada",
-          "Preço próximo à resistência $68,354",
-          "EMA 9 < EMA 21 (momentum bearish)"
+          "Consolidação - aguardar confirmação",
+          "Preço próximo à resistência $71,000",
+          "Preço abaixo da EMA 200",
+          "RSI sobrecomprado (72.57)"
         ]
       },
       "short_result": {
@@ -71,11 +73,11 @@
     "bias_total": 1
   },
   "cumulative_stats": {
-    "total_setups": 187,
+    "total_setups": 189,
     "winning_setups": 22,
     "losing_setups": 7,
     "ongoing_setups": 0,
     "win_rate": 75.9,
-    "bias_accuracy": 21.6
+    "bias_accuracy": 21.5
   }
 }
