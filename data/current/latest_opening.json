@@ -1,21 +1,21 @@
 {
-  "timestamp": "2026-03-16T09:58:26.505504-03:00",
-  "date": "16 de Março de 2026",
+  "timestamp": "2026-03-17T09:58:47.386667-03:00",
+  "date": "17 de Março de 2026",
   "time": "09:58",
   "fear_greed": {
-    "value": 23,
-    "classification": "Extreme Fear",
-    "yesterday": 15,
-    "week_ago": 13
+    "value": 28,
+    "classification": "Fear",
+    "yesterday": 23,
+    "week_ago": 15
   },
   "usdt_d": {
-    "dominance": 7.086,
-    "dominance_formatted": "7.086%",
-    "ema_9": 7.09,
-    "ema_21": 7.09,
+    "dominance": 7.076,
+    "dominance_formatted": "7.076%",
+    "ema_9": 7.08,
+    "ema_21": 7.08,
     "ema_200": 6.17,
-    "rsi": 49.4,
-    "atr": 0.0002,
+    "rsi": 69.75,
+    "atr": 0.0003,
     "macd": 0.0,
     "sr_levels": {
       "resistance_w1": 6.74,
@@ -37,52 +37,51 @@
   "analyses": {
     "BTC": {
       "symbol": "BTC",
-      "price": 73827.0,
-      "price_formatted": "$73,827.00",
-      "price_change": 3.08675,
-      "price_change_formatted": "+3.09%",
-      "high_24h": 77518.35,
-      "low_24h": 70135.65,
-      "volume": 43718532479.0,
+      "price": 73751.0,
+      "price_formatted": "$73,751.00",
+      "price_change": -0.12467,
+      "price_change_formatted": "-0.12%",
+      "high_24h": 77438.55,
+      "low_24h": 70063.45,
+      "volume": 56663276036.0,
       "emas": {
-        "price": 73827.0,
-        "ema_9": 72564.14,
-        "ema_21": 71751.09,
-        "ema_200": 73566.0
+        "price": 73751.0,
+        "ema_9": 73783.27,
+        "ema_21": 72810.84,
+        "ema_200": 74144.0
       },
-      "rsi": 76.14,
-      "atr": 660.07,
+      "rsi": 73.9,
+      "atr": 910.86,
       "macd": {
-        "macd_line": 784.09,
-        "signal_line": 575.33,
-        "histogram": 208.76,
+        "macd_line": 1004.48,
+        "signal_line": 867.7,
+        "histogram": 136.78,
         "trend": "bullish_strong"
       },
       "structure": {
-        "type": "consolidation",
+        "type": "bullish",
         "swing_highs": [
-          70690.0,
           73839.0,
-          71893.0
+          71893.0,
+          75937.0
         ],
         "swing_lows": [
-          69265.0,
           70417.0,
           71324.0
         ],
-        "last_swing_high": 71893.0,
+        "last_swing_high": 75937.0,
         "last_swing_low": 71324.0
       },
       "sr_levels": {
-        "pdh": 74157.0,
-        "pdl": 71324.0,
+        "pdh": 75937.0,
+        "pdl": 73144.0,
         "resistances": [
           74000,
-          74157.0
+          75937.0
         ],
         "supports": [
-          73000,
-          71324.0
+          73144.0,
+          73000
         ]
       },
       "funding_rate": 0,
@@ -94,19 +93,18 @@
         "long": {
           "type": "LONG",
           "style": "Conservador",
-          "entry_low": 73073.0,
-          "entry_high": 73365.0,
-          "stop_loss": 72270.0,
-          "target1": 74277.5,
-          "target2": 75080.5,
+          "entry_low": 73217.14,
+          "entry_high": 73509.72,
+          "stop_loss": 72412.56,
+          "target1": 74424.02,
+          "target2": 75228.6,
           "rr1": "1.5:1",
           "rr2": "2.5:1",
           "trigger": "Rejeição com volume no suporte",
-          "score": 6,
+          "score": 7,
           "reasons": [
-            "Consolidação - aguardar confirmação",
-            "Preço próximo ao suporte $73,000",
-            "Preço acima da EMA 200",
+            "Estrutura HH + HL confirmada",
+            "Preço próximo ao suporte $73,144",
             "EMA 9 > EMA 21 (momentum bullish)",
             "Funding Rate baixo/negativo"
           ]
@@ -124,9 +122,9 @@
           "trigger": "Rejeição com volume na resistência",
           "score": 4,
           "reasons": [
-            "Consolidação - aguardar confirmação",
             "Preço próximo à resistência $74,000",
-            "RSI sobrecomprado (76.14)"
+            "Preço abaixo da EMA 200",
+            "RSI sobrecomprado (73.9)"
           ]
         }
       },
@@ -134,13 +132,14 @@
         "bias": "BULLISH",
         "bias_class": "bullish",
         "bullish_factors": [
-          "Preço acima da EMA 200",
+          "Estrutura de alta (HH + HL)",
           "EMA 9 > EMA 21",
           "Funding Rate saudável",
-          "Fear extremo (23) - oportunidade"
+          "Fear extremo (28) - oportunidade"
         ],
         "bearish_factors": [
-          "RSI sobrecomprado (76.14)"
+          "Preço abaixo da EMA 200",
+          "RSI sobrecomprado (73.9)"
         ]
       },
       "has_setup": true
