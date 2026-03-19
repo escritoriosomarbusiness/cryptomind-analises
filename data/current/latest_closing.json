@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-03-17T23:02:36.455165-03:00",
-  "date": "17 de Março de 2026",
-  "time": "23:02",
+  "timestamp": "2026-03-18T23:03:36.162238-03:00",
+  "date": "18 de Março de 2026",
+  "time": "23:03",
   "results": {
     "BTC": {
       "symbol": "BTC",
-      "open_price": 73751.0,
+      "open_price": 72470.0,
       "close_price": 0,
       "price_change": -100.0,
       "bias_morning": "BULLISH",
@@ -16,19 +16,19 @@
       },
       "long_setup": {
         "type": "LONG",
-        "style": "Conservador",
-        "entry_low": 73217.14,
-        "entry_high": 73509.72,
-        "stop_loss": 72412.56,
-        "target1": 74424.02,
-        "target2": 75228.6,
+        "style": "Moderado",
+        "entry_low": 72999.93,
+        "entry_high": 73291.63,
+        "stop_loss": 72197.73,
+        "target1": 74203.22,
+        "target2": 75005.42,
         "rr1": "1.5:1",
         "rr2": "2.5:1",
         "trigger": "Rejeição com volume no suporte",
-        "score": 7,
+        "score": 5.5,
         "reasons": [
-          "Estrutura HH + HL confirmada",
-          "Preço próximo ao suporte $73,144",
+          "Consolidação - aguardar confirmação",
+          "Preço próximo ao suporte $72,927",
           "EMA 9 > EMA 21 (momentum bullish)",
           "Funding Rate baixo/negativo"
         ]
@@ -40,19 +40,19 @@
       "short_setup": {
         "type": "SHORT",
         "style": "Agressivo",
-        "entry_low": 73630.0,
-        "entry_high": 73926.0,
-        "stop_loss": 74740.0,
-        "target1": 72705.0,
-        "target2": 71891.0,
+        "entry_low": 72635.0,
+        "entry_high": 72927.0,
+        "stop_loss": 73730.0,
+        "target1": 71722.5,
+        "target2": 70919.5,
         "rr1": "1.5:1",
         "rr2": "2.5:1",
         "trigger": "Rejeição com volume na resistência",
         "score": 4,
         "reasons": [
-          "Preço próximo à resistência $74,000",
-          "Preço abaixo da EMA 200",
-          "RSI sobrecomprado (73.9)"
+          "Consolidação - aguardar confirmação",
+          "Preço próximo à resistência $73,000",
+          "Preço abaixo da EMA 200"
         ]
       },
       "short_result": {
@@ -72,11 +72,11 @@
     "bias_total": 1
   },
   "cumulative_stats": {
-    "total_setups": 199,
+    "total_setups": 201,
     "winning_setups": 22,
     "losing_setups": 7,
     "ongoing_setups": 0,
     "win_rate": 75.9,
-    "bias_accuracy": 20.7
+    "bias_accuracy": 20.6
   }
 }
