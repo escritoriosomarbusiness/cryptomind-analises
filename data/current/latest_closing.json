@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-03-20T22:51:42.028506-03:00",
-  "date": "20 de Março de 2026",
-  "time": "22:51",
+  "timestamp": "2026-03-23T22:56:30.944069-03:00",
+  "date": "23 de Março de 2026",
+  "time": "22:56",
   "results": {
     "BTC": {
       "symbol": "BTC",
-      "open_price": 70304.0,
+      "open_price": 70791.0,
       "close_price": 0,
       "price_change": -100.0,
       "bias_morning": "NEUTRO",
@@ -25,10 +25,10 @@
         "rr1": "1.5:1",
         "rr2": "2.5:1",
         "trigger": "Rejeição com volume no suporte",
-        "score": 4,
+        "score": 4.5,
         "reasons": [
           "Preço próximo ao suporte $70,000",
-          "RSI sobrevendido (25.44)",
+          "Preço acima da EMA 200",
           "Funding Rate baixo/negativo"
         ]
       },
@@ -47,11 +47,10 @@
         "rr1": "1.5:1",
         "rr2": "2.5:1",
         "trigger": "Rejeição com volume na resistência",
-        "score": 7,
+        "score": 6,
         "reasons": [
           "Estrutura LH + LL confirmada",
           "Preço próximo à resistência $71,000",
-          "Preço abaixo da EMA 200",
           "EMA 9 < EMA 21 (momentum bearish)"
         ]
       },
@@ -72,11 +71,11 @@
     "bias_total": 1
   },
   "cumulative_stats": {
-    "total_setups": 205,
+    "total_setups": 207,
     "winning_setups": 22,
     "losing_setups": 7,
     "ongoing_setups": 0,
     "win_rate": 75.9,
-    "bias_accuracy": 20.3
+    "bias_accuracy": 20.1
   }
 }
