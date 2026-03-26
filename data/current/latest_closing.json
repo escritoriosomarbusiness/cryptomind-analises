@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-03-24T23:02:15.699636-03:00",
-  "date": "24 de Março de 2026",
-  "time": "23:02",
+  "timestamp": "2026-03-25T23:08:23.190210-03:00",
+  "date": "25 de Março de 2026",
+  "time": "23:08",
   "results": {
     "BTC": {
       "symbol": "BTC",
-      "open_price": 70926.0,
+      "open_price": 71377.0,
       "close_price": 0,
       "price_change": -100.0,
       "bias_morning": "NEUTRO",
@@ -17,18 +17,18 @@
       "long_setup": {
         "type": "LONG",
         "style": "Moderado",
-        "entry_low": 70070.0,
-        "entry_high": 70350.0,
-        "stop_loss": 69300.0,
-        "target1": 71225.0,
-        "target2": 71995.0,
+        "entry_low": 71071.0,
+        "entry_high": 71355.0,
+        "stop_loss": 70290.0,
+        "target1": 72242.5,
+        "target2": 73023.5,
         "rr1": "1.5:1",
         "rr2": "2.5:1",
         "trigger": "Rejeição com volume no suporte",
         "score": 5,
         "reasons": [
           "Consolidação - aguardar confirmação",
-          "Preço próximo ao suporte $70,000",
+          "Preço próximo ao suporte $71,000",
           "EMA 9 > EMA 21 (momentum bullish)",
           "Funding Rate baixo/negativo"
         ]
@@ -40,20 +40,20 @@
       "short_setup": {
         "type": "SHORT",
         "style": "Agressivo",
-        "entry_low": 70645.0,
-        "entry_high": 70929.0,
-        "stop_loss": 71710.0,
-        "target1": 69757.5,
-        "target2": 68976.5,
+        "entry_low": 71562.39,
+        "entry_high": 71850.08,
+        "stop_loss": 72641.22,
+        "target1": 70663.36,
+        "target2": 69872.22,
         "rr1": "1.5:1",
         "rr2": "2.5:1",
         "trigger": "Rejeição com volume na resistência",
         "score": 5,
         "reasons": [
           "Consolidação - aguardar confirmação",
-          "Preço próximo à resistência $71,000",
+          "Preço próximo à resistência $71,922",
           "Preço abaixo da EMA 200",
-          "RSI sobrecomprado (63.37)"
+          "RSI sobrecomprado (72.46)"
         ]
       },
       "short_result": {
@@ -73,11 +73,11 @@
     "bias_total": 1
   },
   "cumulative_stats": {
-    "total_setups": 209,
+    "total_setups": 211,
     "winning_setups": 22,
     "losing_setups": 7,
     "ongoing_setups": 0,
     "win_rate": 75.9,
-    "bias_accuracy": 20.0
+    "bias_accuracy": 19.9
   }
 }
