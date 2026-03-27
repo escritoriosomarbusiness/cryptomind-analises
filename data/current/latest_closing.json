@@ -1,11 +1,87 @@
 {
-  "timestamp": "2026-03-25T23:08:23.190210-03:00",
-  "date": "25 de Março de 2026",
-  "time": "23:08",
+  "timestamp": "2026-03-26T23:09:12.348801-03:00",
+  "date": "26 de Março de 2026",
+  "time": "23:09",
   "results": {
     "BTC": {
       "symbol": "BTC",
-      "open_price": 71377.0,
+      "open_price": 69406.0,
+      "close_price": 0,
+      "price_change": -100.0,
+      "bias_morning": "BULLISH",
+      "bias_result": {
+        "correct": false,
+        "result": "❌ ERRO",
+        "description": "Viés bullish, mas mercado caiu -100.00%"
+      },
+      "long_setup": {
+        "type": "LONG",
+        "style": "Conservador",
+        "entry_low": 69327.26,
+        "entry_high": 69604.29,
+        "stop_loss": 68565.42,
+        "target1": 70470.01,
+        "target2": 71231.85,
+        "rr1": "1.5:1",
+        "rr2": "2.5:1",
+        "trigger": "Rejeição com volume no suporte",
+        "score": 8.5,
+        "reasons": [
+          "Estrutura HH + HL confirmada",
+          "Preço próximo ao suporte $69,258",
+          "Preço acima da EMA 200",
+          "EMA 9 > EMA 21 (momentum bullish)",
+          "Funding Rate baixo/negativo"
+        ]
+      },
+      "long_result": {
+        "status": "not_evaluated",
+        "result": null
+      },
+      "short_setup": null,
+      "short_result": null
+    },
+    "ETH": {
+      "symbol": "ETH",
+      "open_price": 2072.48,
+      "close_price": 0,
+      "price_change": -100.0,
+      "bias_morning": "BULLISH",
+      "bias_result": {
+        "correct": false,
+        "result": "❌ ERRO",
+        "description": "Viés bullish, mas mercado caiu -100.00%"
+      },
+      "long_setup": {
+        "type": "LONG",
+        "style": "Conservador",
+        "entry_low": 2069.43,
+        "entry_high": 2077.7,
+        "stop_loss": 2046.69,
+        "target1": 2103.54,
+        "target2": 2126.28,
+        "rr1": "1.5:1",
+        "rr2": "2.5:1",
+        "trigger": "Rejeição com volume no suporte",
+        "score": 8,
+        "reasons": [
+          "Estrutura HH + HL confirmada",
+          "Preço próximo ao suporte $2,067",
+          "Preço acima da EMA 200",
+          "RSI sobrevendido (36.65)",
+          "Funding Rate baixo/negativo"
+        ]
+      },
+      "long_result": {
+        "status": "not_evaluated",
+        "result": null
+      },
+      "short_setup": null,
+      "short_result": null
+    },
+    "SOL": {
+      "symbol": "SOL",
+      "open_price": 87.54,
       "close_price": 0,
       "price_change": -100.0,
       "bias_morning": "NEUTRO",
@@ -16,20 +92,19 @@
       },
       "long_setup": {
         "type": "LONG",
-        "style": "Moderado",
-        "entry_low": 71071.0,
-        "entry_high": 71355.0,
-        "stop_loss": 70290.0,
-        "target1": 72242.5,
-        "target2": 73023.5,
+        "style": "Conservador",
+        "entry_low": 87.7,
+        "entry_high": 88.05,
+        "stop_loss": 86.73,
+        "target1": 89.14,
+        "target2": 90.11,
         "rr1": "1.5:1",
         "rr2": "2.5:1",
         "trigger": "Rejeição com volume no suporte",
-        "score": 5,
+        "score": 6.5,
         "reasons": [
-          "Consolidação - aguardar confirmação",
-          "Preço próximo ao suporte $71,000",
-          "EMA 9 > EMA 21 (momentum bullish)",
+          "Estrutura HH + HL confirmada",
+          "Preço próximo ao suporte $88",
           "Funding Rate baixo/negativo"
         ]
       },
@@ -37,47 +112,26 @@
         "status": "not_evaluated",
         "result": null
       },
-      "short_setup": {
-        "type": "SHORT",
-        "style": "Agressivo",
-        "entry_low": 71562.39,
-        "entry_high": 71850.08,
-        "stop_loss": 72641.22,
-        "target1": 70663.36,
-        "target2": 69872.22,
-        "rr1": "1.5:1",
-        "rr2": "2.5:1",
-        "trigger": "Rejeição com volume na resistência",
-        "score": 5,
-        "reasons": [
-          "Consolidação - aguardar confirmação",
-          "Preço próximo à resistência $71,922",
-          "Preço abaixo da EMA 200",
-          "RSI sobrecomprado (72.46)"
-        ]
-      },
-      "short_result": {
-        "status": "not_evaluated",
-        "result": null
-      }
+      "short_setup": null,
+      "short_result": null
     }
   },
   "day_stats": {
-    "total_setups": 2,
+    "total_setups": 3,
     "winning": 0,
     "losing": 0,
     "ongoing": 0,
-    "not_activated": 2,
+    "not_activated": 3,
     "total_pnl": 0,
     "bias_correct": 0,
-    "bias_total": 1
+    "bias_total": 3
   },
   "cumulative_stats": {
-    "total_setups": 211,
+    "total_setups": 214,
     "winning_setups": 22,
     "losing_setups": 7,
     "ongoing_setups": 0,
     "win_rate": 75.9,
-    "bias_accuracy": 19.9
+    "bias_accuracy": 19.5
   }
 }
