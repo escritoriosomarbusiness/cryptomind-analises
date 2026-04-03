@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-04-01T23:06:13.150578-03:00",
-  "date": "01 de Abril de 2026",
-  "time": "23:06",
+  "timestamp": "2026-04-02T23:08:00.802833-03:00",
+  "date": "02 de Abril de 2026",
+  "time": "23:08",
   "results": {
     "BTC": {
       "symbol": "BTC",
-      "open_price": 68254.0,
+      "open_price": 66087.0,
       "close_price": 0,
       "price_change": -100.0,
       "bias_morning": "NEUTRO",
@@ -17,19 +17,19 @@
       "long_setup": {
         "type": "LONG",
         "style": "Moderado",
-        "entry_low": 68068.0,
-        "entry_high": 68340.0,
-        "stop_loss": 67320.0,
-        "target1": 69190.0,
-        "target2": 69938.0,
+        "entry_low": 66278.21,
+        "entry_high": 66543.06,
+        "stop_loss": 65549.88,
+        "target1": 67370.71,
+        "target2": 68099.04,
         "rr1": "1.5:1",
         "rr2": "2.5:1",
         "trigger": "Rejeição com volume no suporte",
         "score": 5,
         "reasons": [
           "Consolidação - aguardar confirmação",
-          "Preço próximo ao suporte $68,000",
-          "EMA 9 > EMA 21 (momentum bullish)",
+          "Preço próximo ao suporte $66,212",
+          "RSI sobrevendido (39.96)",
           "Funding Rate baixo/negativo"
         ]
       },
@@ -40,20 +40,20 @@
       "short_setup": {
         "type": "SHORT",
         "style": "Agressivo",
-        "entry_low": 68655.0,
-        "entry_high": 68931.0,
-        "stop_loss": 69690.0,
-        "target1": 67792.5,
-        "target2": 67033.5,
+        "entry_low": 66665.0,
+        "entry_high": 66933.0,
+        "stop_loss": 67670.0,
+        "target1": 65827.5,
+        "target2": 65090.5,
         "rr1": "1.5:1",
         "rr2": "2.5:1",
         "trigger": "Rejeição com volume na resistência",
         "score": 5,
         "reasons": [
           "Consolidação - aguardar confirmação",
-          "Preço próximo à resistência $69,000",
+          "Preço próximo à resistência $67,000",
           "Preço abaixo da EMA 200",
-          "RSI sobrecomprado (62.17)"
+          "EMA 9 < EMA 21 (momentum bearish)"
         ]
       },
       "short_result": {
@@ -73,11 +73,11 @@
     "bias_total": 1
   },
   "cumulative_stats": {
-    "total_setups": 223,
+    "total_setups": 225,
     "winning_setups": 22,
     "losing_setups": 7,
     "ongoing_setups": 0,
     "win_rate": 75.9,
-    "bias_accuracy": 18.8
+    "bias_accuracy": 18.7
   }
 }
