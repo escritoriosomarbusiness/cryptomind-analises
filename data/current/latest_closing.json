@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-04-03T23:00:28.271273-03:00",
-  "date": "03 de Abril de 2026",
-  "time": "23:00",
+  "timestamp": "2026-04-06T23:10:46.791429-03:00",
+  "date": "06 de Abril de 2026",
+  "time": "23:10",
   "results": {
     "BTC": {
       "symbol": "BTC",
-      "open_price": 66792.0,
+      "open_price": 69386.0,
       "close_price": 0,
       "price_change": -100.0,
       "bias_morning": "NEUTRO",
@@ -17,18 +17,19 @@
       "long_setup": {
         "type": "LONG",
         "style": "Moderado",
-        "entry_low": 66066.0,
-        "entry_high": 66330.0,
-        "stop_loss": 65340.0,
-        "target1": 67155.0,
-        "target2": 67881.0,
+        "entry_low": 69069.0,
+        "entry_high": 69345.0,
+        "stop_loss": 68310.0,
+        "target1": 70207.5,
+        "target2": 70966.5,
         "rr1": "1.5:1",
         "rr2": "2.5:1",
         "trigger": "Rejeição com volume no suporte",
-        "score": 4.5,
+        "score": 5,
         "reasons": [
           "Consolidação - aguardar confirmação",
-          "Preço próximo ao suporte $66,000",
+          "Preço próximo ao suporte $69,000",
+          "EMA 9 > EMA 21 (momentum bullish)",
           "Funding Rate baixo/negativo"
         ]
       },
@@ -39,20 +40,20 @@
       "short_setup": {
         "type": "SHORT",
         "style": "Agressivo",
-        "entry_low": 66665.0,
-        "entry_high": 66933.0,
-        "stop_loss": 67670.0,
-        "target1": 65827.5,
-        "target2": 65090.5,
+        "entry_low": 69650.0,
+        "entry_high": 69930.0,
+        "stop_loss": 70700.0,
+        "target1": 68775.0,
+        "target2": 68005.0,
         "rr1": "1.5:1",
         "rr2": "2.5:1",
         "trigger": "Rejeição com volume na resistência",
         "score": 5,
         "reasons": [
           "Consolidação - aguardar confirmação",
-          "Preço próximo à resistência $67,000",
+          "Preço próximo à resistência $70,000",
           "Preço abaixo da EMA 200",
-          "EMA 9 < EMA 21 (momentum bearish)"
+          "RSI sobrecomprado (85.77)"
         ]
       },
       "short_result": {
@@ -72,11 +73,11 @@
     "bias_total": 1
   },
   "cumulative_stats": {
-    "total_setups": 227,
+    "total_setups": 229,
     "winning_setups": 22,
     "losing_setups": 7,
     "ongoing_setups": 0,
     "win_rate": 75.9,
-    "bias_accuracy": 18.6
+    "bias_accuracy": 18.5
   }
 }
